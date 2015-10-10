@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.main.MainSceneCtrl">
+	<top>
+		<MenuBar BorderPane.alignment="TOP_CENTER">
+			<menus>
+				<Menu mnemonicParsing="false" text="Datei">
+					<items>
+						<MenuItem mnemonicParsing="false" onAction="#changeSettings" text="Einstellungen" />
+						<MenuItem mnemonicParsing="false" onAction="#checkForUpdates" text="Nach Updates suchen" />
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+	</top>
+	<center>
+		<fx:include fx:id="deploymentTab" source="deploymentTab.fxml" BorderPane.alignment="CENTER" />
+	</center>
+   <bottom>
+      <AnchorPane fx:id="consolePanel" prefHeight="150.0" BorderPane.alignment="CENTER">
+         <children>
+      		<TextArea fx:id="consoleout" editable="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      			<font>
+      				<Font size="14.0" />
+      			</font>
+      		</TextArea>
+            <Button mnemonicParsing="false" onAction="#toggleConsoleout" text="Ein- / Ausblenden" textAlignment="CENTER" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="5.0" StackPane.alignment="TOP_RIGHT">
+               <StackPane.margin>
+                  <Insets right="5.0" top="5.0" />
+               </StackPane.margin>
+            </Button>
+         </children>
+      </AnchorPane>
+   </bottom>
+</BorderPane>

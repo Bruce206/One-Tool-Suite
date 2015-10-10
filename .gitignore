@@ -1,0 +1,6 @@
+/.settings
+/target/
+/config.properties
+/.classpath
+/database.odb
+/database.odb$
