@@ -19,7 +19,7 @@ public class UpdateService implements Runnable {
 		System.out.println("Suche nach neuer Version...");
 		String version = UpdateService.class.getPackage().getImplementationVersion();
 
-		String urlString = "http://localhost:8080/check/OneToolSuite/" + version;
+		String urlString = "http://apps.bruce-io.de/check/OneToolSuite/" + version;
 		URL url;
 		try {
 			url = new URL(urlString);
@@ -44,14 +44,14 @@ public class UpdateService implements Runnable {
 				tempDir.mkdir();
 
 				// get new jar
-				URL newVersionUrl = new URL("http://localhost:8080/download/OneToolSuite");
+				URL newVersionUrl = new URL("http://apps.bruce-io.de/download/OneToolSuite");
 				ReadableByteChannel rbc = Channels.newChannel(newVersionUrl.openStream());
 				FileOutputStream fos = new FileOutputStream(tempDir.getAbsolutePath().concat("/newversion.jar"));
 				fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 				fos.close();
 
 				// get updater
-				URL updaterUrl = new URL("http://localhost:8080/updater/OneToolSuite");
+				URL updaterUrl = new URL("http://apps.bruce-io.de/updater/OneToolSuite");
 				File updater = new File(tempDir.getAbsolutePath().concat("/updater.jar"));
 				FileOutputStream fos2 = new FileOutputStream(updater);
 				fos2.getChannel().transferFrom(Channels.newChannel(updaterUrl.openStream()), 0, Long.MAX_VALUE);
