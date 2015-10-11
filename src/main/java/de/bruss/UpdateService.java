@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.management.ManagementFactory;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
@@ -62,10 +61,7 @@ public class UpdateService implements Runnable {
 				String path = thisJar.getAbsolutePath();
 				System.out.println(path);
 
-				String pidComplete = ManagementFactory.getRuntimeMXBean().getName();
-				String pid = pidComplete.substring(0, pidComplete.indexOf('@'));
-
-				ProcessBuilder pb = new ProcessBuilder("java", "-jar", updater.getAbsolutePath(), path, pid);
+				ProcessBuilder pb = new ProcessBuilder("java", "-jar", updater.getAbsolutePath(), path);
 
 				System.out.println("Update heruntergeladen! Neustart in: ");
 
