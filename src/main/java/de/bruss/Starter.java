@@ -30,6 +30,7 @@ public class Starter extends Application {
 			Files.createDirectory(Settings.appDataPath);
 		}
 
+		Context.setPrimaryStage(primaryStage);
 		String version = Starter.class.getPackage().getImplementationVersion();
 		primaryStage.setTitle("Server Tools - Version: " + version);
 

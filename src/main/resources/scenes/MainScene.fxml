@@ -27,38 +27,44 @@
 		<fx:include fx:id="deploymentTab" source="deploymentTab.fxml" BorderPane.alignment="CENTER" />
 	</center>
 	<bottom>
-		<BorderPane BorderPane.alignment="CENTER_RIGHT">
+		<BorderPane>
 			<center>
 				<TextArea fx:id="consoleout" editable="false" BorderPane.alignment="CENTER">
 					<font>
-						<Font size="14.0" />
+						<Font size="11.0" />
 					</font>
 				</TextArea>
 			</center>
-         <top>
-            <AnchorPane BorderPane.alignment="CENTER">
-               <children>
-      						<ProgressBar fx:id="progressBar" prefHeight="44.0" prefWidth="547.0" progress="0.0" visible="false">
-      							<effect>
-      								<Blend />
-      							</effect>
-      							<padding>
-      								<Insets left="100.0" />
-      							</padding>
-      						</ProgressBar>
-      						<Button fx:id="minimizeConsole" layoutX="707.0" layoutY="10.0" mnemonicParsing="false" onAction="#toggleConsoleout" text="" textAlignment="CENTER" AnchorPane.bottomAnchor="9.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="10.0">
-      							<graphic>
-      								<FontAwesomeIconView icon="ICON_SORT" />
-      							</graphic>
-      						</Button>
-      						<Button layoutX="824.0" layoutY="10.0" mnemonicParsing="false" onAction="#clearLog" text="" AnchorPane.bottomAnchor="9.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-      							<graphic>
-      								<FontAwesomeIconView icon="ICON_ERASER" />
-      							</graphic>
-      						</Button>
-               </children>
-            </AnchorPane>
-         </top>
+			<top>
+				<BorderPane BorderPane.alignment="CENTER">
+					<right>
+						<HBox alignment="BOTTOM_RIGHT" BorderPane.alignment="BOTTOM_RIGHT">
+							<children>
+								<Button mnemonicParsing="false" onAction="#toggleConsoleout" text="" textAlignment="CENTER">
+									<graphic>
+										<FontAwesomeIconView icon="ICON_SORT" />
+									</graphic>
+								</Button>
+								<Button mnemonicParsing="false" onAction="#clearLog" text="">
+									<graphic>
+										<FontAwesomeIconView icon="ICON_ERASER" />
+									</graphic>
+								</Button>
+							</children>
+						</HBox>
+					</right>
+					<left>
+						<ProgressBar fx:id="progressBar" prefHeight="44.0" prefWidth="547.0" progress="0.0" visible="false" BorderPane.alignment="CENTER">
+							<effect>
+								<Blend />
+							</effect>
+							<padding>
+								<Insets left="100.0" />
+							</padding>
+						</ProgressBar>
+					</left>
+				</BorderPane>
+			</top>
 		</BorderPane>
 	</bottom>
 </BorderPane>

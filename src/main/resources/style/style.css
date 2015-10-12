@@ -1,0 +1,7 @@
+@font-face {
+src: url("roboto/Roboto-Regular.ttf"), url("roboto/Roboto-Bold.ttf");
+}
+
+.root { -fx-focus-color: transparent; -fx-faint-focus-color: transparent;}
+
+.button {-fx-cursor: hand;}

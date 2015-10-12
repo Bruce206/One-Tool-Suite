@@ -12,10 +12,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -28,13 +26,9 @@ public class MainSceneCtrl implements Initializable {
 	private TextArea consoleout;
 
 	@FXML
-	private AnchorPane consolePanel;
-
-	@FXML
 	private ProgressBar progressBar;
 
-	@FXML
-	private Button minimizeConsole;
+	private boolean consoleVisible = true;
 
 	public void appendText(String str) {
 		Platform.runLater(() -> consoleout.appendText(str));
@@ -75,11 +69,17 @@ public class MainSceneCtrl implements Initializable {
 
 	@FXML
 	protected void toggleConsoleout(ActionEvent event) {
-		if (consolePanel.getHeight() > 75) {
-			consolePanel.setPrefHeight(75);
+		if (consoleVisible) {
+			consoleout.setPrefHeight(0);
+			consoleout.setMinHeight(0);
+			Context.getPrimaryStage().setHeight(Context.getPrimaryStage().getHeight() - 168);
 		} else {
-			consolePanel.setPrefHeight(200);
+			Context.getPrimaryStage().setHeight(Context.getPrimaryStage().getHeight() + 168);
+			consoleout.setPrefHeight(168);
 		}
+
+		consoleVisible = !consoleVisible;
+
 	}
 
 	@FXML

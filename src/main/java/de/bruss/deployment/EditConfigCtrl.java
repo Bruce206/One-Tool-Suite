@@ -92,4 +92,10 @@ public class EditConfigCtrl {
 		this.localDbName.setText(editConfig.getLocalDbName());
 		this.remoteDbName.setText(editConfig.getRemoteDbName());
 	}
+
+	@FXML
+	protected void delete(ActionEvent event) {
+		ConfigService.remove(editConfig);
+		deploymentTabCtrl.refresh();
+	}
 }

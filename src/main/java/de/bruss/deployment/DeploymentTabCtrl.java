@@ -6,9 +6,7 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -16,9 +14,6 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -58,9 +53,8 @@ public class DeploymentTabCtrl implements Initializable {
 		MenuItem cmGetDatabaseButton = new MenuItem("ServerDB -> Lokal-Dump");
 		MenuItem cmDumpAndRestoreButton = new MenuItem("ServerDB -> LokalDB");
 		cmDeployButton.setStyle("-fx-font-weight: bold;");
-		MenuItem cmEditButton = new MenuItem("Editieren");
 		MenuItem cmDeleteButton = new MenuItem("Löschen");
-		cm.getItems().addAll(cmDeployButton, cmEditButton, cmDeleteButton, cmGetDatabaseButton, cmDumpAndRestoreButton);
+		cm.getItems().addAll(cmDeployButton, cmDeleteButton, cmGetDatabaseButton, cmDumpAndRestoreButton);
 
 		configTable.setRowFactory(config -> {
 			TableRow<Config> row = new TableRow<>();
@@ -71,23 +65,6 @@ public class DeploymentTabCtrl implements Initializable {
 			}
 
 			row.setOnMouseClicked(event -> {
-
-				cmEditButton.setOnAction(cmEvent -> {
-					// contextmenu edit clicked
-						try {
-							FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/EditConfig.fxml"));
-
-							Stage stage = new Stage(StageStyle.DECORATED);
-							stage.setScene(new Scene((Pane) loader.load()));
-
-							EditConfigCtrl controller = loader.<EditConfigCtrl> getController();
-							controller.initData(this, row.getItem());
-
-							stage.show();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					});
 
 				// contextmenu delete clicked
 				cmDeleteButton.setOnAction(cmEvent -> {
