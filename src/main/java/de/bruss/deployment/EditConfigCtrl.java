@@ -48,8 +48,6 @@ public class EditConfigCtrl {
 		}
 
 		deploymentTabCtrl.refresh();
-
-		((Stage) remotePath.getScene().getWindow()).hide();
 	}
 
 	public void initData(DeploymentTabCtrl deploymentTabCtrl) {
@@ -75,6 +73,23 @@ public class EditConfigCtrl {
 		final DirectoryChooser fileChooser = new DirectoryChooser();
 
 		File file = fileChooser.showDialog(new Stage());
-		localPath.setText(file.getAbsolutePath());
+		if (file != null) {
+			localPath.setText(file.getAbsolutePath());
+		}
+
+	}
+
+	@FXML
+	protected void addConfig(ActionEvent event) {
+		editConfig = new Config();
+
+		this.host.setText(editConfig.getHost());
+		this.localPath.setText(editConfig.getLocalPath());
+		this.remotePath.setText(editConfig.getRemotePath());
+		this.name.setText(editConfig.getName());
+		this.serviceName.setText(editConfig.getServiceName());
+		this.port.setText(editConfig.getPort());
+		this.localDbName.setText(editConfig.getLocalDbName());
+		this.remoteDbName.setText(editConfig.getRemoteDbName());
 	}
 }

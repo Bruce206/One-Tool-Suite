@@ -42,6 +42,9 @@ public class Starter extends Application {
 		} else {
 			Parent root = FXMLLoader.load(getClass().getResource("/scenes/MainScene.fxml"));
 			Scene scene = new Scene(root);
+			String css = Starter.class.getResource("/style/style.css").toExternalForm();
+			scene.getStylesheets().clear();
+			scene.getStylesheets().add(css);
 			primaryStage.setScene(scene);
 
 		}

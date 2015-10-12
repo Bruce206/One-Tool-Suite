@@ -11,34 +11,15 @@
 <?import javafx.scene.text.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.deployment.DeploymentTabCtrl">
-   <bottom>
-		<ToolBar prefHeight="43.0" BorderPane.alignment="CENTER">
-			<items>
-				<Button defaultButton="true" mnemonicParsing="false" onAction="#addConfig" text="Deployment-Config hinzufügen">
-					<font>
-						<Font name="System Bold" size="20.0" />
-					</font>
-				</Button>
-				<ProgressBar fx:id="progressBar" prefHeight="44.0" prefWidth="787.0" progress="0.0" visible="false">
-					<effect>
-						<Blend />
-					</effect>
-					<padding>
-						<Insets left="100.0" />
-					</padding>
-				</ProgressBar>
-			</items>
-		</ToolBar>
-   </bottom>
-   <center>
+	<center>
 		<TableView fx:id="configTable" style="-fx-font-size: 12px;" BorderPane.alignment="CENTER">
 			<columns>
 				<TableColumn fx:id="name" prefWidth="220.0" text="Name" />
-				<TableColumn fx:id="serviceName" prefWidth="229.0" text="Service / Jar Name" />
 				<TableColumn fx:id="host" prefWidth="325.0" text="Hostname / IP" />
-				<TableColumn fx:id="localDbName" minWidth="0.0" prefWidth="185.0" text="DB-Name Lokal" />
-				<TableColumn fx:id="remoteDbName" prefWidth="174.0" text="DB-Name Server" />
 			</columns>
 		</TableView>
-   </center>
+	</center>
+	<right>
+		<fx:include fx:id="editConfigTab" source="EditConfig.fxml" BorderPane.alignment="CENTER" />
+	</right>
 </BorderPane>

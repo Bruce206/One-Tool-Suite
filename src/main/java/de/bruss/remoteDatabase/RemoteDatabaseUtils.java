@@ -15,6 +15,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ProgressBar;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.base.Preconditions;
@@ -25,13 +33,6 @@ import com.jcraft.jsch.SftpException;
 import de.bruss.deployment.Config;
 import de.bruss.settings.Settings;
 import de.bruss.ssh.SshUtils;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ProgressBar;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 public class RemoteDatabaseUtils implements Runnable {
 
@@ -68,10 +69,10 @@ public class RemoteDatabaseUtils implements Runnable {
 		}
 
 	}
-	
+
 	private void dropLocalDb() throws IOException, InterruptedException, ExecutionException, LocalDatabaseInUseException {
-		System.out.println("Dropping local database: " + config.getLocalDbName());
-		
+		System.out.print("Dropping local database: " + config.getLocalDbName());
+
 		Process p;
 		ProcessBuilder pb;
 		pb = new ProcessBuilder(Settings.getInstance().getProperty("postgresPath") + "\\bin\\dropdb.exe", "--username", "cms_admin", config.getLocalDbName());
@@ -82,7 +83,7 @@ public class RemoteDatabaseUtils implements Runnable {
 		p = pb.start();
 
 		int exitValue = p.waitFor();
-		
+
 		String output = "";
 		InputStream is = p.getInputStream();
 		InputStreamReader isr = new InputStreamReader(is);
@@ -91,7 +92,7 @@ public class RemoteDatabaseUtils implements Runnable {
 		while ((ll = br.readLine()) != null) {
 			output += ll;
 		}
-		
+
 		// continue if db doesn't exist because it will be created later
 		if (exitValue > 0 && !output.contains("existiert nicht")) {
 
@@ -110,9 +111,9 @@ public class RemoteDatabaseUtils implements Runnable {
 					}
 				}
 			});
-			
+
 			Platform.runLater(alert);
-			
+
 			if (alert.get()) {
 				dropLocalDb();
 				return;
@@ -121,9 +122,7 @@ public class RemoteDatabaseUtils implements Runnable {
 			}
 		}
 
-
-
-		System.out.println("-- [done]");
+		System.out.println("-> [done]");
 	}
 
 	private void createLocalDb() throws IOException {
@@ -147,10 +146,10 @@ public class RemoteDatabaseUtils implements Runnable {
 	@Override
 	public void run() {
 		try {
-			
+
 			Preconditions.checkNotNull(config);
 			Preconditions.checkNotNull(config.getRemoteDbName());
-			
+
 			if (StringUtils.isBlank(config.getRemoteDbName())) {
 				throw new IllegalArgumentException("Remote Db Name should not be empty!");
 			}
@@ -160,12 +159,10 @@ public class RemoteDatabaseUtils implements Runnable {
 			if (SshUtils.fileExistsOnServer(session, "/tmp/" + config.getRemoteDbName() + ".dump")) {
 				SshUtils.removeFile(session, "/tmp/" + config.getRemoteDbName() + ".dump");
 			}
-			
-			
-			System.out.println("Sending pgdump for database: " + config.getRemoteDbName());
-			String response2 = SshUtils.sendCommand(this.session,
-					"su - postgres -c \"pg_dump -Ucms_admin -f/tmp/" + config.getRemoteDbName() + ".dump -Fc " + config.getRemoteDbName() + "\"");
-			System.out.println("Database dump complete: " + response2);
+
+			System.out.print("Sending pgdump for database: " + config.getRemoteDbName());
+			String response2 = SshUtils.sendCommand(this.session, "su - postgres -c \"pg_dump -Ucms_admin -f/tmp/" + config.getRemoteDbName() + ".dump -Fc " + config.getRemoteDbName() + "\"");
+			System.out.println(" -> Database dump complete: " + response2);
 
 			// Download file
 			Path dbFile = Files.createTempFile("db_", ".dump");
@@ -175,14 +172,14 @@ public class RemoteDatabaseUtils implements Runnable {
 				Preconditions.checkNotNull(config.getLocalDbName());
 				dropLocalDb();
 
-				System.out.println("Creating local database: " + config.getLocalDbName());
+				System.out.print("Creating local database: " + config.getLocalDbName());
 				createLocalDb();
-				System.out.println("-- [done]");
+				System.out.println("-> [done]");
 
 				// restore db
-				System.out.println("Restoring local database: " + config.getLocalDbName() + " from dump: " + dbFile.toString());
+				System.out.print("Restoring local database: " + config.getLocalDbName() + " from dump: " + dbFile.toString());
 				restoreLocalDb(dbFile);
-				System.out.println("-- [done]");
+				System.out.println("-> [done]");
 			} else {
 				final FileChooser fileChooser = new FileChooser();
 
@@ -191,13 +188,12 @@ public class RemoteDatabaseUtils implements Runnable {
 				fileChooser.setTitle("Datenbankbackup speichern...");
 				fileChooser.setInitialFileName(StringUtils.defaultString(config.getLocalDbName(), config.getRemoteDbName()) + ".dump");
 				String downloadsFolder = System.getProperty("user.home") + "\\Downloads";
-				System.out.println(downloadsFolder);
 				fileChooser.setInitialDirectory(Paths.get(downloadsFolder).toFile());
 
 				Platform.runLater(() -> {
 					try {
 						File file = fileChooser.showSaveDialog(new Stage());
-						if (file != null && file.isFile()) {
+						if (file != null) {
 							Files.copy(dbFile, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
 							System.out.println("Dump saved to: " + file.getAbsolutePath());
 						}
@@ -207,8 +203,6 @@ public class RemoteDatabaseUtils implements Runnable {
 					}
 				});
 			}
-
-			System.out.println("Process finished! :)");
 
 		} catch (IOException | JSchException | SftpException | RuntimeException | InterruptedException | ExecutionException | LocalDatabaseInUseException e) {
 			System.out.println("Database backup / restore failed!");

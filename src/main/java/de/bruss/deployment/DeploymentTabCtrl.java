@@ -1,22 +1,16 @@
 package de.bruss.deployment;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import org.apache.commons.lang3.StringUtils;
-
-import de.bruss.remoteDatabase.RemoteDatabaseUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -25,6 +19,11 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import org.apache.commons.lang3.StringUtils;
+
+import de.bruss.Context;
+import de.bruss.remoteDatabase.RemoteDatabaseUtils;
 
 public class DeploymentTabCtrl implements Initializable {
 
@@ -40,8 +39,9 @@ public class DeploymentTabCtrl implements Initializable {
 	private TableColumn<Config, String> localDbName;
 	@FXML
 	private TableColumn<Config, String> remoteDbName;
+
 	@FXML
-	private ProgressBar progressBar;
+	private EditConfigCtrl editConfigTabController;
 
 	private static ObservableList<Config> data;
 
@@ -50,9 +50,6 @@ public class DeploymentTabCtrl implements Initializable {
 
 		name.setCellValueFactory(new PropertyValueFactory<Config, String>("name"));
 		host.setCellValueFactory(new PropertyValueFactory<Config, String>("host"));
-		localDbName.setCellValueFactory(new PropertyValueFactory<Config, String>("localDbName"));
-		remoteDbName.setCellValueFactory(new PropertyValueFactory<Config, String>("remoteDbName"));
-		serviceName.setCellValueFactory(new PropertyValueFactory<Config, String>("serviceName"));
 
 		refresh();
 
@@ -74,22 +71,23 @@ public class DeploymentTabCtrl implements Initializable {
 			}
 
 			row.setOnMouseClicked(event -> {
+
 				cmEditButton.setOnAction(cmEvent -> {
 					// contextmenu edit clicked
-					try {
-						FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/EditConfig.fxml"));
+						try {
+							FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/EditConfig.fxml"));
 
-						Stage stage = new Stage(StageStyle.DECORATED);
-						stage.setScene(new Scene((Pane) loader.load()));
+							Stage stage = new Stage(StageStyle.DECORATED);
+							stage.setScene(new Scene((Pane) loader.load()));
 
-						EditConfigCtrl controller = loader.<EditConfigCtrl> getController();
-						controller.initData(this, row.getItem());
+							EditConfigCtrl controller = loader.<EditConfigCtrl> getController();
+							controller.initData(this, row.getItem());
 
-						stage.show();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				});
+							stage.show();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					});
 
 				// contextmenu delete clicked
 				cmDeleteButton.setOnAction(cmEvent -> {
@@ -102,7 +100,7 @@ public class DeploymentTabCtrl implements Initializable {
 					if (row.getItem() != null && StringUtils.isNotBlank(row.getItem().getRemotePath()) && !row.getItem().getRemotePath().equals("/")) {
 
 						try {
-							DeploymentUtils sshUtils = new DeploymentUtils(row.getItem(), progressBar);
+							DeploymentUtils sshUtils = new DeploymentUtils(row.getItem(), Context.getProgressBar());
 							Thread t = new Thread(sshUtils);
 							t.start();
 						} catch (Exception e) {
@@ -119,7 +117,7 @@ public class DeploymentTabCtrl implements Initializable {
 				cmGetDatabaseButton.setOnAction(cmEvent -> {
 
 					try {
-						RemoteDatabaseUtils sshUtils = new RemoteDatabaseUtils(row.getItem(), progressBar, false);
+						RemoteDatabaseUtils sshUtils = new RemoteDatabaseUtils(row.getItem(), Context.getProgressBar(), false);
 						Thread t = new Thread(sshUtils);
 						t.start();
 					} catch (Exception e) {
@@ -133,7 +131,7 @@ public class DeploymentTabCtrl implements Initializable {
 				cmDumpAndRestoreButton.setOnAction(cmEvent -> {
 
 					try {
-						RemoteDatabaseUtils sshUtils = new RemoteDatabaseUtils(row.getItem(), progressBar, true);
+						RemoteDatabaseUtils sshUtils = new RemoteDatabaseUtils(row.getItem(), Context.getProgressBar(), true);
 						Thread t = new Thread(sshUtils);
 						t.start();
 					} catch (Exception e) {
@@ -150,6 +148,10 @@ public class DeploymentTabCtrl implements Initializable {
 				if (event.getButton() == MouseButton.PRIMARY) {
 					if (cm.isShowing()) {
 						cm.hide();
+					} else {
+						if (row.getItem() != null) {
+							editConfigTabController.initData(this, row.getItem());
+						}
 					}
 				}
 			});
@@ -160,19 +162,6 @@ public class DeploymentTabCtrl implements Initializable {
 	public void refresh() {
 		data = FXCollections.observableList(ConfigService.getAll());
 		configTable.setItems(data);
-	}
-
-	@FXML
-	protected void addConfig(ActionEvent event) throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/EditConfig.fxml"));
-
-		Stage stage = new Stage(StageStyle.DECORATED);
-		stage.setScene(new Scene((Pane) loader.load()));
-
-		EditConfigCtrl controller = loader.<EditConfigCtrl> getController();
-		controller.initData(this);
-
-		stage.show();
 	}
 
 }

@@ -12,11 +12,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import de.bruss.Context;
 import de.bruss.UpdateService;
 
 public class MainSceneCtrl implements Initializable {
@@ -26,6 +29,12 @@ public class MainSceneCtrl implements Initializable {
 
 	@FXML
 	private AnchorPane consolePanel;
+
+	@FXML
+	private ProgressBar progressBar;
+
+	@FXML
+	private Button minimizeConsole;
 
 	public void appendText(String str) {
 		Platform.runLater(() -> consoleout.appendText(str));
@@ -42,6 +51,8 @@ public class MainSceneCtrl implements Initializable {
 		};
 		System.setOut(new PrintStream(out, true));
 		System.setErr(new PrintStream(out, true));
+
+		Context.setProgressBar(progressBar);
 
 		// PrintStream out;
 		// try {
@@ -77,6 +88,10 @@ public class MainSceneCtrl implements Initializable {
 		Thread t = new Thread(updateService);
 		t.setDaemon(true);
 		t.start();
+	}
 
+	@FXML
+	protected void clearLog(ActionEvent event) throws IOException {
+		this.consoleout.clear();
 	}
 }

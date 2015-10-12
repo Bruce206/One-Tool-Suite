@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
+<?import com.cathive.fonts.fontawesome.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.main.MainSceneCtrl">
 	<top>
@@ -25,20 +26,39 @@
 	<center>
 		<fx:include fx:id="deploymentTab" source="deploymentTab.fxml" BorderPane.alignment="CENTER" />
 	</center>
-   <bottom>
-      <AnchorPane fx:id="consolePanel" prefHeight="150.0" BorderPane.alignment="CENTER">
-         <children>
-      		<TextArea fx:id="consoleout" editable="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      			<font>
-      				<Font size="14.0" />
-      			</font>
-      		</TextArea>
-            <Button mnemonicParsing="false" onAction="#toggleConsoleout" text="Ein- / Ausblenden" textAlignment="CENTER" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="5.0" StackPane.alignment="TOP_RIGHT">
-               <StackPane.margin>
-                  <Insets right="5.0" top="5.0" />
-               </StackPane.margin>
-            </Button>
-         </children>
-      </AnchorPane>
-   </bottom>
+	<bottom>
+		<BorderPane BorderPane.alignment="CENTER_RIGHT">
+			<center>
+				<TextArea fx:id="consoleout" editable="false" BorderPane.alignment="CENTER">
+					<font>
+						<Font size="14.0" />
+					</font>
+				</TextArea>
+			</center>
+         <top>
+            <AnchorPane BorderPane.alignment="CENTER">
+               <children>
+      						<ProgressBar fx:id="progressBar" prefHeight="44.0" prefWidth="547.0" progress="0.0" visible="false">
+      							<effect>
+      								<Blend />
+      							</effect>
+      							<padding>
+      								<Insets left="100.0" />
+      							</padding>
+      						</ProgressBar>
+      						<Button fx:id="minimizeConsole" layoutX="707.0" layoutY="10.0" mnemonicParsing="false" onAction="#toggleConsoleout" text="" textAlignment="CENTER" AnchorPane.bottomAnchor="9.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="10.0">
+      							<graphic>
+      								<FontAwesomeIconView icon="ICON_SORT" />
+      							</graphic>
+      						</Button>
+      						<Button layoutX="824.0" layoutY="10.0" mnemonicParsing="false" onAction="#clearLog" text="" AnchorPane.bottomAnchor="9.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+      							<graphic>
+      								<FontAwesomeIconView icon="ICON_ERASER" />
+      							</graphic>
+      						</Button>
+               </children>
+            </AnchorPane>
+         </top>
+		</BorderPane>
+	</bottom>
 </BorderPane>

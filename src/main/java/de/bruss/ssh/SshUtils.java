@@ -3,6 +3,8 @@ package de.bruss.ssh;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javafx.scene.control.ProgressBar;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,7 +18,6 @@ import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
 
 import de.bruss.settings.Settings;
-import javafx.scene.control.ProgressBar;
 
 public class SshUtils {
 	public static Session getSession(String host) {
@@ -98,13 +99,13 @@ public class SshUtils {
 			@Override
 			public void init(int op, String src, String dest, long max) {
 				this.max = max;
-				System.out.println("Starting Download... FileSize: " + max + "bytes");
+				System.out.print("Starting Download (FileSize: " + FileUtils.byteCountToDisplaySize(max) + ") ...");
 				progressBar.setVisible(true);
 			}
 
 			@Override
 			public void end() {
-				System.out.println("Finished downloading!");
+				System.out.println(" -> [done]!");
 				progressBar.setVisible(false);
 			}
 
