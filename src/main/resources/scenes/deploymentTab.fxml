@@ -10,7 +10,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.deployment.DeploymentTabCtrl">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.config.ConfigTableCtrl">
 	<center>
 		<TableView fx:id="configTable" style="-fx-font-size: 12px;" BorderPane.alignment="CENTER">
 			<columns>

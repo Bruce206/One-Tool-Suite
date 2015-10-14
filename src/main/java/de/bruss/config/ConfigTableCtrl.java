@@ -1,4 +1,4 @@
-package de.bruss.deployment;
+package de.bruss.config;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,9 +18,11 @@ import javafx.scene.input.MouseButton;
 import org.apache.commons.lang3.StringUtils;
 
 import de.bruss.Context;
+import de.bruss.deployment.Config;
+import de.bruss.deployment.DeploymentUtils;
 import de.bruss.remoteDatabase.RemoteDatabaseUtils;
 
-public class DeploymentTabCtrl implements Initializable {
+public class ConfigTableCtrl implements Initializable {
 
 	@FXML
 	private TableView<Config> configTable;

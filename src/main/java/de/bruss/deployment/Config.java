@@ -11,16 +11,25 @@ public class Config {
 	@GeneratedValue
 	private long id;
 
-	private String localPath;
-	private String remotePath;
+	// general
 	private String host;
 	private String name;
+
+	// spring boot
 	private String serviceName;
 	private String port;
+	private String localPath;
+	private String remotePath;
+
+	// database
 	private String remoteDbName;
 	private String localDbName;
 
-	public Config(String localPath, String remotePath, String host, String name, String serviceName, String port, String localDbName, String remoteDbName) {
+	// filetransfer
+	private String remoteFilePath;
+	private String localFilePath;
+
+	public Config(String localPath, String remotePath, String host, String name, String serviceName, String port, String localDbName, String remoteDbName, String remoteFilePath, String localFilePath) {
 		super();
 		setLocalPath(localPath);
 		setRemotePath(remotePath);
@@ -30,6 +39,8 @@ public class Config {
 		this.port = port;
 		this.localDbName = localDbName;
 		this.remoteDbName = remoteDbName;
+		this.remoteFilePath = remoteFilePath;
+		this.localFilePath = localFilePath;
 	}
 
 	public Config() {
@@ -126,10 +137,34 @@ public class Config {
 		this.localDbName = localDbName;
 	}
 
+	public String getRemoteFilePath() {
+		return remoteFilePath;
+	}
+
+	public void setRemoteFilePath(String remoteFilePath) {
+		if (!remoteFilePath.startsWith("/")) {
+			remoteFilePath = "/" + remoteFilePath;
+		}
+
+		if (remoteFilePath.endsWith("/")) {
+			remoteFilePath = remoteFilePath.substring(0, remoteFilePath.length() - 2);
+		}
+
+		this.remoteFilePath = remoteFilePath;
+	}
+
+	public String getLocalFilePath() {
+		return localFilePath;
+	}
+
+	public void setLocalFilePath(String localFilePath) {
+		this.localFilePath = localFilePath;
+	}
+
 	@Override
 	public String toString() {
-		return "Config [id=" + id + ", localPath=" + localPath + ", remotePath=" + remotePath + ", host=" + host + ", name=" + name + ", serviceName=" + serviceName + ", port=" + port
-				+ ", remoteDbName=" + remoteDbName + ", localDbName=" + localDbName + "]";
+		return "Config [id=" + id + ", host=" + host + ", name=" + name + ", serviceName=" + serviceName + ", port=" + port + ", localPath=" + localPath + ", remotePath=" + remotePath + ", remoteDbName=" + remoteDbName + ", localDbName=" + localDbName + ", remoteFilePath=" + remoteFilePath
+				+ ", localFilePath=" + localFilePath + "]";
 	}
-	
+
 }

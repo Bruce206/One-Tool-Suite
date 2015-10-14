@@ -1,4 +1,4 @@
-package de.bruss.deployment;
+package de.bruss.config;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -9,6 +9,7 @@ import javax.persistence.TypedQuery;
 import org.apache.commons.beanutils.BeanUtils;
 
 import de.bruss.EmfSingleton;
+import de.bruss.deployment.Config;
 
 public class ConfigService {
 

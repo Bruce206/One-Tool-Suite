@@ -1,7 +1,8 @@
-package de.bruss.deployment;
+package de.bruss.config;
 
 import java.io.File;
 
+import de.bruss.deployment.Config;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -26,14 +27,18 @@ public class EditConfigCtrl {
 	private TextField localDbName;
 	@FXML
 	private TextField remoteDbName;
+	@FXML
+	private TextField remoteFilePath;
+	@FXML
+	private TextField localFilePath;
 
-	private DeploymentTabCtrl deploymentTabCtrl;
+	private ConfigTableCtrl configTableCtrl;
 	private Config editConfig;
 
 	@FXML
 	protected void save(ActionEvent event) {
 		if (editConfig == null) {
-			Config config = new Config(localPath.getText(), remotePath.getText(), host.getText(), name.getText(), serviceName.getText(), port.getText(), localDbName.getText(), remoteDbName.getText());
+			Config config = new Config(localPath.getText(), remotePath.getText(), host.getText(), name.getText(), serviceName.getText(), port.getText(), localDbName.getText(), remoteDbName.getText(), remoteFilePath.getText(), localFilePath.getText());
 			ConfigService.addConfig(config);
 		} else {
 			editConfig.setHost(this.host.getText());
@@ -44,28 +49,22 @@ public class EditConfigCtrl {
 			editConfig.setPort(this.port.getText());
 			editConfig.setLocalDbName(this.localDbName.getText());
 			editConfig.setRemoteDbName(this.remoteDbName.getText());
+			editConfig.setRemoteFilePath(this.remoteFilePath.getText());
+			editConfig.setLocalFilePath(this.localFilePath.getText());
 			ConfigService.save(editConfig);
 		}
 
-		deploymentTabCtrl.refresh();
+		configTableCtrl.refresh();
 	}
 
-	public void initData(DeploymentTabCtrl deploymentTabCtrl) {
-		this.deploymentTabCtrl = deploymentTabCtrl;
+	public void initData(ConfigTableCtrl configTableCtrl) {
+		this.configTableCtrl = configTableCtrl;
 	}
 
-	public void initData(DeploymentTabCtrl deploymentTabCtrl, Config editConfig) {
-		this.deploymentTabCtrl = deploymentTabCtrl;
+	public void initData(ConfigTableCtrl configTableCtrl, Config editConfig) {
+		this.configTableCtrl = configTableCtrl;
 		this.editConfig = editConfig;
-
-		this.host.setText(editConfig.getHost());
-		this.localPath.setText(editConfig.getLocalPath());
-		this.remotePath.setText(editConfig.getRemotePath());
-		this.name.setText(editConfig.getName());
-		this.serviceName.setText(editConfig.getServiceName());
-		this.port.setText(editConfig.getPort());
-		this.localDbName.setText(editConfig.getLocalDbName());
-		this.remoteDbName.setText(editConfig.getRemoteDbName());
+		setConfigInView();
 	}
 
 	@FXML
@@ -82,7 +81,10 @@ public class EditConfigCtrl {
 	@FXML
 	protected void addConfig(ActionEvent event) {
 		editConfig = new Config();
+		setConfigInView();
+	}
 
+	private void setConfigInView() {
 		this.host.setText(editConfig.getHost());
 		this.localPath.setText(editConfig.getLocalPath());
 		this.remotePath.setText(editConfig.getRemotePath());
@@ -91,11 +93,13 @@ public class EditConfigCtrl {
 		this.port.setText(editConfig.getPort());
 		this.localDbName.setText(editConfig.getLocalDbName());
 		this.remoteDbName.setText(editConfig.getRemoteDbName());
+		this.remoteFilePath.setText(editConfig.getRemoteFilePath());
+		this.localFilePath.setText(editConfig.getLocalFilePath());
 	}
 
 	@FXML
 	protected void delete(ActionEvent event) {
 		ConfigService.remove(editConfig);
-		deploymentTabCtrl.refresh();
+		configTableCtrl.refresh();
 	}
 }

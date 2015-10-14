@@ -23,6 +23,7 @@ public class Starter extends Application {
 	public void start(final Stage primaryStage) throws IOException {
 
 		System.setProperty("objectdb.home", Settings.appDataPath.toString());
+		System.setProperty("objectdb.conf", getClass().getResource("/objectdb.conf").getPath());
 
 		if (Files.exists(Settings.appDataPath)) {
 			System.out.println("Config-Folder exists");
