@@ -31,7 +31,11 @@ public class Config {
 	private String remoteFilePath;
 	private String localFilePath;
 
-	public Config(String localPath, String remotePath, String host, String name, String serviceName, String port, String localDbName, String remoteDbName, String remoteFilePath, String localFilePath) {
+	private boolean springBootConfig = false;
+	private boolean databaseConfig = false;
+	private boolean fileSyncConfig = false;
+
+	public Config(String localPath, String remotePath, String host, String name, String serviceName, String port, String localDbName, String remoteDbName, String remoteFilePath, String localFilePath, boolean springBootConfig, boolean databaseConfig, boolean fileSyncConfig) {
 		super();
 		setLocalPath(localPath);
 		setRemotePath(remotePath);
@@ -41,12 +45,14 @@ public class Config {
 		this.port = port;
 		this.localDbName = localDbName;
 		this.remoteDbName = remoteDbName;
-		this.remoteFilePath = remoteFilePath;
-		this.localFilePath = localFilePath;
+		setRemoteFilePath(remoteFilePath);
+		setLocalFilePath(localFilePath);
+		this.springBootConfig = springBootConfig;
+		this.databaseConfig = databaseConfig;
+		this.fileSyncConfig = fileSyncConfig;
 	}
 
 	public Config() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public Long getId() {
@@ -183,6 +189,30 @@ public class Config {
 	public String toString() {
 		return "Config [id=" + id + ", host=" + host + ", name=" + name + ", serviceName=" + serviceName + ", port=" + port + ", localPath=" + localPath + ", remotePath=" + remotePath + ", remoteDbName=" + remoteDbName + ", localDbName=" + localDbName + ", remoteFilePath=" + remoteFilePath
 				+ ", localFilePath=" + localFilePath + "]";
+	}
+
+	public boolean isSpringBootConfig() {
+		return springBootConfig;
+	}
+
+	public void setSpringBootConfig(boolean springBootConfig) {
+		this.springBootConfig = springBootConfig;
+	}
+
+	public boolean isDatabaseConfig() {
+		return databaseConfig;
+	}
+
+	public void setDatabaseConfig(boolean databaseConfig) {
+		this.databaseConfig = databaseConfig;
+	}
+
+	public boolean isFileSyncConfig() {
+		return fileSyncConfig;
+	}
+
+	public void setFileSyncConfig(boolean fileSyncConfig) {
+		this.fileSyncConfig = fileSyncConfig;
 	}
 
 }

@@ -33,7 +33,7 @@ public class Starter extends Application {
 
 		Context.setPrimaryStage(primaryStage);
 		String version = Starter.class.getPackage().getImplementationVersion();
-		primaryStage.setTitle("Server Tools - Version: " + version);
+		primaryStage.setTitle("One Tool Suite - Version: " + version);
 
 		primaryStage.getIcons().add(new Image("/images/icon.png"));
 

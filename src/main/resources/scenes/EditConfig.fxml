@@ -10,98 +10,164 @@
 <?import javafx.scene.text.*?>
 <?import com.cathive.fonts.fontawesome.*?>
 
-<BorderPane prefHeight="478.0" prefWidth="386.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.config.EditConfigCtrl">
-	<center>
-		<GridPane>
-			<children>
-				<Label text="Allgemeines" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+<BorderPane minHeight="600.0" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.config.EditConfigCtrl">
+   <center>
+		<VBox prefHeight="478.0" prefWidth="369.0" BorderPane.alignment="CENTER">
+			<Label text="Allgemeines" GridPane.rowIndex="0" GridPane.valignment="BOTTOM">
+				<font>
+					<Font name="Roboto Bold" size="15.0" />
+				</font>
+            <VBox.margin>
+               <Insets left="35.0" top="10.0" />
+            </VBox.margin>
+			</Label>
+         <GridPane>
+           <columnConstraints>
+             <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+           </columnConstraints>
+           <rowConstraints>
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+           </rowConstraints>
+            <children>
+					<Label text="Name">
+                  <GridPane.margin>
+                     <Insets />
+                  </GridPane.margin>
+               </Label>
+					<Label text="Host" GridPane.rowIndex="1" />
+					<TextField fx:id="name" GridPane.columnIndex="2" />
+					<TextField fx:id="host" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            </children>
+            <VBox.margin>
+               <Insets />
+            </VBox.margin>
+            <styleClass>
+               <String fx:value="border-grid" />
+               <String fx:value="form-grid" />
+            </styleClass>
+         </GridPane>
+				<CheckBox fx:id="springBootConfig" mnemonicParsing="false" onAction="#toggleSpringBootConfig" text="Sping Boot">
 					<font>
-						<Font name="Roboto Bold" size="15.0" />
+						<Font name="System Bold" size="15.0" />
 					</font>
-				</Label>
-				<Label text="Name" GridPane.rowIndex="3" />
-
-				<Label text="Hostname / IP" GridPane.rowIndex="4" />
-				<Label text="Spring Boot" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
+            <VBox.margin>
+               <Insets left="10.0" />
+            </VBox.margin>
+				</CheckBox>
+         <GridPane fx:id="springBootConfigGrid">
+           <columnConstraints>
+             <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+           </columnConstraints>
+           <rowConstraints>
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+           </rowConstraints>
+            <children>
+   				<Label text="Service / Jar Name" />
+   
+   				<Label text="App-Port" GridPane.rowIndex="1" />
+   
+   				<Label text="Jar-Verzeichnis Lokal" GridPane.rowIndex="2">
+                  <GridPane.margin>
+                     <Insets right="40.0" />
+                  </GridPane.margin>
+               </Label>
+   
+   				<TextField fx:id="serviceName" GridPane.columnIndex="2" />
+   				<TextField fx:id="port" promptText="7001" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+   				<TextField fx:id="localPath" promptText="/target" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+   
+   				<Label text="Server-Verzeichnis" GridPane.rowIndex="3" />
+   				<TextField fx:id="remotePath" promptText="/wwwhome/appname" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+   				<Button mnemonicParsing="false" onAction="#searchJarPath" prefHeight="25.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+   					<graphic>
+         						<ImageView fitHeight="17.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+         							<image>
+         								<Image url="@../images/folder_explore.png" />
+         							</image>
+         						</ImageView>
+   					</graphic>
+   				</Button>
+            </children>
+            <styleClass>
+               <String fx:value="border-grid" />
+               <String fx:value="form-grid" />
+            </styleClass>
+         </GridPane>
+				<CheckBox fx:id="databaseConfig" mnemonicParsing="false" onAction="#toggleDatabaseConfig" text="Datenbank">
 					<font>
-						<Font name="Roboto Bold" size="15.0" />
+						<Font name="System Bold" size="15.0" />
 					</font>
-				</Label>
-				<Label text="Service / Jar Name" GridPane.rowIndex="6" />
-
-				<TextField fx:id="serviceName" promptText="name des upstart-scripts &amp; des jar-files" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-
-				<Label text="App-Port" GridPane.rowIndex="7" />
-				<TextField fx:id="port" promptText="nie 80 oder 8080" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-
-				<Label text="Jar-Verzeichnis Lokal" GridPane.rowIndex="8" />
-				<TextField fx:id="localPath" promptText="normalerweise /target" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-				<Button mnemonicParsing="false" onAction="#searchJarPath" GridPane.columnIndex="2" GridPane.rowIndex="8">
-					<graphic>
-						<ImageView fitHeight="17.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-							<image>
-								<Image url="@../images/folder_explore.png" />
-							</image>
-						</ImageView>
-					</graphic>
-				</Button>
-
-				<Label text="Server-Verzeichnis" GridPane.rowIndex="9" />
-				<TextField fx:id="remotePath" promptText="Bspw.: /wwwhome/foo" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-				<Label text="Datenbank" GridPane.columnSpan="2147483647" GridPane.rowIndex="10" GridPane.valignment="BOTTOM">
+            <VBox.margin>
+               <Insets left="10.0" />
+            </VBox.margin>
+				</CheckBox>
+         <GridPane fx:id="databaseConfigGrid">
+           <columnConstraints>
+             <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+           </columnConstraints>
+           <rowConstraints>
+             <RowConstraints />
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+           </rowConstraints>
+            <children>
+   				<Label text="Name Lokal" GridPane.rowIndex="1" />
+   				<TextField fx:id="localDbName" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+   				<Label text="Name Server" GridPane.rowIndex="2" />
+   				<TextField fx:id="remoteDbName" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            </children>
+            <styleClass>
+               <String fx:value="border-grid" />
+               <String fx:value="form-grid" />
+            </styleClass>
+         </GridPane>
+				<CheckBox fx:id="fileSyncConfig" mnemonicParsing="false" onAction="#toggleFileSyncConfig" text="Daten-Sync">
 					<font>
-						<Font name="Roboto Bold" size="15.0" />
+						<Font name="System Bold" size="15.0" />
 					</font>
-				</Label>
-				<Label text="Name Lokal" GridPane.rowIndex="11" />
-				<TextField fx:id="localDbName" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-				<Label text="Name Server" GridPane.rowIndex="12" />
-				<TextField fx:id="remoteDbName" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-				<Label text="Datei-Sync" GridPane.rowIndex="13">
-					<font>
-						<Font name="Roboto Bold" size="15.0" />
-					</font>
-				</Label>
-				<TextField fx:id="localFilePath" GridPane.columnIndex="1" GridPane.rowIndex="14" />
-				<TextField fx:id="remoteFilePath" GridPane.columnIndex="1" GridPane.rowIndex="15" />
-				<TextField fx:id="name" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-				<TextField fx:id="host" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-				<Label text="Ordner Lokal" GridPane.rowIndex="14" />
-				<Label text="Ordner Server" GridPane.rowIndex="15" />
-
-			</children>
-			<padding>
-				<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-			</padding>
-			<columnConstraints>
-				<ColumnConstraints maxWidth="218.0" minWidth="115.0" prefWidth="136.0" />
-				<ColumnConstraints maxWidth="286.0" minWidth="164.0" prefWidth="188.0" />
-				<ColumnConstraints maxWidth="95.0" minWidth="10.0" prefWidth="42.0" />
-			</columnConstraints>
-			<rowConstraints>
-				<RowConstraints />
-				<RowConstraints />
-				<RowConstraints minHeight="30.0" prefHeight="30.0" />
-				<RowConstraints minHeight="30.0" prefHeight="30.0" />
-				<RowConstraints minHeight="30.0" prefHeight="30.0" />
-				<RowConstraints minHeight="30.0" prefHeight="30.0" />
-				<RowConstraints />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" />
-				<RowConstraints minHeight="30.0" prefHeight="30.0" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" />
-				<RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
-				<RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
-			</rowConstraints>
-		</GridPane>
-	</center>
-	<right>
-		<AnchorPane prefHeight="478.0" prefWidth="189.0" BorderPane.alignment="CENTER">
+            <VBox.margin>
+               <Insets left="10.0" />
+            </VBox.margin>
+				</CheckBox>
+         <GridPane fx:id="fileSyncConfigGrid">
+           <columnConstraints>
+             <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               <ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+           </columnConstraints>
+           <rowConstraints>
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+           </rowConstraints>
+            <children>
+   
+   				<Label text="Ordner Lokal" />
+   				<Label text="Ordner Server" GridPane.rowIndex="1" />
+   				<TextField fx:id="localFilePath" GridPane.columnIndex="2" />
+   				<TextField fx:id="remoteFilePath" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            </children>
+            <padding>
+               <Insets bottom="10.0" left="10.0" right="10.0" />
+            </padding>
+            <styleClass>
+               <String fx:value="border-grid" />
+               <String fx:value="form-grid" />
+            </styleClass>
+         </GridPane>
+		</VBox>
+   </center>
+   <right>
+		<AnchorPane prefHeight="539.0" prefWidth="198.0" BorderPane.alignment="CENTER">
 			<children>
 				<Button mnemonicParsing="false" onAction="#addConfig" prefHeight="25.0" style="-fx-base: #9DD6FB;" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" AnchorPane.topAnchor="40.0">
 					<font>
@@ -127,15 +193,15 @@
 						<FontAwesomeIconView icon="ICON_SAVE" />
 					</graphic>
 				</Button>
-				<Button contentDisplay="CENTER" layoutX="-58.0" layoutY="368.0" mnemonicParsing="false" onAction="#syncData" prefHeight="20.0" prefWidth="186.0" text="Dateien syncen" textAlignment="CENTER" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
-				<Button layoutX="-69.0" layoutY="130.0" mnemonicParsing="false" onAction="#deploy" prefHeight="25.0" prefWidth="186.0" text="Deployen" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
+				<Button fx:id="file_btn_1" contentDisplay="CENTER" layoutX="25.0" layoutY="274.0" mnemonicParsing="false" onAction="#syncData" prefHeight="20.0" prefWidth="186.0" styleClass="action-btn" text="Dateien syncen" textAlignment="CENTER" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
+				<Button fx:id="spring_btn_1" layoutX="25.0" layoutY="109.0" mnemonicParsing="false" onAction="#deploy" prefHeight="25.0" prefWidth="186.0" styleClass="action-btn" text="Boot-App deployen" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
 				<Label alignment="CENTER" contentDisplay="CENTER" layoutX="86.0" layoutY="14.0" text="Aktionen" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
 					<font>
 						<Font name="System Bold" size="15.0" />
 					</font>
 				</Label>
-				<Button layoutX="-50.0" layoutY="278.0" mnemonicParsing="false" onAction="#getDbDump" prefHeight="25.0" prefWidth="186.0" text="DB als Dump laden" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
-				<Button contentDisplay="CENTER" layoutX="25.0" layoutY="303.0" mnemonicParsing="false" onAction="#dumpAndRestoreDb" prefHeight="20.0" prefWidth="186.0" text="DB lokal einspielen" textAlignment="CENTER" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
+				<Button fx:id="db_btn_1" layoutX="25.0" layoutY="172.0" mnemonicParsing="false" onAction="#getDbDump" prefHeight="25.0" prefWidth="186.0" styleClass="action-btn" text="DB als Dump laden" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
+				<Button fx:id="db_btn_2" contentDisplay="CENTER" layoutX="25.0" layoutY="212.0" mnemonicParsing="false" onAction="#dumpAndRestoreDb" prefHeight="20.0" prefWidth="186.0" styleClass="action-btn" text="DB lokal einspielen" textAlignment="CENTER" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
 			</children>
 		</AnchorPane>
 	</right>
