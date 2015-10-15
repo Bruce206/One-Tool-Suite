@@ -44,7 +44,7 @@ public class EditConfigCtrl {
 
 	@FXML
 	protected void save(ActionEvent event) {
-		if (editConfig == null) {
+		if (editConfig.getId() == null) {
 			Config config = new Config(localPath.getText(), remotePath.getText(), host.getText(), name.getText(), serviceName.getText(), port.getText(), localDbName.getText(), remoteDbName.getText(), remoteFilePath.getText(), localFilePath.getText());
 			ConfigService.addConfig(config);
 		} else {

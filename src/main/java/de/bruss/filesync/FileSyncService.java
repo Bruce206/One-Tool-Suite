@@ -36,7 +36,7 @@ public class FileSyncService implements Runnable {
 	}
 
 	private void syncFiles(FileObject file, String localPath) throws FileSystemException, IOException {
-		File newFile = new File(localPath + "/" + file.getName().getBaseName());
+		File newFile = new File(localPath + file.getName().getBaseName());
 
 		if (file.getType() == FileType.FOLDER) {
 			checkFolderCount++;

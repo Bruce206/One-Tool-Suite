@@ -11,7 +11,7 @@ public class Config {
 
 	@Id
 	@GeneratedValue
-	private long id;
+	private Long id;
 
 	// general
 	private String host;
@@ -49,11 +49,11 @@ public class Config {
 		// TODO Auto-generated constructor stub
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -62,10 +62,14 @@ public class Config {
 	}
 
 	public void setLocalPath(String localPath) {
-		if (!localPath.endsWith("\\")) {
-			localPath += "\\";
+		if (localPath != null) {
+			localPath = localPath.replace('\\', '/');
+
+			if (!localPath.endsWith("/")) {
+				localPath += "/";
+			}
+			this.localPath = localPath;
 		}
-		this.localPath = localPath;
 	}
 
 	public String getRemotePath() {
@@ -163,7 +167,15 @@ public class Config {
 	}
 
 	public void setLocalFilePath(String localFilePath) {
-		this.localFilePath = localFilePath;
+		if (StringUtils.isNotBlank(localFilePath)) {
+			localFilePath = localFilePath.replace('\\', '/');
+
+			if (!localFilePath.endsWith("/")) {
+				localFilePath = localFilePath.concat("/");
+			}
+
+			this.localFilePath = localFilePath;
+		}
 	}
 
 	@Override
