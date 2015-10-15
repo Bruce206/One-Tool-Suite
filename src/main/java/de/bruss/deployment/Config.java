@@ -63,13 +63,14 @@ public class Config {
 
 	public void setLocalPath(String localPath) {
 		if (localPath != null) {
-			localPath = localPath.replace('\\', '/');
+			localPath = localPath.replace("\\", "/");
 
 			if (!localPath.endsWith("/")) {
 				localPath += "/";
 			}
-			this.localPath = localPath;
 		}
+
+		this.localPath = localPath;
 	}
 
 	public String getRemotePath() {
@@ -156,9 +157,9 @@ public class Config {
 			if (remoteFilePath.endsWith("/")) {
 				remoteFilePath = remoteFilePath.substring(0, remoteFilePath.length() - 2);
 			}
-
-			this.remoteFilePath = remoteFilePath;
 		}
+
+		this.remoteFilePath = remoteFilePath;
 
 	}
 
@@ -168,14 +169,14 @@ public class Config {
 
 	public void setLocalFilePath(String localFilePath) {
 		if (StringUtils.isNotBlank(localFilePath)) {
-			localFilePath = localFilePath.replace('\\', '/');
+			localFilePath = localFilePath.replace("\\", "/");
 
 			if (!localFilePath.endsWith("/")) {
 				localFilePath = localFilePath.concat("/");
 			}
-
-			this.localFilePath = localFilePath;
 		}
+
+		this.localFilePath = localFilePath;
 	}
 
 	@Override
