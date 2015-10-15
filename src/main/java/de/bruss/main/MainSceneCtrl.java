@@ -12,7 +12,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -25,9 +24,6 @@ public class MainSceneCtrl implements Initializable {
 	@FXML
 	private TextArea consoleout;
 
-	@FXML
-	private ProgressBar progressBar;
-
 	private boolean consoleVisible = true;
 
 	public void appendText(String str) {
@@ -37,6 +33,8 @@ public class MainSceneCtrl implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
+		Context.setMainSceneCtrl(this);
+
 		OutputStream out = new OutputStream() {
 			@Override
 			public void write(int b) throws IOException {
@@ -45,8 +43,6 @@ public class MainSceneCtrl implements Initializable {
 		};
 		System.setOut(new PrintStream(out, true));
 		System.setErr(new PrintStream(out, true));
-
-		Context.setProgressBar(progressBar);
 
 		// PrintStream out;
 		// try {
@@ -67,8 +63,7 @@ public class MainSceneCtrl implements Initializable {
 		stage.show();
 	}
 
-	@FXML
-	protected void toggleConsoleout(ActionEvent event) {
+	public void toggleConsoleout() {
 		if (consoleVisible) {
 			consoleout.setPrefHeight(0);
 			consoleout.setMinHeight(0);
@@ -90,8 +85,7 @@ public class MainSceneCtrl implements Initializable {
 		t.start();
 	}
 
-	@FXML
-	protected void clearLog(ActionEvent event) throws IOException {
+	public void clearLog() throws IOException {
 		this.consoleout.clear();
 	}
 }

@@ -1,6 +1,7 @@
 package de.bruss.config;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -11,8 +12,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
@@ -71,11 +75,26 @@ public class EditConfigCtrl implements Initializable {
 	@FXML
 	private Button file_btn_1;
 
+	@FXML
+	private ProgressBar progressBar;
+
 	private Config editConfig = new Config();
+
+	@FXML
+	private HBox fileCounterBox;
+
+	@FXML
+	private Label fileCounter;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		Context.setEditConfigCtrl(this);
+		Context.setProgressBar(progressBar);
+		Context.setFileCounterBox(fileCounterBox);
+		Context.setFileCounter(fileCounter);
+
+		editConfig = new Config();
+		setConfigInView();
 	}
 
 	@FXML
@@ -157,9 +176,10 @@ public class EditConfigCtrl implements Initializable {
 		this.databaseConfig.setSelected(editConfig.isDatabaseConfig());
 		this.fileSyncConfig.setSelected(editConfig.isFileSyncConfig());
 
-		toggleGrid(springBootConfigGrid, Lists.newArrayList(spring_btn_1), editConfig.isSpringBootConfig());
-		toggleGrid(databaseConfigGrid, Lists.newArrayList(db_btn_1, db_btn_2), editConfig.isDatabaseConfig());
-		toggleGrid(fileSyncConfigGrid, Lists.newArrayList(file_btn_1), editConfig.isFileSyncConfig());
+		// reversed visible-flags because we don't actually want to toggle it
+		toggleGrid(springBootConfigGrid, Lists.newArrayList(spring_btn_1), !editConfig.isSpringBootConfig());
+		toggleGrid(databaseConfigGrid, Lists.newArrayList(db_btn_1, db_btn_2), !editConfig.isDatabaseConfig());
+		toggleGrid(fileSyncConfigGrid, Lists.newArrayList(file_btn_1), !editConfig.isFileSyncConfig());
 	}
 
 	@FXML
@@ -242,8 +262,8 @@ public class EditConfigCtrl implements Initializable {
 		editConfig.setFileSyncConfig(!editConfig.isFileSyncConfig());
 	}
 
-	private void toggleGrid(GridPane grid, List<Node> nodesToToggle, boolean value) {
-		if (!value) {
+	private void toggleGrid(GridPane grid, List<Node> nodesToToggle, boolean visible) {
+		if (visible) {
 			grid.setPrefHeight(10);
 			grid.setMinHeight(10);
 			grid.setVisible(false);
@@ -258,6 +278,16 @@ public class EditConfigCtrl implements Initializable {
 				node.setVisible(true);
 			}
 		}
+	}
+
+	@FXML
+	protected void toggleConsoleout(ActionEvent event) {
+		Context.getMainSceneCtrl().toggleConsoleout();
+	}
+
+	@FXML
+	protected void clearLog(ActionEvent event) throws IOException {
+		Context.getMainSceneCtrl().clearLog();
 	}
 
 }

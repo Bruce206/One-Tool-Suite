@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import org.apache.commons.lang3.StringUtils;
+import de.bruss.commons.BrussUtils;
 
 @Entity
 public class Config {
@@ -68,15 +68,7 @@ public class Config {
 	}
 
 	public void setLocalPath(String localPath) {
-		if (localPath != null) {
-			localPath = localPath.replace("\\", "/");
-
-			if (!localPath.endsWith("/")) {
-				localPath += "/";
-			}
-		}
-
-		this.localPath = localPath;
+		this.localPath = BrussUtils.formatPath(localPath, false);
 	}
 
 	public String getRemotePath() {
@@ -84,10 +76,7 @@ public class Config {
 	}
 
 	public void setRemotePath(String remotePath) {
-		if (!remotePath.endsWith("/")) {
-			remotePath += "/";
-		}
-		this.remotePath = remotePath;
+		this.remotePath = BrussUtils.formatPath(remotePath, true);
 	}
 
 	public String getHost() {
@@ -155,18 +144,7 @@ public class Config {
 	}
 
 	public void setRemoteFilePath(String remoteFilePath) {
-		if (StringUtils.isNotBlank(remoteFilePath)) {
-			if (!remoteFilePath.startsWith("/")) {
-				remoteFilePath = "/" + remoteFilePath;
-			}
-
-			if (remoteFilePath.endsWith("/")) {
-				remoteFilePath = remoteFilePath.substring(0, remoteFilePath.length() - 2);
-			}
-		}
-
-		this.remoteFilePath = remoteFilePath;
-
+		this.remoteFilePath = BrussUtils.formatPath(remoteFilePath, true);
 	}
 
 	public String getLocalFilePath() {
@@ -174,15 +152,7 @@ public class Config {
 	}
 
 	public void setLocalFilePath(String localFilePath) {
-		if (StringUtils.isNotBlank(localFilePath)) {
-			localFilePath = localFilePath.replace("\\", "/");
-
-			if (!localFilePath.endsWith("/")) {
-				localFilePath = localFilePath.concat("/");
-			}
-		}
-
-		this.localFilePath = localFilePath;
+		this.localFilePath = BrussUtils.formatPath(localFilePath, false);
 	}
 
 	@Override

@@ -10,6 +10,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 <?import com.cathive.fonts.fontawesome.*?>
+<?import com.cathive.fonts.fontawesome.FontAwesomeIconView?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.config.ConfigTableCtrl">
 	<left>
@@ -17,7 +18,21 @@
 			<columns>
 				<TableColumn fx:id="name" editable="false" maxWidth="-1.0" minWidth="220.0" prefWidth="220.0" text="Name" />
 				<TableColumn fx:id="host" editable="false" maxWidth="-1.0" minWidth="200.0" prefWidth="325.0" text="Hostname / IP" />
-				<TableColumn fx:id="springBootConfigColumn" prefWidth="75.0" text="SB" />
+				<TableColumn fx:id="springBootConfigColumn" prefWidth="20.0">
+					<graphic>
+						<FontAwesomeIconView icon="ICON_LEAF"></FontAwesomeIconView>
+					</graphic>
+				</TableColumn>
+				<TableColumn fx:id="databaseConfigColumn" prefWidth="20.0">
+					<graphic>
+						<FontAwesomeIconView icon="ICON_REORDER"></FontAwesomeIconView>
+					</graphic>
+				</TableColumn>
+				<TableColumn fx:id="fileSyncConfigColumn" prefWidth="20.0">
+					<graphic>
+						<FontAwesomeIconView icon="ICON_COPY"></FontAwesomeIconView>
+					</graphic>
+				</TableColumn>
 			</columns>
 		</TableView>
 	</left>

@@ -35,36 +35,6 @@
 					</font>
 				</TextArea>
 			</center>
-			<top>
-				<BorderPane BorderPane.alignment="CENTER">
-					<right>
-						<HBox alignment="BOTTOM_RIGHT" BorderPane.alignment="BOTTOM_RIGHT">
-							<children>
-								<Button mnemonicParsing="false" onAction="#toggleConsoleout" text="" textAlignment="CENTER">
-									<graphic>
-										<FontAwesomeIconView icon="ICON_SORT" />
-									</graphic>
-								</Button>
-								<Button mnemonicParsing="false" onAction="#clearLog" text="">
-									<graphic>
-										<FontAwesomeIconView icon="ICON_ERASER" />
-									</graphic>
-								</Button>
-							</children>
-						</HBox>
-					</right>
-					<left>
-						<ProgressBar fx:id="progressBar" prefHeight="44.0" prefWidth="547.0" progress="0.0" visible="false" BorderPane.alignment="CENTER">
-							<effect>
-								<Blend />
-							</effect>
-							<padding>
-								<Insets left="100.0" />
-							</padding>
-						</ProgressBar>
-					</left>
-				</BorderPane>
-			</top>
 		</BorderPane>
 	</bottom>
 </BorderPane>
