@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import org.apache.commons.lang3.StringUtils;
+
 @Entity
 public class Config {
 
@@ -142,15 +144,18 @@ public class Config {
 	}
 
 	public void setRemoteFilePath(String remoteFilePath) {
-		if (!remoteFilePath.startsWith("/")) {
-			remoteFilePath = "/" + remoteFilePath;
+		if (StringUtils.isNotBlank(remoteFilePath)) {
+			if (!remoteFilePath.startsWith("/")) {
+				remoteFilePath = "/" + remoteFilePath;
+			}
+
+			if (remoteFilePath.endsWith("/")) {
+				remoteFilePath = remoteFilePath.substring(0, remoteFilePath.length() - 2);
+			}
+
+			this.remoteFilePath = remoteFilePath;
 		}
 
-		if (remoteFilePath.endsWith("/")) {
-			remoteFilePath = remoteFilePath.substring(0, remoteFilePath.length() - 2);
-		}
-
-		this.remoteFilePath = remoteFilePath;
 	}
 
 	public String getLocalFilePath() {

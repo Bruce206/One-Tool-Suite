@@ -2,12 +2,19 @@ package de.bruss.config;
 
 import java.io.File;
 
-import de.bruss.deployment.Config;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+
+import org.apache.commons.lang3.StringUtils;
+
+import de.bruss.Context;
+import de.bruss.deployment.Config;
+import de.bruss.deployment.DeploymentUtils;
+import de.bruss.filesync.FileSyncService;
+import de.bruss.remoteDatabase.RemoteDatabaseUtils;
 
 public class EditConfigCtrl {
 
@@ -101,5 +108,59 @@ public class EditConfigCtrl {
 	protected void delete(ActionEvent event) {
 		ConfigService.remove(editConfig);
 		configTableCtrl.refresh();
+	}
+
+	@FXML
+	protected void deploy(ActionEvent action) {
+		if (editConfig != null && StringUtils.isNotBlank(editConfig.getRemotePath()) && !editConfig.getRemotePath().equals("/")) {
+
+			try {
+				DeploymentUtils sshUtils = new DeploymentUtils(editConfig, Context.getProgressBar());
+				Thread t = new Thread(sshUtils);
+				t.start();
+			} catch (Exception e) {
+				System.err.println("Deploying failed!");
+				e.printStackTrace();
+			}
+		} else {
+			System.out.println("Can't deploy without remotePath!");
+		}
+	}
+
+	@FXML
+	protected void getDbDump(ActionEvent event) {
+		try {
+			RemoteDatabaseUtils sshUtils = new RemoteDatabaseUtils(editConfig, Context.getProgressBar(), false);
+			Thread t = new Thread(sshUtils);
+			t.start();
+		} catch (Exception e) {
+			System.err.println("Database Operation failed!");
+			System.err.println(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	protected void dumpAndRestoreDb(ActionEvent event) {
+		try {
+			RemoteDatabaseUtils sshUtils = new RemoteDatabaseUtils(editConfig, Context.getProgressBar(), true);
+			Thread t = new Thread(sshUtils);
+			t.start();
+		} catch (Exception e) {
+			System.err.println("Database Operation failed!");
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	protected void syncData(ActionEvent event) {
+		try {
+			FileSyncService fileSyncService = new FileSyncService(editConfig);
+			Thread t = new Thread(fileSyncService);
+			t.start();
+		} catch (Exception e) {
+			System.err.println("FyleSync Operation failed!");
+			e.printStackTrace();
+		}
 	}
 }

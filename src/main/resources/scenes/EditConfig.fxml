@@ -57,17 +57,17 @@
 				<TextField fx:id="localDbName" GridPane.columnIndex="1" GridPane.rowIndex="11" />
 				<Label text="Name Server" GridPane.rowIndex="12" />
 				<TextField fx:id="remoteDbName" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-            <Label text="Datei-Sync" GridPane.rowIndex="13">
-               <font>
-                  <Font name="Roboto Bold" size="15.0" />
-               </font>
-            </Label>
-            <TextField fx:id="localFilePath" GridPane.columnIndex="1" GridPane.rowIndex="14" />
-            <TextField fx:id="remoteFilePath" GridPane.columnIndex="1" GridPane.rowIndex="15" />
-            <TextField fx:id="name" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <TextField fx:id="host" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label text="Ordner Lokal" GridPane.rowIndex="14" />
-            <Label text="Ordner Server" GridPane.rowIndex="15" />
+				<Label text="Datei-Sync" GridPane.rowIndex="13">
+					<font>
+						<Font name="Roboto Bold" size="15.0" />
+					</font>
+				</Label>
+				<TextField fx:id="localFilePath" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+				<TextField fx:id="remoteFilePath" GridPane.columnIndex="1" GridPane.rowIndex="15" />
+				<TextField fx:id="name" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+				<TextField fx:id="host" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+				<Label text="Ordner Lokal" GridPane.rowIndex="14" />
+				<Label text="Ordner Server" GridPane.rowIndex="15" />
 
 			</children>
 			<padding>
@@ -81,9 +81,9 @@
 			<rowConstraints>
 				<RowConstraints />
 				<RowConstraints />
-            <RowConstraints minHeight="30.0" prefHeight="30.0" />
-            <RowConstraints minHeight="30.0" prefHeight="30.0" />
-            <RowConstraints minHeight="30.0" prefHeight="30.0" />
+				<RowConstraints minHeight="30.0" prefHeight="30.0" />
+				<RowConstraints minHeight="30.0" prefHeight="30.0" />
+				<RowConstraints minHeight="30.0" prefHeight="30.0" />
 				<RowConstraints minHeight="30.0" prefHeight="30.0" />
 				<RowConstraints />
 				<RowConstraints minHeight="10.0" prefHeight="30.0" />
@@ -92,48 +92,51 @@
 				<RowConstraints minHeight="10.0" prefHeight="30.0" />
 				<RowConstraints minHeight="10.0" prefHeight="30.0" />
 				<RowConstraints minHeight="10.0" prefHeight="30.0" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0" />
 				<RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
 				<RowConstraints maxHeight="0.0" minHeight="0.0" prefHeight="0.0" />
 			</rowConstraints>
 		</GridPane>
 	</center>
-	<bottom>
-		<HBox alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="366.0" BorderPane.alignment="CENTER_RIGHT">
+	<right>
+		<AnchorPane prefHeight="478.0" prefWidth="189.0" BorderPane.alignment="CENTER">
 			<children>
-				<Button mnemonicParsing="false" onAction="#addConfig" style="-fx-base: #9DD6FB;" text="">
+				<Button mnemonicParsing="false" onAction="#addConfig" prefHeight="25.0" style="-fx-base: #9DD6FB;" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" AnchorPane.topAnchor="40.0">
 					<font>
-						<Font size="22.0" />
+						<Font size="15.0" />
 					</font>
 					<graphic>
 						<FontAwesomeIconView icon="ICON_FILE_ALT" />
 					</graphic>
 				</Button>
-				<Button mnemonicParsing="false" onAction="#delete" style="-fx-base: #eeaaaa;" text="">
+				<Button mnemonicParsing="false" onAction="#delete" style="-fx-base: #eeaaaa;" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="40.0">
 					<font>
-						<Font size="22.0" />
+						<Font size="15.0" />
 					</font>
 					<graphic>
 						<FontAwesomeIconView icon="ICON_TRASH" />
 					</graphic>
 				</Button>
-				<Button mnemonicParsing="false" onAction="#save" style="-fx-base: #b6e7c9;" text="">
+				<Button mnemonicParsing="false" onAction="#save" prefHeight="25.0" style="-fx-base: #b6e7c9;" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="40.0">
 					<font>
-						<Font size="22.0" />
+						<Font size="15.0" />
 					</font>
 					<graphic>
 						<FontAwesomeIconView icon="ICON_SAVE" />
 					</graphic>
 				</Button>
+				<Button contentDisplay="CENTER" layoutX="-58.0" layoutY="368.0" mnemonicParsing="false" onAction="#syncData" prefHeight="20.0" prefWidth="186.0" text="Dateien syncen" textAlignment="CENTER" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
+				<Button layoutX="-69.0" layoutY="130.0" mnemonicParsing="false" onAction="#deploy" prefHeight="25.0" prefWidth="186.0" text="Deployen" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
+				<Label alignment="CENTER" contentDisplay="CENTER" layoutX="86.0" layoutY="14.0" text="Aktionen" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+					<font>
+						<Font name="System Bold" size="15.0" />
+					</font>
+				</Label>
+				<Button layoutX="-50.0" layoutY="278.0" mnemonicParsing="false" onAction="#getDbDump" prefHeight="25.0" prefWidth="186.0" text="DB als Dump laden" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
+				<Button contentDisplay="CENTER" layoutX="25.0" layoutY="303.0" mnemonicParsing="false" onAction="#dumpAndRestoreDb" prefHeight="20.0" prefWidth="186.0" text="DB lokal einspielen" textAlignment="CENTER" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
 			</children>
-			<opaqueInsets>
-				<Insets />
-			</opaqueInsets>
-			<BorderPane.margin>
-				<Insets bottom="10.0" left="10.0" right="10.0" />
-			</BorderPane.margin>
-		</HBox>
-	</bottom>
+		</AnchorPane>
+	</right>
 </BorderPane>
