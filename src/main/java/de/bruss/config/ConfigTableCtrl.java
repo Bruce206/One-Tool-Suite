@@ -3,6 +3,9 @@ package de.bruss.config;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import de.bruss.Context;
+import de.bruss.commons.FormattedTableCellFactory;
+import de.bruss.deployment.Config;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,9 +15,6 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
-import de.bruss.Context;
-import de.bruss.commons.FormattedTableCellFactory;
-import de.bruss.deployment.Config;
 
 public class ConfigTableCtrl implements Initializable {
 
@@ -54,7 +54,7 @@ public class ConfigTableCtrl implements Initializable {
 			row.setOnMouseClicked(event -> {
 				if (event.getButton() == MouseButton.PRIMARY) {
 					if (row.getItem() != null) {
-						Context.getEditConfigCtrl().initData(row.getItem());
+						Context.getEditConfigCtrl().initData(ConfigService.getConfig(row.getItem().getId()));
 					}
 				}
 			});
