@@ -3,6 +3,8 @@ package de.bruss;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import de.bruss.filesync.FileSyncService;
+import de.bruss.settings.Settings;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -12,8 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import de.bruss.filesync.FileSyncService;
-import de.bruss.settings.Settings;
 
 public class Starter extends Application {
 	public static void main(String[] args) {
@@ -24,7 +24,7 @@ public class Starter extends Application {
 	public void start(final Stage primaryStage) throws IOException {
 
 		System.setProperty("objectdb.home", Settings.appDataPath.toString());
-		System.setProperty("objectdb.conf", getClass().getResource("/objectdb.conf").getPath());
+//		System.setProperty("objectdb.conf", getClass().getResource("/objectdb.conf").getPath());
 
 		if (Files.exists(Settings.appDataPath)) {
 			System.out.println("Config-Folder exists");
