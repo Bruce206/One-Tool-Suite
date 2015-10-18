@@ -10,18 +10,18 @@
 <?import javafx.scene.text.*?>
 <?import com.cathive.fonts.fontawesome.*?>
 
-<BorderPane minHeight="545.0" prefHeight="718.0" prefWidth="560.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.config.EditConfigCtrl">
+<BorderPane minHeight="545.0" minWidth="-Infinity" prefHeight="647.0" prefWidth="426.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.config.EditConfigCtrl">
 	<center>
-		<VBox fx:id="editConfigVBox" prefHeight="660.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-			<GridPane style="-fx-border-radius: 0 0 10 10; -fx-background-radius: 0 0 10 10;">
+		<VBox fx:id="editConfigVBox" prefHeight="620.0" prefWidth="452.0" BorderPane.alignment="CENTER">
+			<GridPane alignment="TOP_CENTER" style="-fx-border-radius: 0 0 10 10; -fx-background-radius: 0 0 10 10;">
 				<columnConstraints>
 					<ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
 					<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
 					<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
 				</columnConstraints>
 				<rowConstraints>
-					<RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
-					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+					<RowConstraints minHeight="20.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+					<RowConstraints minHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
 				</rowConstraints>
 				<children>
 					<Label alignment="BOTTOM_LEFT" text="Name">
@@ -40,14 +40,13 @@
 					<TextField fx:id="host" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 				</children>
 				<VBox.margin>
-					<Insets />
+					<Insets top="1.0" />
 				</VBox.margin>
 				<styleClass>
 					<String fx:value="border-grid" />
 					<String fx:value="form-grid" />
 				</styleClass>
 			</GridPane>
-         <Region prefHeight="32.0" prefWidth="402.0" />
 			<CheckBox fx:id="springBootConfig" mnemonicParsing="false" onAction="#toggleSpringBootConfig" text="Sping Boot">
 				<font>
 					<Font name="System Bold" size="15.0" />
@@ -207,7 +206,7 @@
 		</VBox>
 	</center>
 	<bottom>
-		<BorderPane BorderPane.alignment="CENTER">
+		<BorderPane prefHeight="27.0" prefWidth="361.0" BorderPane.alignment="CENTER">
 			<right>
 				<HBox alignment="BOTTOM_RIGHT" BorderPane.alignment="BOTTOM_RIGHT">
 					<children>
@@ -225,25 +224,17 @@
 				</HBox>
 			</right>
 			<left>
-				<ProgressBar fx:id="progressBar" prefHeight="18.0" prefWidth="395.0" progress="0.0" visible="false" BorderPane.alignment="CENTER">
+				<ProgressBar fx:id="progressBar" prefHeight="18.0" prefWidth="227.0" progress="0.0" visible="false" BorderPane.alignment="CENTER">
 					<padding>
 						<Insets left="100.0" />
 					</padding>
 				</ProgressBar>
 			</left>
          <center>
-            <HBox fx:id="fileCounterBox" alignment="CENTER_LEFT" visible="false" BorderPane.alignment="CENTER_LEFT">
+            <HBox fx:id="fileCounterBox" alignment="CENTER" visible="false" BorderPane.alignment="CENTER_LEFT">
                <children>
-                  <Label text="Dateien / Ordner geprüft:">
-                     <font>
-                        <Font size="9.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="fileCounter" text="0">
-                     <font>
-                        <Font size="9.0" />
-                     </font>
-                  </Label>
+                  <Label text="Dateien / Ordner geprüft: " />
+                  <Label fx:id="fileCounter" text="0" />
                </children>
             </HBox>
          </center>

@@ -210,7 +210,7 @@ public class EditConfigCtrl implements Initializable {
 	}
 
 	@FXML
-	protected void toggleConsoleout(ActionEvent event) {
+	protected void toggleConsoleout(ActionEvent event) throws IOException {
 		Context.getMainSceneCtrl().toggleConsoleout();
 	}
 

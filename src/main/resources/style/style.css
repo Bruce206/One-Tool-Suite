@@ -37,7 +37,7 @@
     -fx-border-color: 
         transparent
         transparent
-        black 
+        transparent
         transparent;
     -fx-border-insets: 0.0 10.0 1.0 0.0;
 }
@@ -48,7 +48,6 @@
 	-fx-border-radius: 0.0 0.0 0.0 0.0;
     -fx-text-fill: black;
 }
-
 
 .ribbon-bar .button:hover {
     -fx-background-color: #D3EBFF;
@@ -61,3 +60,10 @@
     -fx-border-color: red !important;
     -fx-border-width: 2.0;	
 }
+
+.table-row-cell:selected {
+   -fx-background-color: grey; 
+   -fx-text-background-color: white;
+   -fx-table-cell-border-color: transparent;
+}
+

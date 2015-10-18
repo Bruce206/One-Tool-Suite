@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import de.bruss.commons.BrussUtils;
 
 @Entity
-public class Config {
+public class Config implements Comparable<Config> {
 
 	@Id
 	@GeneratedValue
@@ -234,6 +234,11 @@ public class Config {
 
 	public void setAutoconfig(boolean autoconfig) {
 		this.autoconfig = autoconfig;
+	}
+
+	@Override
+	public int compareTo(Config config) {
+		return this.id.compareTo(config.id);
 	}
 
 }

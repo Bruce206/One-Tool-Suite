@@ -14,9 +14,9 @@ import java.util.Set;
 
 public class Settings {
 
-	private final Properties configProp = new Properties();
-	public final static Path appDataPath = Paths.get(System.getenv("APPDATA") + "\\BootDeployer");
-	private final static Path configFilePath = Paths.get(System.getenv("APPDATA") + "\\BootDeployer\\config.properties");
+	private Properties configProp = new Properties();
+	public final static Path appDataPath = Paths.get(System.getenv("APPDATA") + "\\OneToolSuite");
+	private final static Path configFilePath = Paths.get(System.getenv("APPDATA") + "\\OneToolSuite\\config.properties");
 
 	private Settings() {
 		init();
@@ -85,4 +85,12 @@ public class Settings {
 		return !Files.exists(configFilePath);
 	}
 
+	public void setProperty(String key, String value) throws IOException {
+		configProp.setProperty(key, value);
+		File file = configFilePath.toFile();
+		FileOutputStream fileOut = new FileOutputStream(file);
+		configProp.store(fileOut, "Configurations - don't share!!");
+		fileOut.close();
+		init();
+	}
 }

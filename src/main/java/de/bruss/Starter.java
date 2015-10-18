@@ -2,6 +2,7 @@ package de.bruss;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -20,6 +21,8 @@ public class Starter extends Application {
 		launch(args);
 	}
 
+	private static Scene scene;
+
 	@Override
 	public void start(final Stage primaryStage) throws IOException {
 
@@ -27,9 +30,17 @@ public class Starter extends Application {
 		// System.setProperty("objectdb.conf", getClass().getResource("/objectdb.conf").getPath());
 
 		if (Files.exists(Settings.appDataPath)) {
-			System.out.println("Config-Folder exists");
+			System.out.println("Config-Folder gefunden unter: " + Settings.appDataPath);
 		} else {
-			Files.createDirectory(Settings.appDataPath);
+			// altes verz. umbenennen
+			if (Files.exists(Paths.get(System.getenv("APPDATA") + "\\BootDeployer"))) {
+				System.out.println("Importing old appData");
+				Files.move(Paths.get(System.getenv("APPDATA") + "\\BootDeployer"), Settings.appDataPath);
+			} else {
+				System.out.println("Erstelle Ordner...");
+				Files.createDirectory(Settings.appDataPath);
+			}
+
 		}
 
 		Context.setPrimaryStage(primaryStage);
@@ -44,7 +55,7 @@ public class Starter extends Application {
 			primaryStage.setScene(scene);
 		} else {
 			Parent root = FXMLLoader.load(getClass().getResource("/scenes/MainScene.fxml"));
-			Scene scene = new Scene(root);
+			scene = new Scene(root);
 			String css = Starter.class.getResource("/style/style.css").toExternalForm();
 			scene.getStylesheets().clear();
 			scene.getStylesheets().add(css);
@@ -64,6 +75,12 @@ public class Starter extends Application {
 		});
 
 		primaryStage.show();
+	}
+
+	public static void reloadCss() {
+		String css = Starter.class.getResource("/style/style.css").toExternalForm();
+		scene.getStylesheets().clear();
+		scene.getStylesheets().add(css);
 	}
 
 }

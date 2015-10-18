@@ -3,9 +3,6 @@ package de.bruss.config;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import de.bruss.Context;
-import de.bruss.commons.FormattedTableCellFactory;
-import de.bruss.deployment.Config;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,6 +12,9 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
+import de.bruss.Context;
+import de.bruss.commons.FormattedTableCellFactory;
+import de.bruss.deployment.Config;
 
 public class ConfigTableCtrl implements Initializable {
 
@@ -46,6 +46,7 @@ public class ConfigTableCtrl implements Initializable {
 		databaseConfigColumn.setCellFactory(new FormattedTableCellFactory<Config, String>("databaseConfig"));
 		fileSyncConfigColumn.setCellFactory(new FormattedTableCellFactory<Config, String>("fileSyncConfig"));
 
+		configTable.getSortOrder().add(name);
 		refresh();
 
 		configTable.setRowFactory(config -> {
@@ -63,9 +64,17 @@ public class ConfigTableCtrl implements Initializable {
 	}
 
 	public void refresh() {
-		data = FXCollections.observableList(ConfigService.getAll());
-		configTable.setItems(data);
-		configTable.getSortOrder().add(name);
-	}
+		int selectedItem = configTable.getSelectionModel().getSelectedIndex();
+		TableColumn<Config, ?> sort = configTable.getSortOrder().get(0);
 
+		data = FXCollections.observableList(ConfigService.getAll());
+
+		configTable.setItems(data);
+		configTable.refresh();
+		configTable.getSortOrder().add(sort);
+		configTable.requestFocus();
+		configTable.getSelectionModel().select(selectedItem);
+		configTable.getFocusModel().focus(selectedItem);
+
+	}
 }

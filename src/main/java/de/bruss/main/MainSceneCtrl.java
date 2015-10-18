@@ -25,8 +25,10 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import de.bruss.Context;
+import de.bruss.Starter;
 import de.bruss.UpdateService;
 import de.bruss.deployment.Config;
+import de.bruss.settings.Settings;
 
 public class MainSceneCtrl implements Initializable {
 
@@ -51,8 +53,6 @@ public class MainSceneCtrl implements Initializable {
 	@FXML
 	private Button delete_btn;
 
-	private boolean consoleVisible = true;
-
 	public void appendText(String str) {
 		Platform.runLater(() -> consoleout.appendText(str));
 	}
@@ -61,6 +61,8 @@ public class MainSceneCtrl implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 
 		Context.setMainSceneCtrl(this);
+
+		showConsole(Boolean.parseBoolean(Settings.getInstance().getProperty("consoleVisible")));
 
 		OutputStream out = new OutputStream() {
 			@Override
@@ -159,16 +161,27 @@ public class MainSceneCtrl implements Initializable {
 		stage.show();
 	}
 
-	public void toggleConsoleout() {
-		if (consoleVisible) {
+	@FXML
+	protected void reloadCss(ActionEvent event) throws IOException {
+		Starter.reloadCss();
+	}
+
+	public void toggleConsoleout() throws IOException {
+		String consoleVisibleStr = Settings.getInstance().getProperty("consoleVisible");
+		boolean newConsoleVisible = !Boolean.parseBoolean(consoleVisibleStr);
+		showConsole(newConsoleVisible);
+		Settings.getInstance().setProperty("consoleVisible", String.valueOf(newConsoleVisible));
+	}
+
+	private void showConsole(boolean visible) {
+		if (visible) {
+			Context.getPrimaryStage().setHeight(Context.getPrimaryStage().getHeight() + 168);
+			consoleout.setPrefHeight(168);
+		} else {
 			consoleout.setPrefHeight(0);
 			consoleout.setMinHeight(0);
 			Context.getPrimaryStage().setHeight(Context.getPrimaryStage().getHeight() - 168);
-		} else {
-			Context.getPrimaryStage().setHeight(Context.getPrimaryStage().getHeight() + 168);
-			consoleout.setPrefHeight(168);
 		}
-		consoleVisible = !consoleVisible;
 	}
 
 	@FXML
