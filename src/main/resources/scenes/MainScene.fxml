@@ -31,19 +31,19 @@
          <children>
             <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#changeSettings" prefHeight="90.0" prefWidth="90.0" text="EInstellungen">
                <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                      <viewport>
                         <Rectangle2D />
                      </viewport>
                      <image>
-                        <Image url="@../images/configure-2.png" />
+                        <Image url="@../images/system-run-2.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
             <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#checkForUpdates" prefHeight="90.0" prefWidth="90.0" text="Update">
                <graphic>
-                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                      <viewport>
                         <Rectangle2D />
                      </viewport>
@@ -54,7 +54,7 @@
                </graphic>
             </Button>
             <Separator orientation="VERTICAL" prefHeight="100.0" prefWidth="29.0" />
-            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#addConfig" prefHeight="90.0" prefWidth="90.0" text="Neu">
+            <Button fx:id="add_btn" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#addConfig" prefHeight="90.0" prefWidth="90.0" text="Neu">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <viewport>
@@ -66,7 +66,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#addCopyConfig" prefHeight="90.0" prefWidth="90.0" text="Duplizieren">
+            <Button fx:id="duplicate_btn" alignment="CENTER" contentDisplay="TOP" disable="true" mnemonicParsing="false" onAction="#addCopyConfig" prefHeight="90.0" prefWidth="90.0" text="Duplizieren">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <viewport>
@@ -78,7 +78,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#save" prefHeight="90.0" prefWidth="90.0" text="Speichern">
+            <Button fx:id="save_btn" alignment="CENTER" contentDisplay="TOP" disable="true" mnemonicParsing="false" onAction="#save" prefHeight="90.0" prefWidth="90.0" text="Speichern">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <viewport>
@@ -88,7 +88,7 @@
                         <Image url="@../images/document-save-7.png" />
                      </image></ImageView>
                </graphic></Button>
-            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#delete" prefHeight="90.0" prefWidth="90.0" styleClass="delete-button" text="Löschen">
+            <Button fx:id="delete_btn" alignment="CENTER" contentDisplay="TOP" disable="true" mnemonicParsing="false" onAction="#delete" prefHeight="90.0" prefWidth="90.0" styleClass="delete-button" text="Löschen">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <viewport>
@@ -101,7 +101,7 @@
                </graphic>
             </Button>
             <Separator orientation="VERTICAL" prefHeight="100.0" prefWidth="29.0" />
-            <Button fx:id="spring_btn_1" alignment="CENTER" contentDisplay="TOP" ellipsisString="" mnemonicParsing="false" onAction="#deploy" prefHeight="90.0" prefWidth="90.0" text="Boot-App Deployment" textAlignment="CENTER" wrapText="true">
+            <Button fx:id="spring_btn_1" alignment="CENTER" contentDisplay="TOP" disable="true" ellipsisString="" mnemonicParsing="false" onAction="#deploy" prefHeight="90.0" prefWidth="90.0" text="Boot-App Deployment" textAlignment="CENTER" wrapText="true">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                      <viewport>
@@ -113,7 +113,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="db_btn_1" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#dumpAndRestoreDb" prefHeight="90.0" prefWidth="90.0" text="DB Duplikat" textAlignment="CENTER">
+            <Button fx:id="db_btn_1" alignment="CENTER" contentDisplay="TOP" disable="true" mnemonicParsing="false" onAction="#dumpAndRestoreDb" prefHeight="90.0" prefWidth="90.0" text="DB Duplikat" textAlignment="CENTER">
                <graphic>
                   <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                      <viewport>
@@ -125,7 +125,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="db_btn_2" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#getDbDump" prefHeight="90.0" prefWidth="90.0" text="DB Download" textAlignment="CENTER">
+            <Button fx:id="db_btn_2" alignment="CENTER" contentDisplay="TOP" disable="true" mnemonicParsing="false" onAction="#getDbDump" prefHeight="90.0" prefWidth="90.0" text="DB Download" textAlignment="CENTER">
                <graphic>
                   <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                      <viewport>
@@ -137,7 +137,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="file_btn_1" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#syncData" prefHeight="90.0" prefWidth="90.0" text="Datei-Sync" textAlignment="CENTER">
+            <Button fx:id="file_btn_1" alignment="CENTER" contentDisplay="TOP" disable="true" mnemonicParsing="false" onAction="#syncData" prefHeight="90.0" prefWidth="90.0" text="Datei-Sync" textAlignment="CENTER">
                <graphic>
                   <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                      <viewport>

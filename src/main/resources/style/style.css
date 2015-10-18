@@ -19,6 +19,7 @@
   	-fx-background-radius: 0.0 10.0 10.0 10.0;
   	-fx-background-color: #ededed;
   	-fx-background-insets: -1.0 10.0 10.0 10.0;
+  	-fx-effect: dropshadow(two-pass-box , darkgray, 10, 0.0 , 4, 5);  
 }
 
 .form-grid {
@@ -50,8 +51,8 @@
 
 
 .ribbon-bar .button:hover {
-    -fx-background-color: lightblue;
-    -fx-border-color: black;
+    -fx-background-color: #D3EBFF;
+    -fx-border-color: #8AC9FF;
     -fx-border-width: 1.0;
 }
 

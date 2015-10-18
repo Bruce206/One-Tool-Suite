@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import de.bruss.Context;
 import de.bruss.UpdateService;
+import de.bruss.deployment.Config;
 
 public class MainSceneCtrl implements Initializable {
 
@@ -40,6 +41,15 @@ public class MainSceneCtrl implements Initializable {
 	private Button db_btn_2;
 	@FXML
 	private Button file_btn_1;
+
+	@FXML
+	private Button save_btn;
+	@FXML
+	private Button duplicate_btn;
+	@FXML
+	private Button new_btn;
+	@FXML
+	private Button delete_btn;
 
 	private boolean consoleVisible = true;
 
@@ -89,7 +99,25 @@ public class MainSceneCtrl implements Initializable {
 
 	@FXML
 	protected void deploy(ActionEvent action) {
-		Context.getEditConfigCtrl().deploy();
+		Config currentConf = Context.getEditConfigCtrl().getEditConfig();
+
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		Image img = new Image("/images/deploy-2.png");
+		ImageView imgView = new ImageView();
+		imgView.setImage(img);
+		alert.setGraphic(imgView);
+		alert.setHeaderText("Soll folgende App installiert / aktualisiert werden?");
+
+		String message = "App:\t\t\t" + currentConf.getServiceName() + "\nServer:\t\t" + currentConf.getHost() + "\nAutoconfig:\t" + (currentConf.isAutoconfig() ? "Ja" : "Nein");
+
+		alert.setContentText(message);
+
+		Optional<ButtonType> result = alert.showAndWait();
+
+		if (result.get() == ButtonType.OK) {
+			Context.getEditConfigCtrl().deploy();
+		}
+
 	}
 
 	@FXML
@@ -156,16 +184,22 @@ public class MainSceneCtrl implements Initializable {
 	}
 
 	public void toggleSpringBootButtons(boolean visible) {
-		this.spring_btn_1.setVisible(visible);
+		this.spring_btn_1.setDisable(!visible);
 	}
 
 	public void toggleDatabaseButtons(boolean visible) {
-		this.db_btn_1.setVisible(visible);
-		this.db_btn_2.setVisible(visible);
+		this.db_btn_1.setDisable(!visible);
+		this.db_btn_2.setDisable(!visible);
 	}
 
 	public void toggleFileSyncBootButtons(boolean visible) {
-		this.file_btn_1.setVisible(visible);
+		this.file_btn_1.setDisable(!visible);
+	}
+
+	public void toggleEditOnlyVisibility(boolean visible) {
+		this.duplicate_btn.setDisable(!visible);
+		this.delete_btn.setDisable(!visible);
+		this.save_btn.setDisable(false);
 	}
 
 }

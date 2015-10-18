@@ -10,9 +10,9 @@
 <?import javafx.scene.text.*?>
 <?import com.cathive.fonts.fontawesome.*?>
 
-<BorderPane minHeight="545.0" prefHeight="545.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.config.EditConfigCtrl">
+<BorderPane minHeight="545.0" prefHeight="718.0" prefWidth="560.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.config.EditConfigCtrl">
 	<center>
-		<VBox prefHeight="478.0" prefWidth="369.0" BorderPane.alignment="CENTER">
+		<VBox fx:id="editConfigVBox" prefHeight="660.0" prefWidth="600.0" BorderPane.alignment="CENTER">
 			<GridPane style="-fx-border-radius: 0 0 10 10; -fx-background-radius: 0 0 10 10;">
 				<columnConstraints>
 					<ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -56,43 +56,40 @@
 					<Insets left="10.0" />
 				</VBox.margin>
             <graphic>
-               <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                   <image>
                      <Image url="@../images/spring-boot.png" />
                   </image>
                </ImageView>
             </graphic>
 			</CheckBox>
-			<GridPane fx:id="springBootConfigGrid">
+			<GridPane fx:id="springBootConfigGrid" hgap="15.0" prefHeight="300.0">
 				<columnConstraints>
 					<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-					<ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
 					<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
 				</columnConstraints>
 				<rowConstraints>
-					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+					<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+					<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+					<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+               <RowConstraints vgrow="SOMETIMES" />
 				</rowConstraints>
 				<children>
 					<Label text="Service / Jar Name" />
 
-					<Label text="App-Port" GridPane.rowIndex="1" />
-
-					<Label text="Jar-Verzeichnis Lokal" GridPane.rowIndex="2">
+					<Label text="Jar-Verzeichnis Lokal" GridPane.rowIndex="1">
 						<GridPane.margin>
 							<Insets right="40.0" />
 						</GridPane.margin>
 					</Label>
 
-					<TextField fx:id="serviceName" GridPane.columnIndex="2" />
-					<TextField fx:id="port" promptText="7001" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-					<TextField fx:id="localPath" promptText="/target" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+					<TextField fx:id="serviceName" GridPane.columnIndex="1" />
+					<TextField fx:id="localPath" promptText="/target" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-					<Label text="Server-Verzeichnis" GridPane.rowIndex="3" />
-					<TextField fx:id="remotePath" promptText="/wwwhome/appname" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-					<Button mnemonicParsing="false" onAction="#searchJarPath" prefHeight="25.0" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+					<Label text="Server-Verzeichnis" GridPane.rowIndex="2" />
+					<TextField fx:id="remotePath" promptText="/wwwhome/appname" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+					<Button mnemonicParsing="false" onAction="#searchJarPath" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
 						<graphic>
 							<ImageView fitHeight="17.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
 								<image>
@@ -101,6 +98,31 @@
 							</ImageView>
 						</graphic>
 					</Button>
+               <GridPane fx:id="autoconfigGrid" hgap="20.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" GridPane.rowSpan="2147483647">
+                 <columnConstraints>
+                   <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                 </columnConstraints>
+                 <rowConstraints>
+                   <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                   <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                 </rowConstraints>
+                  <children>
+                     <Label text="IP" />
+                     <Label text="Server-Name" GridPane.rowIndex="1" />
+                     <TextField fx:id="serverName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     <TextField fx:id="ip" GridPane.columnIndex="1" />
+      
+      					<Label text="App-Port" GridPane.rowIndex="2" />
+      					<TextField fx:id="port" promptText="7001" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  </children>
+               </GridPane>
+               <CheckBox fx:id="autoconfig" mnemonicParsing="false" onAction="#toggleAutoconfig" selected="true" text="Autoconfig bei erstem Start" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
+                  <font>
+                     <Font name="System Bold" size="12.0" />
+                  </font>
+               </CheckBox>
 				</children>
 				<styleClass>
 					<String fx:value="border-grid" />
@@ -115,29 +137,28 @@
 					<Insets left="10.0" />
 				</VBox.margin>
             <graphic>
-               <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                   <image>
                      <Image url="@../images/db.png" />
                   </image>
                </ImageView>
             </graphic>
 			</CheckBox>
-			<GridPane fx:id="databaseConfigGrid">
+			<GridPane fx:id="databaseConfigGrid" hgap="15.0">
 				<columnConstraints>
 					<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-					<ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
 					<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
 				</columnConstraints>
 				<rowConstraints>
 					<RowConstraints />
-					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+					<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+					<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
 				</rowConstraints>
 				<children>
 					<Label text="Name Lokal" GridPane.rowIndex="1" />
-					<TextField fx:id="localDbName" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+					<TextField fx:id="localDbName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 					<Label text="Name Server" GridPane.rowIndex="2" />
-					<TextField fx:id="remoteDbName" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+					<TextField fx:id="remoteDbName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 				</children>
 				<styleClass>
 					<String fx:value="border-grid" />
@@ -152,29 +173,28 @@
 					<Insets left="10.0" />
 				</VBox.margin>
             <graphic>
-               <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                   <image>
                      <Image url="@../images/network-local.png" />
                   </image>
                </ImageView>
             </graphic>
 			</CheckBox>
-			<GridPane fx:id="fileSyncConfigGrid">
+			<GridPane fx:id="fileSyncConfigGrid" hgap="15.0">
 				<columnConstraints>
 					<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-					<ColumnConstraints hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
 					<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
 				</columnConstraints>
 				<rowConstraints>
-					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-					<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+					<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+					<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
 				</rowConstraints>
 				<children>
 
 					<Label text="Ordner Lokal" />
 					<Label text="Ordner Server" GridPane.rowIndex="1" />
-					<TextField fx:id="localFilePath" GridPane.columnIndex="2" />
-					<TextField fx:id="remoteFilePath" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+					<TextField fx:id="localFilePath" GridPane.columnIndex="1" />
+					<TextField fx:id="remoteFilePath" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 				</children>
 				<padding>
 					<Insets bottom="10.0" left="10.0" right="10.0" />

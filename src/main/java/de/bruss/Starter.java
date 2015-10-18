@@ -36,7 +36,7 @@ public class Starter extends Application {
 		String version = Starter.class.getPackage().getImplementationVersion();
 		primaryStage.setTitle("One Tool Suite - Version: " + version);
 
-		primaryStage.getIcons().add(new Image("/images/logo.png"));
+		primaryStage.getIcons().add(new Image("/images/configure-2.png"));
 
 		if (Settings.isEmpty()) {
 			Parent root = FXMLLoader.load(getClass().getResource("/scenes/SettingsScene.fxml"));

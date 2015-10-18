@@ -19,7 +19,6 @@ public class Config {
 
 	// spring boot
 	private String serviceName;
-	private String port;
 	private String localPath;
 	private String remotePath;
 
@@ -31,11 +30,33 @@ public class Config {
 	private String remoteFilePath;
 	private String localFilePath;
 
+	// autoconfig
+	private boolean autoconfig = false;
+	private String port;
+	private String serverName;
+	private String ip;
+
 	private boolean springBootConfig = false;
 	private boolean databaseConfig = false;
 	private boolean fileSyncConfig = false;
 
-	public Config(String localPath, String remotePath, String host, String name, String serviceName, String port, String localDbName, String remoteDbName, String remoteFilePath, String localFilePath, boolean springBootConfig, boolean databaseConfig, boolean fileSyncConfig) {
+	// @formatter:off
+	public Config(String localPath, 
+					String remotePath, 
+					String host,
+					String name, 
+					String serviceName, 
+					String port, 
+					String localDbName, 
+					String remoteDbName, 
+					String remoteFilePath, 
+					String localFilePath, 
+					boolean springBootConfig, 
+					boolean databaseConfig, 
+					boolean fileSyncConfig,
+					boolean autoconfig,
+					String ip,
+					String serverName) {
 		super();
 		setLocalPath(localPath);
 		setRemotePath(remotePath);
@@ -50,9 +71,15 @@ public class Config {
 		this.springBootConfig = springBootConfig;
 		this.databaseConfig = databaseConfig;
 		this.fileSyncConfig = fileSyncConfig;
+		this.autoconfig = autoconfig;
+		this.ip = ip;
+		this.serverName = serverName;
 	}
+	
+	// @formatter:on
 
 	public Config() {
+		// default constructor
 	}
 
 	public Long getId() {
@@ -183,6 +210,30 @@ public class Config {
 
 	public void setFileSyncConfig(boolean fileSyncConfig) {
 		this.fileSyncConfig = fileSyncConfig;
+	}
+
+	public String getServerName() {
+		return serverName;
+	}
+
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
+	}
+
+	public String getIP() {
+		return ip;
+	}
+
+	public void setIP(String ip) {
+		this.ip = ip;
+	}
+
+	public boolean isAutoconfig() {
+		return autoconfig;
+	}
+
+	public void setAutoconfig(boolean autoconfig) {
+		this.autoconfig = autoconfig;
 	}
 
 }

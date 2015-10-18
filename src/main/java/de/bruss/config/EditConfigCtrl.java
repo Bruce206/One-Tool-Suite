@@ -15,6 +15,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
@@ -50,11 +51,17 @@ public class EditConfigCtrl implements Initializable {
 	@FXML
 	private TextField localFilePath;
 	@FXML
+	private TextField ip;
+	@FXML
+	private TextField serverName;
+	@FXML
 	private CheckBox springBootConfig;
 	@FXML
 	private CheckBox databaseConfig;
 	@FXML
 	private CheckBox fileSyncConfig;
+	@FXML
+	private CheckBox autoconfig;
 
 	@FXML
 	private GridPane springBootConfigGrid;
@@ -62,11 +69,16 @@ public class EditConfigCtrl implements Initializable {
 	private GridPane databaseConfigGrid;
 	@FXML
 	private GridPane fileSyncConfigGrid;
+	@FXML
+	private GridPane autoconfigGrid;
 
 	@FXML
 	private ProgressBar progressBar;
 
 	private Config editConfig = new Config();
+
+	@FXML
+	private VBox editConfigVBox;
 
 	@FXML
 	private HBox fileCounterBox;
@@ -81,11 +93,11 @@ public class EditConfigCtrl implements Initializable {
 		Context.setFileCounterBox(fileCounterBox);
 		Context.setFileCounter(fileCounter);
 
-		editConfig = new Config();
-		// setConfigInView();
+		this.editConfigVBox.setVisible(false);
 	}
 
 	public void initData(Config editConfig) {
+		this.editConfigVBox.setVisible(true);
 		this.editConfig = editConfig;
 		setConfigInView();
 	}
@@ -115,63 +127,84 @@ public class EditConfigCtrl implements Initializable {
 		this.springBootConfig.setSelected(editConfig.isSpringBootConfig());
 		this.databaseConfig.setSelected(editConfig.isDatabaseConfig());
 		this.fileSyncConfig.setSelected(editConfig.isFileSyncConfig());
+		this.autoconfig.setSelected(editConfig.isAutoconfig());
+		this.serverName.setText(editConfig.getServerName());
+		this.ip.setText(editConfig.getIP());
 
-		// reversed visible-flags because we don't actually want to toggle it
-		setVisibility(ButtonType.SPRING_BOOT, editConfig.isSpringBootConfig());
-		setVisibility(ButtonType.DABATASE, editConfig.isDatabaseConfig());
-		setVisibility(ButtonType.FILE_SYNC, editConfig.isFileSyncConfig());
+		setVisibility(VisibilityGroup.SPRING_BOOT, editConfig.isSpringBootConfig());
+		setVisibility(VisibilityGroup.DABATASE, editConfig.isDatabaseConfig());
+		setVisibility(VisibilityGroup.FILE_SYNC, editConfig.isFileSyncConfig());
+		setVisibility(VisibilityGroup.EDIT_ONLY, editConfig.getId() != null);
+		setVisibility(VisibilityGroup.AUTOCONFIG, editConfig.isAutoconfig());
 	}
 
 	@FXML
 	protected void toggleSpringBootConfig(ActionEvent event) {
 		editConfig.setSpringBootConfig(!editConfig.isSpringBootConfig());
-		setVisibility(ButtonType.SPRING_BOOT, editConfig.isSpringBootConfig());
+		setVisibility(VisibilityGroup.SPRING_BOOT, editConfig.isSpringBootConfig());
 	}
 
 	@FXML
 	protected void toggleDatabaseConfig(ActionEvent event) {
 		editConfig.setDatabaseConfig(!editConfig.isDatabaseConfig());
-		setVisibility(ButtonType.DABATASE, editConfig.isDatabaseConfig());
+		setVisibility(VisibilityGroup.DABATASE, editConfig.isDatabaseConfig());
 	}
 
 	@FXML
 	protected void toggleFileSyncConfig(ActionEvent event) {
 		editConfig.setFileSyncConfig(!editConfig.isFileSyncConfig());
-		setVisibility(ButtonType.FILE_SYNC, editConfig.isFileSyncConfig());
+		setVisibility(VisibilityGroup.FILE_SYNC, editConfig.isFileSyncConfig());
 	}
 
-	enum ButtonType {
-		SPRING_BOOT, DABATASE, FILE_SYNC
+	@FXML
+	protected void toggleAutoconfig(ActionEvent event) {
+		editConfig.setAutoconfig(!editConfig.isAutoconfig());
+		setVisibility(VisibilityGroup.AUTOCONFIG, editConfig.isAutoconfig());
 	}
 
-	private void setVisibility(ButtonType buttonType, boolean visible) {
+	enum VisibilityGroup {
+		SPRING_BOOT, DABATASE, FILE_SYNC, EDIT_ONLY, AUTOCONFIG
+	}
+
+	private void setVisibility(VisibilityGroup visibilityGroup, boolean visible) {
 		GridPane grid = null;
 
-		switch (buttonType) {
+		switch (visibilityGroup) {
 		case SPRING_BOOT:
-			Context.getMainSceneCtrl().toggleSpringBootButtons(visible);
+			if (Context.getMainSceneCtrl() != null)
+				Context.getMainSceneCtrl().toggleSpringBootButtons(visible && editConfig.getId() != null);
 			grid = springBootConfigGrid;
 			break;
 		case DABATASE:
-			Context.getMainSceneCtrl().toggleDatabaseButtons(visible);
+			if (Context.getMainSceneCtrl() != null)
+				Context.getMainSceneCtrl().toggleDatabaseButtons(visible && editConfig.getId() != null);
 			grid = databaseConfigGrid;
 			break;
 		case FILE_SYNC:
-			Context.getMainSceneCtrl().toggleFileSyncBootButtons(visible);
+			if (Context.getMainSceneCtrl() != null)
+				Context.getMainSceneCtrl().toggleFileSyncBootButtons(visible && editConfig.getId() != null);
 			grid = fileSyncConfigGrid;
 			break;
+		case EDIT_ONLY:
+			if (Context.getMainSceneCtrl() != null)
+				Context.getMainSceneCtrl().toggleEditOnlyVisibility(visible);
+			break;
+		case AUTOCONFIG:
+			grid = autoconfigGrid;
 		default:
 			break;
 		}
 
-		grid.setVisible(visible);
+		if (grid != null) {
+			grid.setVisible(visible);
 
-		if (!visible) {
-			grid.setPrefHeight(10);
-			grid.setMinHeight(10);
-		} else {
-			grid.setMinHeight(GridPane.USE_COMPUTED_SIZE);
-			grid.setPrefHeight(GridPane.USE_COMPUTED_SIZE);
+			if (!visible) {
+				grid.setPrefHeight(10);
+				grid.setMinHeight(10);
+			} else {
+				grid.setMinHeight(GridPane.USE_COMPUTED_SIZE);
+				grid.setPrefHeight(GridPane.USE_COMPUTED_SIZE);
+			}
 		}
 
 	}
@@ -202,7 +235,10 @@ public class EditConfigCtrl implements Initializable {
 					localFilePath.getText(),
 					springBootConfig.isSelected(),
 					databaseConfig.isSelected(),
-					fileSyncConfig.isSelected());
+					fileSyncConfig.isSelected(),
+					autoconfig.isSelected(),
+					ip.getText(),
+					serverName.getText());
 			// @formatter:on
 			ConfigService.addConfig(config);
 			editConfig = config;
@@ -220,10 +256,13 @@ public class EditConfigCtrl implements Initializable {
 			editConfig.setSpringBootConfig(this.springBootConfig.isSelected());
 			editConfig.setDatabaseConfig(this.databaseConfig.isSelected());
 			editConfig.setFileSyncConfig(this.fileSyncConfig.isSelected());
+			editConfig.setAutoconfig(this.autoconfig.isSelected());
+			editConfig.setIP(this.ip.getText());
+			editConfig.setServerName(this.serverName.getText());
 			ConfigService.save(editConfig);
 		}
 
-		setConfigInView();
+		initData(editConfig);
 		Context.getConfigTableCtrl().refresh();
 	}
 
@@ -232,8 +271,7 @@ public class EditConfigCtrl implements Initializable {
 		BeanUtils.copyProperties(newConfig, editConfig);
 		newConfig.setId(null);
 		newConfig.setName("Kopie von " + newConfig.getName());
-		editConfig = newConfig;
-		setConfigInView();
+		initData(newConfig);
 		save();
 	}
 
@@ -289,14 +327,17 @@ public class EditConfigCtrl implements Initializable {
 
 	public void delete() {
 		ConfigService.remove(editConfig);
-		editConfig = new Config();
-		Context.getEditConfigCtrl().setConfigInView();
+		initData(new Config());
+		editConfigVBox.setVisible(false);
 		Context.getConfigTableCtrl().refresh();
 	}
 
 	public void addConfig() {
-		editConfig = new Config();
-		setConfigInView();
+		initData(new Config());
+	}
+
+	public Config getEditConfig() {
+		return editConfig;
 	}
 
 }
