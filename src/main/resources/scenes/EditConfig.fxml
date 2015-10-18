@@ -55,9 +55,13 @@
 				<VBox.margin>
 					<Insets left="10.0" />
 				</VBox.margin>
-				<graphic>
-					<FontAwesomeIconView icon="ICON_LEAF" />
-				</graphic>
+            <graphic>
+               <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/spring-boot.png" />
+                  </image>
+               </ImageView>
+            </graphic>
 			</CheckBox>
 			<GridPane fx:id="springBootConfigGrid">
 				<columnConstraints>
@@ -110,9 +114,13 @@
 				<VBox.margin>
 					<Insets left="10.0" />
 				</VBox.margin>
-				<graphic>
-					<FontAwesomeIconView icon="ICON_REORDER" />
-				</graphic>
+            <graphic>
+               <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/db.png" />
+                  </image>
+               </ImageView>
+            </graphic>
 			</CheckBox>
 			<GridPane fx:id="databaseConfigGrid">
 				<columnConstraints>
@@ -143,9 +151,13 @@
 				<VBox.margin>
 					<Insets left="10.0" />
 				</VBox.margin>
-				<graphic>
-					<FontAwesomeIconView icon="ICON_COPY" />
-				</graphic>
+            <graphic>
+               <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                  <image>
+                     <Image url="@../images/network-local.png" />
+                  </image>
+               </ImageView>
+            </graphic>
 			</CheckBox>
 			<GridPane fx:id="fileSyncConfigGrid">
 				<columnConstraints>
@@ -174,45 +186,6 @@
 			</GridPane>
 		</VBox>
 	</center>
-	<right>
-		<AnchorPane prefHeight="539.0" prefWidth="198.0" BorderPane.alignment="CENTER">
-			<children>
-				<Button mnemonicParsing="false" onAction="#addConfig" prefHeight="25.0" style="-fx-base: #9DD6FB;" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="70.0" AnchorPane.topAnchor="40.0">
-					<font>
-						<Font size="15.0" />
-					</font>
-					<graphic>
-						<FontAwesomeIconView icon="ICON_FILE_ALT" />
-					</graphic>
-				</Button>
-				<Button mnemonicParsing="false" onAction="#delete" style="-fx-base: #eeaaaa;" AnchorPane.leftAnchor="25.0" AnchorPane.topAnchor="40.0">
-					<font>
-						<Font size="15.0" />
-					</font>
-					<graphic>
-						<FontAwesomeIconView icon="ICON_TRASH" />
-					</graphic>
-				</Button>
-				<Button mnemonicParsing="false" onAction="#save" prefHeight="25.0" style="-fx-base: #b6e7c9;" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="40.0">
-					<font>
-						<Font size="15.0" />
-					</font>
-					<graphic>
-						<FontAwesomeIconView icon="ICON_SAVE" />
-					</graphic>
-				</Button>
-				<Button fx:id="file_btn_1" contentDisplay="CENTER" layoutX="25.0" layoutY="274.0" mnemonicParsing="false" onAction="#syncData" prefHeight="20.0" prefWidth="186.0" styleClass="action-btn" text="Dateien syncen" textAlignment="CENTER" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
-				<Button fx:id="spring_btn_1" layoutX="25.0" layoutY="109.0" mnemonicParsing="false" onAction="#deploy" prefHeight="25.0" prefWidth="186.0" styleClass="action-btn" text="Boot-App deployen" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
-				<Label alignment="CENTER" contentDisplay="CENTER" layoutX="86.0" layoutY="14.0" text="Aktionen" textAlignment="CENTER" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-					<font>
-						<Font name="System Bold" size="15.0" />
-					</font>
-				</Label>
-				<Button fx:id="db_btn_1" layoutX="25.0" layoutY="172.0" mnemonicParsing="false" onAction="#getDbDump" prefHeight="25.0" prefWidth="186.0" styleClass="action-btn" text="DB als Dump laden" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
-				<Button fx:id="db_btn_2" contentDisplay="CENTER" layoutX="25.0" layoutY="212.0" mnemonicParsing="false" onAction="#dumpAndRestoreDb" prefHeight="20.0" prefWidth="186.0" styleClass="action-btn" text="DB lokal einspielen" textAlignment="CENTER" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" />
-			</children>
-		</AnchorPane>
-	</right>
 	<bottom>
 		<BorderPane BorderPane.alignment="CENTER">
 			<right>

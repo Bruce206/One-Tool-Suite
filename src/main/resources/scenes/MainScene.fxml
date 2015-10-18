@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -11,18 +12,6 @@
 <?import com.cathive.fonts.fontawesome.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.main.MainSceneCtrl">
-	<top>
-		<MenuBar BorderPane.alignment="TOP_CENTER">
-			<menus>
-				<Menu mnemonicParsing="false" text="Datei">
-					<items>
-						<MenuItem mnemonicParsing="false" onAction="#changeSettings" text="Einstellungen" />
-						<MenuItem mnemonicParsing="false" onAction="#checkForUpdates" text="Nach Updates suchen" />
-					</items>
-				</Menu>
-			</menus>
-		</MenuBar>
-	</top>
 	<center>
 		<fx:include fx:id="deploymentTab" source="deploymentTab.fxml" BorderPane.alignment="CENTER" />
 	</center>
@@ -37,4 +26,133 @@
 			</center>
 		</BorderPane>
 	</bottom>
+   <top>
+      <HBox prefHeight="100.0" prefWidth="200.0" styleClass="ribbon-bar" BorderPane.alignment="CENTER">
+         <children>
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#changeSettings" prefHeight="90.0" prefWidth="90.0" text="EInstellungen">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <image>
+                        <Image url="@../images/configure-2.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#checkForUpdates" prefHeight="90.0" prefWidth="90.0" text="Update">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <image>
+                        <Image url="@../images/system-software-update-5.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Separator orientation="VERTICAL" prefHeight="100.0" prefWidth="29.0" />
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#addConfig" prefHeight="90.0" prefWidth="90.0" text="Neu">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <image>
+                        <Image url="@../images/document-new-6.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#addCopyConfig" prefHeight="90.0" prefWidth="90.0" text="Duplizieren">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <image>
+                        <Image url="@../images/edit-copy-6.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#save" prefHeight="90.0" prefWidth="90.0" text="Speichern">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <image>
+                        <Image url="@../images/document-save-7.png" />
+                     </image></ImageView>
+               </graphic></Button>
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#delete" prefHeight="90.0" prefWidth="90.0" styleClass="delete-button" text="Löschen">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <image>
+                        <Image url="@../images/user-trash-2.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Separator orientation="VERTICAL" prefHeight="100.0" prefWidth="29.0" />
+            <Button fx:id="spring_btn_1" alignment="CENTER" contentDisplay="TOP" ellipsisString="" mnemonicParsing="false" onAction="#deploy" prefHeight="90.0" prefWidth="90.0" text="Boot-App Deployment" textAlignment="CENTER" wrapText="true">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <image>
+                        <Image url="@../images/deploy-2.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="db_btn_1" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#dumpAndRestoreDb" prefHeight="90.0" prefWidth="90.0" text="DB Duplikat" textAlignment="CENTER">
+               <graphic>
+                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <image>
+                        <Image url="@../images/db-copy-3.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="db_btn_2" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#getDbDump" prefHeight="90.0" prefWidth="90.0" text="DB Download" textAlignment="CENTER">
+               <graphic>
+                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <image>
+                        <Image url="@../images/db-copy-to-file-3.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="file_btn_1" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#syncData" prefHeight="90.0" prefWidth="90.0" text="Datei-Sync" textAlignment="CENTER">
+               <graphic>
+                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <image>
+                        <Image url="@../images/network-local.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </HBox>
+   </top>
 </BorderPane>

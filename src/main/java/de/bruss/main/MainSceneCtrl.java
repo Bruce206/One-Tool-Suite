@@ -3,7 +3,9 @@ package de.bruss.main;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -12,7 +14,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -23,6 +31,15 @@ public class MainSceneCtrl implements Initializable {
 
 	@FXML
 	private TextArea consoleout;
+
+	@FXML
+	private Button spring_btn_1;
+	@FXML
+	private Button db_btn_1;
+	@FXML
+	private Button db_btn_2;
+	@FXML
+	private Button file_btn_1;
 
 	private boolean consoleVisible = true;
 
@@ -55,6 +72,57 @@ public class MainSceneCtrl implements Initializable {
 	}
 
 	@FXML
+	protected void delete(ActionEvent event) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		Image img = new Image("/images/user-trash-2.png");
+		ImageView imgView = new ImageView();
+		imgView.setImage(img);
+		alert.setGraphic(imgView);
+		alert.setHeaderText("Soll die Konfiguration wirklich gelöscht werden?");
+
+		Optional<ButtonType> result = alert.showAndWait();
+
+		if (result.get() == ButtonType.OK) {
+			Context.getEditConfigCtrl().delete();
+		}
+	}
+
+	@FXML
+	protected void deploy(ActionEvent action) {
+		Context.getEditConfigCtrl().deploy();
+	}
+
+	@FXML
+	protected void getDbDump(ActionEvent event) {
+		Context.getEditConfigCtrl().getDbDump();
+	}
+
+	@FXML
+	protected void dumpAndRestoreDb(ActionEvent event) {
+		Context.getEditConfigCtrl().dumpAndRestoreDb();
+	}
+
+	@FXML
+	protected void syncData(ActionEvent event) {
+		Context.getEditConfigCtrl().syncData();
+	}
+
+	@FXML
+	protected void addConfig(ActionEvent event) {
+		Context.getEditConfigCtrl().addConfig();
+	}
+
+	@FXML
+	protected void addCopyConfig(ActionEvent event) throws IllegalAccessException, InvocationTargetException {
+		Context.getEditConfigCtrl().duplicate();
+	}
+
+	@FXML
+	protected void save(ActionEvent event) {
+		Context.getEditConfigCtrl().save();
+	}
+
+	@FXML
 	protected void changeSettings(ActionEvent event) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/SettingsScene.fxml"));
 
@@ -72,9 +140,7 @@ public class MainSceneCtrl implements Initializable {
 			Context.getPrimaryStage().setHeight(Context.getPrimaryStage().getHeight() + 168);
 			consoleout.setPrefHeight(168);
 		}
-
 		consoleVisible = !consoleVisible;
-
 	}
 
 	@FXML
@@ -88,4 +154,18 @@ public class MainSceneCtrl implements Initializable {
 	public void clearLog() throws IOException {
 		this.consoleout.clear();
 	}
+
+	public void toggleSpringBootButtons(boolean visible) {
+		this.spring_btn_1.setVisible(visible);
+	}
+
+	public void toggleDatabaseButtons(boolean visible) {
+		this.db_btn_1.setVisible(visible);
+		this.db_btn_2.setVisible(visible);
+	}
+
+	public void toggleFileSyncBootButtons(boolean visible) {
+		this.file_btn_1.setVisible(visible);
+	}
+
 }
