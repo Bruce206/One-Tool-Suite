@@ -6,18 +6,28 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import de.bruss.Context;
 import de.bruss.deployment.Config;
 import de.bruss.deployment.DeploymentUtils;
+import de.bruss.filesync.FileSyncContainer;
 import de.bruss.filesync.FileSyncService;
 import de.bruss.remoteDatabase.RemoteDatabaseUtils;
 
@@ -47,10 +58,6 @@ public class EditConfigCtrl implements Initializable {
 	@FXML
 	private TextField remoteDbName;
 	@FXML
-	private TextField remoteFilePath;
-	@FXML
-	private TextField localFilePath;
-	@FXML
 	private TextField ip;
 	@FXML
 	private TextField serverName;
@@ -68,7 +75,7 @@ public class EditConfigCtrl implements Initializable {
 	@FXML
 	private GridPane databaseConfigGrid;
 	@FXML
-	private GridPane fileSyncConfigGrid;
+	private VBox fileSyncConfigVBox;
 	@FXML
 	private GridPane autoconfigGrid;
 
@@ -76,6 +83,9 @@ public class EditConfigCtrl implements Initializable {
 	private ProgressBar progressBar;
 
 	private Config editConfig = new Config();
+
+	@FXML
+	private ScrollPane scrollPane;
 
 	@FXML
 	private VBox editConfigVBox;
@@ -86,6 +96,15 @@ public class EditConfigCtrl implements Initializable {
 	@FXML
 	private Label fileCounter;
 
+	@FXML
+	private TableView<FileSyncContainer> fileSyncTable;
+	@FXML
+	private TableColumn<FileSyncContainer, String> localPathCol;
+	@FXML
+	private TableColumn<FileSyncContainer, String> remotePathCol;
+	@FXML
+	private TableColumn<FileSyncContainer, String> actionColumn;
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		Context.setEditConfigCtrl(this);
@@ -93,12 +112,45 @@ public class EditConfigCtrl implements Initializable {
 		Context.setFileCounterBox(fileCounterBox);
 		Context.setFileCounter(fileCounter);
 
+		Callback<TableColumn<FileSyncContainer, String>, TableCell<FileSyncContainer, String>> cellFactory = new Callback<TableColumn<FileSyncContainer, String>, TableCell<FileSyncContainer, String>>() {
+			@Override
+			public TableCell<FileSyncContainer, String> call(TableColumn<FileSyncContainer, String> param) {
+				return new EditingCell();
+			}
+		};
+
+		fileSyncTable.setFixedCellSize(25);
+		fileSyncTable.prefHeightProperty().bind(Bindings.size(fileSyncTable.getItems()).multiply(25).add(fileSyncTable.getItems().size() > 0 ? 25.1 : 50.1));
+		fileSyncTable.minHeightProperty().bind(fileSyncTable.prefHeightProperty());
+		fileSyncTable.maxHeightProperty().bind(fileSyncTable.prefHeightProperty());
+
+		localPathCol.setCellValueFactory(new PropertyValueFactory<FileSyncContainer, String>("localFilePath"));
+		localPathCol.setCellFactory(cellFactory);
+		localPathCol.setOnEditCommit(new EventHandler<CellEditEvent<FileSyncContainer, String>>() {
+			@Override
+			public void handle(CellEditEvent<FileSyncContainer, String> t) {
+				t.getRowValue().setLocalFilePath(t.getNewValue());
+			}
+		});
+
+		remotePathCol.setCellValueFactory(new PropertyValueFactory<FileSyncContainer, String>("remoteFilePath"));
+		remotePathCol.setCellFactory(cellFactory);
+		remotePathCol.setOnEditCommit(new EventHandler<CellEditEvent<FileSyncContainer, String>>() {
+			@Override
+			public void handle(CellEditEvent<FileSyncContainer, String> t) {
+				t.getRowValue().setRemoteFilePath(t.getNewValue());
+			}
+		});
+		remotePathCol.setSortType(TableColumn.SortType.ASCENDING);
+
+		actionColumn.setCellFactory(new DeleteFileSyncContainerCellFactory<FileSyncContainer, String>());
+
 		this.editConfigVBox.setVisible(false);
 	}
 
 	public void initData(Config editConfig) {
 		this.editConfigVBox.setVisible(true);
-		this.editConfig = editConfig;
+		this.editConfig = ConfigService.getConfig(editConfig.getId());
 		setConfigInView();
 	}
 
@@ -122,8 +174,6 @@ public class EditConfigCtrl implements Initializable {
 		this.port.setText(editConfig.getPort());
 		this.localDbName.setText(editConfig.getLocalDbName());
 		this.remoteDbName.setText(editConfig.getRemoteDbName());
-		this.remoteFilePath.setText(editConfig.getRemoteFilePath());
-		this.localFilePath.setText(editConfig.getLocalFilePath());
 		this.springBootConfig.setSelected(editConfig.isSpringBootConfig());
 		this.databaseConfig.setSelected(editConfig.isDatabaseConfig());
 		this.fileSyncConfig.setSelected(editConfig.isFileSyncConfig());
@@ -131,11 +181,22 @@ public class EditConfigCtrl implements Initializable {
 		this.serverName.setText(editConfig.getServerName());
 		this.ip.setText(editConfig.getIP());
 
+		fileSyncTable.getItems().clear();
+		fileSyncTable.getItems().addAll(editConfig.getFileSyncList());
+		fileSyncTable.refresh();
+
 		setVisibility(VisibilityGroup.SPRING_BOOT, editConfig.isSpringBootConfig());
 		setVisibility(VisibilityGroup.DABATASE, editConfig.isDatabaseConfig());
 		setVisibility(VisibilityGroup.FILE_SYNC, editConfig.isFileSyncConfig());
 		setVisibility(VisibilityGroup.EDIT_ONLY, editConfig.getId() != null);
 		setVisibility(VisibilityGroup.AUTOCONFIG, editConfig.isAutoconfig());
+
+	}
+
+	@FXML
+	protected void addFileSyncContainer(ActionEvent event) {
+		fileSyncTable.getItems().add(new FileSyncContainer("", ""));
+		fileSyncTable.refresh();
 	}
 
 	@FXML
@@ -167,43 +228,43 @@ public class EditConfigCtrl implements Initializable {
 	}
 
 	private void setVisibility(VisibilityGroup visibilityGroup, boolean visible) {
-		GridPane grid = null;
+		Pane pane = null;
 
 		switch (visibilityGroup) {
 		case SPRING_BOOT:
 			if (Context.getMainSceneCtrl() != null)
 				Context.getMainSceneCtrl().toggleSpringBootButtons(visible && editConfig.getId() != null);
-			grid = springBootConfigGrid;
+			pane = springBootConfigGrid;
 			break;
 		case DABATASE:
 			if (Context.getMainSceneCtrl() != null)
 				Context.getMainSceneCtrl().toggleDatabaseButtons(visible && editConfig.getId() != null);
-			grid = databaseConfigGrid;
+			pane = databaseConfigGrid;
 			break;
 		case FILE_SYNC:
 			if (Context.getMainSceneCtrl() != null)
 				Context.getMainSceneCtrl().toggleFileSyncBootButtons(visible && editConfig.getId() != null);
-			grid = fileSyncConfigGrid;
+			pane = fileSyncConfigVBox;
 			break;
 		case EDIT_ONLY:
 			if (Context.getMainSceneCtrl() != null)
 				Context.getMainSceneCtrl().toggleEditOnlyVisibility(visible);
 			break;
 		case AUTOCONFIG:
-			grid = autoconfigGrid;
+			pane = autoconfigGrid;
 		default:
 			break;
 		}
 
-		if (grid != null) {
-			grid.setVisible(visible);
+		if (pane != null) {
+			pane.setVisible(visible);
 
 			if (!visible) {
-				grid.setPrefHeight(10);
-				grid.setMinHeight(10);
+				pane.setPrefHeight(10);
+				pane.setMinHeight(10);
 			} else {
-				grid.setMinHeight(GridPane.USE_COMPUTED_SIZE);
-				grid.setPrefHeight(GridPane.USE_COMPUTED_SIZE);
+				pane.setMinHeight(GridPane.USE_COMPUTED_SIZE);
+				pane.setPrefHeight(GridPane.USE_COMPUTED_SIZE);
 			}
 		}
 
@@ -231,14 +292,13 @@ public class EditConfigCtrl implements Initializable {
 					port.getText(), 
 					localDbName.getText(), 
 					remoteDbName.getText(), 
-					remoteFilePath.getText(), 
-					localFilePath.getText(),
 					springBootConfig.isSelected(),
 					databaseConfig.isSelected(),
 					fileSyncConfig.isSelected(),
 					autoconfig.isSelected(),
 					ip.getText(),
-					serverName.getText());
+					serverName.getText(),
+					fileSyncTable.getItems());
 			// @formatter:on
 			ConfigService.addConfig(config);
 			editConfig = config;
@@ -251,14 +311,13 @@ public class EditConfigCtrl implements Initializable {
 			editConfig.setPort(this.port.getText());
 			editConfig.setLocalDbName(this.localDbName.getText());
 			editConfig.setRemoteDbName(this.remoteDbName.getText());
-			editConfig.setRemoteFilePath(this.remoteFilePath.getText());
-			editConfig.setLocalFilePath(this.localFilePath.getText());
 			editConfig.setSpringBootConfig(this.springBootConfig.isSelected());
 			editConfig.setDatabaseConfig(this.databaseConfig.isSelected());
 			editConfig.setFileSyncConfig(this.fileSyncConfig.isSelected());
 			editConfig.setAutoconfig(this.autoconfig.isSelected());
 			editConfig.setIP(this.ip.getText());
 			editConfig.setServerName(this.serverName.getText());
+			editConfig.setFileSyncList(fileSyncTable.getItems());
 			ConfigService.save(editConfig);
 		}
 

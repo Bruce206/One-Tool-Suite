@@ -1,10 +1,15 @@
 package de.bruss.deployment;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import de.bruss.commons.BrussUtils;
+import de.bruss.filesync.FileSyncContainer;
 
 @Entity
 public class Config implements Comparable<Config> {
@@ -26,10 +31,6 @@ public class Config implements Comparable<Config> {
 	private String remoteDbName;
 	private String localDbName;
 
-	// filetransfer
-	private String remoteFilePath;
-	private String localFilePath;
-
 	// autoconfig
 	private boolean autoconfig = false;
 	private String port;
@@ -40,6 +41,9 @@ public class Config implements Comparable<Config> {
 	private boolean databaseConfig = false;
 	private boolean fileSyncConfig = false;
 
+	@Embedded
+	List<FileSyncContainer> fileSyncList = new ArrayList<FileSyncContainer>();
+
 	// @formatter:off
 	public Config(String localPath, 
 					String remotePath, 
@@ -49,14 +53,13 @@ public class Config implements Comparable<Config> {
 					String port, 
 					String localDbName, 
 					String remoteDbName, 
-					String remoteFilePath, 
-					String localFilePath, 
 					boolean springBootConfig, 
 					boolean databaseConfig, 
 					boolean fileSyncConfig,
 					boolean autoconfig,
 					String ip,
-					String serverName) {
+					String serverName,
+					List<FileSyncContainer> fileSyncList) {
 		super();
 		setLocalPath(localPath);
 		setRemotePath(remotePath);
@@ -66,14 +69,13 @@ public class Config implements Comparable<Config> {
 		this.port = port;
 		this.localDbName = localDbName;
 		this.remoteDbName = remoteDbName;
-		setRemoteFilePath(remoteFilePath);
-		setLocalFilePath(localFilePath);
 		this.springBootConfig = springBootConfig;
 		this.databaseConfig = databaseConfig;
 		this.fileSyncConfig = fileSyncConfig;
 		this.autoconfig = autoconfig;
 		this.ip = ip;
 		this.serverName = serverName;
+		this.fileSyncList = fileSyncList;
 	}
 	
 	// @formatter:on
@@ -166,28 +168,6 @@ public class Config implements Comparable<Config> {
 		this.localDbName = localDbName;
 	}
 
-	public String getRemoteFilePath() {
-		return remoteFilePath;
-	}
-
-	public void setRemoteFilePath(String remoteFilePath) {
-		this.remoteFilePath = BrussUtils.formatPath(remoteFilePath, true);
-	}
-
-	public String getLocalFilePath() {
-		return localFilePath;
-	}
-
-	public void setLocalFilePath(String localFilePath) {
-		this.localFilePath = BrussUtils.formatPath(localFilePath, false);
-	}
-
-	@Override
-	public String toString() {
-		return "Config [id=" + id + ", host=" + host + ", name=" + name + ", serviceName=" + serviceName + ", port=" + port + ", localPath=" + localPath + ", remotePath=" + remotePath + ", remoteDbName=" + remoteDbName + ", localDbName=" + localDbName + ", remoteFilePath=" + remoteFilePath
-				+ ", localFilePath=" + localFilePath + "]";
-	}
-
 	public boolean isSpringBootConfig() {
 		return springBootConfig;
 	}
@@ -239,6 +219,20 @@ public class Config implements Comparable<Config> {
 	@Override
 	public int compareTo(Config config) {
 		return this.id.compareTo(config.id);
+	}
+
+	public List<FileSyncContainer> getFileSyncList() {
+		return fileSyncList;
+	}
+
+	public void setFileSyncList(List<FileSyncContainer> fileSyncList) {
+		this.fileSyncList = fileSyncList;
+	}
+
+	@Override
+	public String toString() {
+		return "Config [id=" + id + ", host=" + host + ", name=" + name + ", serviceName=" + serviceName + ", localPath=" + localPath + ", remotePath=" + remotePath + ", remoteDbName=" + remoteDbName + ", localDbName=" + localDbName + ", autoconfig=" + autoconfig + ", port=" + port
+				+ ", serverName=" + serverName + ", ip=" + ip + ", springBootConfig=" + springBootConfig + ", databaseConfig=" + databaseConfig + ", fileSyncConfig=" + fileSyncConfig + ", fileSyncList=" + fileSyncList + "]";
 	}
 
 }

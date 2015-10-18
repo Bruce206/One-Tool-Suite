@@ -2,6 +2,7 @@ package de.bruss.filesync;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javafx.application.Platform;
 
@@ -28,15 +29,13 @@ public class FileSyncService implements Runnable {
 	public long downloadSizeCount = 0;
 
 	private String host;
-	private String remoteFilePath;
-	private String localFilePath;
+	private List<FileSyncContainer> fileSyncList;
 
 	public static DefaultFileSystemManager fsManager = null;
 
 	public FileSyncService(final Config config) throws IOException {
 		this.host = config.getHost();
-		this.localFilePath = config.getLocalFilePath().substring(0, config.getLocalFilePath().length() - 1);
-		this.remoteFilePath = config.getRemoteFilePath();
+		this.fileSyncList = config.getFileSyncList();
 	}
 
 	@Override
@@ -63,18 +62,20 @@ public class FileSyncService implements Runnable {
 				fsManager = (DefaultFileSystemManager) VFS.getManager();
 			}
 
-			String uri = "sftp://" + Settings.getInstance().getProperty("username") + "@" + host + remoteFilePath;
+			for (FileSyncContainer container : fileSyncList) {
+				String uri = "sftp://" + Settings.getInstance().getProperty("username") + "@" + host + container.getRemoteFilePath();
 
-			FileObject fo = fsManager.resolveFile(uri, fsOptions);
+				FileObject fo = fsManager.resolveFile(uri, fsOptions);
+				String localFilePath = container.getLocalFilePath();
+				File localFolder = new File(localFilePath.substring(0, localFilePath.length() - 1));
+				if (!localFolder.exists()) {
+					localFolder.mkdir();
+				}
 
-			File localFolder = new File(localFilePath);
-			if (!localFolder.exists()) {
-				localFolder.mkdir();
+				syncFiles(fo, localFilePath);
+				fo.close();
 			}
 
-			syncFiles(fo, localFilePath);
-
-			fo.close();
 		} catch (FileSystemException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

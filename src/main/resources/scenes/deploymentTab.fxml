@@ -18,7 +18,7 @@
 			<columns>
 				<TableColumn fx:id="name" editable="false" maxWidth="-1.0" minWidth="220.0" prefWidth="-1.0" text="Name" />
 				<TableColumn fx:id="host" editable="false" maxWidth="-1.0" minWidth="200.0" prefWidth="-1.0" text="Hostname / IP" />
-				<TableColumn fx:id="springBootConfigColumn" prefWidth="20.0">
+				<TableColumn fx:id="springBootConfigColumn" editable="false" prefWidth="20.0">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -27,7 +27,7 @@
                   </ImageView>
                </graphic>
 				</TableColumn>
-				<TableColumn fx:id="databaseConfigColumn" prefWidth="20.0">
+				<TableColumn fx:id="databaseConfigColumn" editable="false" prefWidth="20.0">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -36,7 +36,7 @@
                   </ImageView>
                </graphic>
 				</TableColumn>
-				<TableColumn fx:id="fileSyncConfigColumn" prefWidth="20.0">
+				<TableColumn fx:id="fileSyncConfigColumn" editable="false" prefWidth="20.0">
                <graphic>
                   <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
