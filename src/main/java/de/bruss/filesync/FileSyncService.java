@@ -2,9 +2,9 @@ package de.bruss.filesync;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
-
-import javafx.application.Platform;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.vfs2.FileObject;
@@ -18,6 +18,7 @@ import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
 import de.bruss.Context;
 import de.bruss.deployment.Config;
 import de.bruss.settings.Settings;
+import javafx.application.Platform;
 
 public class FileSyncService implements Runnable {
 
@@ -27,13 +28,14 @@ public class FileSyncService implements Runnable {
 	public int createdFileCount = 0;
 	public int createdFolderCount = 0;
 	public long downloadSizeCount = 0;
+	public int localFilesDeleted = 0;
 
 	private String host;
 	private List<FileSyncContainer> fileSyncList;
 
 	public static DefaultFileSystemManager fsManager = null;
 
-	public FileSyncService(final Config config) throws IOException {
+	public FileSyncService(final Config config) {
 		this.host = config.getHost();
 		this.fileSyncList = config.getFileSyncList();
 	}
@@ -48,6 +50,7 @@ public class FileSyncService implements Runnable {
 		createdFileCount = 0;
 		createdFolderCount = 0;
 		downloadSizeCount = 0;
+		localFilesDeleted = 0;
 		FileSystemOptions fsOptions = new FileSystemOptions();
 
 		try {
@@ -87,6 +90,7 @@ public class FileSyncService implements Runnable {
 		System.out.println("Files checked: " + checkFileCount);
 		System.out.println("Files updated: " + updateFileCount);
 		System.out.println("Files created: " + createdFileCount);
+		System.out.println("Files deleted locally: " + localFilesDeleted);
 		System.out.println("Downloaded total: " + FileUtils.byteCountToDisplaySize(downloadSizeCount));
 		Context.getFileCounterBox().setVisible(false);
 	}
@@ -109,8 +113,18 @@ public class FileSyncService implements Runnable {
 				createdFolderCount++;
 				newFile.mkdir();
 			}
+			
+			List<String> remoteFiles = new ArrayList<String>();
 			for (FileObject child : file.getChildren()) {
 				syncFiles(child, localPath + "/" + file.getName().getBaseName());
+				remoteFiles.add(child.getName().getBaseName());
+			}
+			
+			for (File localFile : new File(localPath + "/" + file.getName().getBaseName()).listFiles()) {
+				if (!remoteFiles.contains(localFile.getName())) {
+					Files.delete(localFile.toPath());
+					localFilesDeleted++;
+				}
 			}
 		}
 

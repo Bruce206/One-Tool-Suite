@@ -6,6 +6,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import de.bruss.Context;
+import de.bruss.deployment.Config;
+import de.bruss.deployment.DeploymentUtils;
+import de.bruss.filesync.FileSyncContainer;
+import de.bruss.filesync.FileSyncService;
+import de.bruss.remoteDatabase.RemoteDatabaseUtils;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -28,16 +37,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import de.bruss.Context;
-import de.bruss.deployment.Config;
-import de.bruss.deployment.DeploymentUtils;
-import de.bruss.filesync.FileSyncContainer;
-import de.bruss.filesync.FileSyncService;
-import de.bruss.remoteDatabase.RemoteDatabaseUtils;
 
 public class EditConfigCtrl implements Initializable {
 
@@ -150,7 +149,12 @@ public class EditConfigCtrl implements Initializable {
 
 	public void initData(Config editConfig) {
 		this.editConfigVBox.setVisible(true);
-		this.editConfig = ConfigService.getConfig(editConfig.getId());
+		if (editConfig.getId() != null) {
+			this.editConfig = ConfigService.getConfig(editConfig.getId());
+		} else {
+			this.editConfig = editConfig;
+		}
+		
 		setConfigInView();
 	}
 
@@ -232,23 +236,27 @@ public class EditConfigCtrl implements Initializable {
 
 		switch (visibilityGroup) {
 		case SPRING_BOOT:
-			if (Context.getMainSceneCtrl() != null)
+			if (Context.getMainSceneCtrl() != null) {
 				Context.getMainSceneCtrl().toggleSpringBootButtons(visible && editConfig.getId() != null);
+			}
 			pane = springBootConfigGrid;
 			break;
 		case DABATASE:
-			if (Context.getMainSceneCtrl() != null)
+			if (Context.getMainSceneCtrl() != null) {
 				Context.getMainSceneCtrl().toggleDatabaseButtons(visible && editConfig.getId() != null);
+			}
 			pane = databaseConfigGrid;
 			break;
 		case FILE_SYNC:
-			if (Context.getMainSceneCtrl() != null)
+			if (Context.getMainSceneCtrl() != null) {
 				Context.getMainSceneCtrl().toggleFileSyncBootButtons(visible && editConfig.getId() != null);
+			}
 			pane = fileSyncConfigVBox;
 			break;
 		case EDIT_ONLY:
-			if (Context.getMainSceneCtrl() != null)
+			if (Context.getMainSceneCtrl() != null) {
 				Context.getMainSceneCtrl().toggleEditOnlyVisibility(visible);
+			}
 			break;
 		case AUTOCONFIG:
 			pane = autoconfigGrid;

@@ -2,6 +2,8 @@ package de.bruss.filesync;
 
 import javax.persistence.Embeddable;
 
+import de.bruss.commons.BrussUtils;
+
 @Embeddable
 public class FileSyncContainer {
 	private String remoteFilePath;
@@ -18,7 +20,7 @@ public class FileSyncContainer {
 	}
 
 	public void setRemoteFilePath(String remoteFilePath) {
-		this.remoteFilePath = remoteFilePath;
+		this.remoteFilePath = BrussUtils.formatPath(remoteFilePath, true);
 	}
 
 	public String getLocalFilePath() {
@@ -26,6 +28,6 @@ public class FileSyncContainer {
 	}
 
 	public void setLocalFilePath(String localFilePath) {
-		this.localFilePath = localFilePath;
+		this.localFilePath = BrussUtils.formatPath(localFilePath, false);
 	}
 }

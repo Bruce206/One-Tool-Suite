@@ -149,7 +149,7 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#reloadCss" prefHeight="90.0" prefWidth="90.0" text="Reload-Css" textAlignment="CENTER" />
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#reloadCss" prefHeight="90.0" prefWidth="90.0" text="Reload-Css" textAlignment="CENTER" visible="false" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
