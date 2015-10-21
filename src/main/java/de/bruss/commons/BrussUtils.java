@@ -18,9 +18,17 @@ public class BrussUtils {
 			if (leadingSlash && !path.startsWith("/")) {
 				path = "/" + path;
 			}
+			
+			if (!leadingSlash && path.startsWith("/")) {
+				path = path.substring(1);
+			}
 
 			if (endingSlash && !path.endsWith("/")) {
 				path += "/";
+			}
+			
+			if (!endingSlash && path.endsWith("/")) {
+				path = path.substring(0, path.length() - 1);
 			}
 		}
 
