@@ -137,7 +137,7 @@ public class Config implements Comparable<Config> {
 	}
 
 	public String getRemoteJarPath() {
-		return remotePath + getJarName();
+		return remotePath + "/" + getJarName();
 	}
 
 	public void setServiceName(String serviceName) {
