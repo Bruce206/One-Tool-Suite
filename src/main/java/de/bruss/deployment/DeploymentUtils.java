@@ -7,8 +7,6 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.List;
 
-import javafx.scene.control.ProgressBar;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -19,6 +17,7 @@ import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 
 import de.bruss.ssh.SshUtils;
+import javafx.scene.control.ProgressBar;
 
 public class DeploymentUtils implements Runnable {
 
@@ -90,14 +89,16 @@ public class DeploymentUtils implements Runnable {
 			System.out.print("Starting Service: " + config.getServiceName() + " ");
 			String response2 = SshUtils.sendCommand(session, "start " + config.getServiceName());
 			System.out.println("-- [done] Response: " + response2);
-		} catch (JSchException | SftpException e) {
+		} catch (JSchException | SftpException | IOException e) {
 			e.printStackTrace();
 		}
 
 	}
 
 	private void restartApache() {
-		SshUtils.sendCommand(session, "service apache2 reload");
+		System.out.print("Restarting Apache");
+		String response = SshUtils.sendCommand(session, "service apache2 reload");
+		System.out.println("-- [done] " + response);
 	}
 
 	private void createApacheConfigOnServer() {
@@ -162,16 +163,18 @@ public class DeploymentUtils implements Runnable {
 		System.out.println("-- [done]");
 	}
 
-	private void createApplicationPropertiesOnServer() {
+	private void createApplicationPropertiesOnServer() throws IOException {
 		System.out.print("Creating application.properties file...  ");
+		InputStream applicationPropertiesTemplate = null;
 		try {
 			File tempConfFile = File.createTempFile("application.properties_", "");
-			InputStream applicationPropertiesTemplate = getClass().getResourceAsStream("/application.properties.template");
+			applicationPropertiesTemplate = getClass().getResourceAsStream("/application.properties.template");
 
 			StringWriter writer = new StringWriter();
 			IOUtils.copy(applicationPropertiesTemplate, writer);
 			String applicationPropertiesString = writer.toString();
 			applicationPropertiesString = applicationPropertiesString.replaceAll("SERVERPORT", config.getPort());
+			applicationPropertiesString = applicationPropertiesString.replaceAll("DBNAME", config.getRemoteDbName());
 			Files.write(tempConfFile.toPath(), applicationPropertiesString.getBytes());
 
 			System.out.print("-- Copying to server... (" + tempConfFile.toPath().toString() + ")");
@@ -181,6 +184,10 @@ public class DeploymentUtils implements Runnable {
 			System.out.println("Error occured while creating application.properties file");
 			System.out.println(e.getMessage());
 			e.printStackTrace();
+		} finally {
+			if (applicationPropertiesTemplate != null) {
+				applicationPropertiesTemplate.close();
+			}
 		}
 	}
 

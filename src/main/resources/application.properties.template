@@ -1,1 +1,2 @@
 server.port=SERVERPORT
+spring.datasource.url=jdbc:postgresql:DBNAME
