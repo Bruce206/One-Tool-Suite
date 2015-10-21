@@ -105,7 +105,7 @@ public class Config implements Comparable<Config> {
 	}
 
 	public void setRemotePath(String remotePath) {
-		this.remotePath = BrussUtils.formatPath(remotePath, true, false);
+		this.remotePath = BrussUtils.formatPath(remotePath, true, true);
 	}
 
 	public String getHost() {
@@ -137,7 +137,7 @@ public class Config implements Comparable<Config> {
 	}
 
 	public String getRemoteJarPath() {
-		return remotePath + "/" + getJarName();
+		return remotePath + getJarName();
 	}
 
 	public void setServiceName(String serviceName) {
