@@ -10,7 +10,7 @@
 <?import javafx.scene.text.*?>
 <?import com.cathive.fonts.fontawesome.*?>
 
-<BorderPane minHeight="545.0" minWidth="-Infinity" prefHeight="678.0" prefWidth="426.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.config.EditConfigCtrl">
+<BorderPane minHeight="545.0" minWidth="-Infinity" prefHeight="678.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.config.EditConfigCtrl">
 	<center>
 		<ScrollPane fx:id="scrollPane" fitToWidth="true" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
 			<content>
@@ -109,6 +109,7 @@
 									<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
 									<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
 									<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
 								</rowConstraints>
 								<children>
 									<Label text="IP" />
@@ -118,6 +119,8 @@
 
 									<Label text="App-Port" GridPane.rowIndex="2" />
 									<TextField fx:id="port" promptText="7001" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                           <Label text="Datenbankname" GridPane.rowIndex="3" />
+                           <Label text="In Datenbankconfig eintragen!" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 								</children>
 							</GridPane>
 							<CheckBox fx:id="autoconfig" mnemonicParsing="false" onAction="#toggleAutoconfig" selected="true" text="Autoconfig bei erstem Start" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
