@@ -20,7 +20,7 @@ public class FileSyncContainer {
 	}
 
 	public void setRemoteFilePath(String remoteFilePath) {
-		this.remoteFilePath = BrussUtils.formatPath(remoteFilePath, true);
+		this.remoteFilePath = BrussUtils.formatPath(remoteFilePath, true, true);
 	}
 
 	public String getLocalFilePath() {
@@ -28,6 +28,6 @@ public class FileSyncContainer {
 	}
 
 	public void setLocalFilePath(String localFilePath) {
-		this.localFilePath = BrussUtils.formatPath(localFilePath, false);
+		this.localFilePath = BrussUtils.formatPath(localFilePath, false, true);
 	}
 }

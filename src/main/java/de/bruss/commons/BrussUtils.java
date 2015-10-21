@@ -9,7 +9,7 @@ public class BrussUtils {
 	 * @param path
 	 * @return
 	 */
-	public static String formatPath(String path, boolean leadingSlash) {
+	public static String formatPath(String path, boolean leadingSlash, boolean endingSlash) {
 
 		if (StringUtils.isNotBlank(path)) {
 
@@ -19,7 +19,7 @@ public class BrussUtils {
 				path = "/" + path;
 			}
 
-			if (!path.endsWith("/")) {
+			if (endingSlash && !path.endsWith("/")) {
 				path += "/";
 			}
 		}

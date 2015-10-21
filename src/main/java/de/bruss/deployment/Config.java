@@ -97,7 +97,7 @@ public class Config implements Comparable<Config> {
 	}
 
 	public void setLocalPath(String localPath) {
-		this.localPath = BrussUtils.formatPath(localPath, false);
+		this.localPath = BrussUtils.formatPath(localPath, false, true);
 	}
 
 	public String getRemotePath() {
@@ -105,7 +105,7 @@ public class Config implements Comparable<Config> {
 	}
 
 	public void setRemotePath(String remotePath) {
-		this.remotePath = BrussUtils.formatPath(remotePath, true);
+		this.remotePath = BrussUtils.formatPath(remotePath, true, false);
 	}
 
 	public String getHost() {
