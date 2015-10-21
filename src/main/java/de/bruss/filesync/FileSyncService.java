@@ -75,7 +75,7 @@ public class FileSyncService implements Runnable {
 					localFolder.mkdir();
 				}
 
-				syncFiles(fo, localFilePath);
+				syncFiles(fo, localFilePath, true);
 				fo.close();
 			}
 
@@ -95,7 +95,7 @@ public class FileSyncService implements Runnable {
 		Context.getFileCounterBox().setVisible(false);
 	}
 
-	private void syncFiles(FileObject file, String localPath) throws FileSystemException, IOException {
+	private void syncFiles(FileObject file, String localPath, boolean initial) throws FileSystemException, IOException {
 		final int count = checkFileCount + checkFolderCount;
 		Platform.runLater(new Runnable() {
 			@Override
@@ -105,22 +105,28 @@ public class FileSyncService implements Runnable {
 
 		});
 
-		File newFile = new File(localPath + "/" + file.getName().getBaseName());
+		String foldername = "/" + file.getName().getBaseName();
+		File newFile = new File(localPath + foldername);
 
 		if (file.getType() == FileType.FOLDER) {
 			checkFolderCount++;
-			if (!newFile.exists()) {
+			
+			if (initial) {
+				foldername = "";
+			}
+			
+			if (!initial && !newFile.exists()) {
 				createdFolderCount++;
 				newFile.mkdir();
 			}
 			
 			List<String> remoteFiles = new ArrayList<String>();
 			for (FileObject child : file.getChildren()) {
-				syncFiles(child, localPath + "/" + file.getName().getBaseName());
+				syncFiles(child, localPath + foldername, false);
 				remoteFiles.add(child.getName().getBaseName());
 			}
 			
-			for (File localFile : new File(localPath + "/" + file.getName().getBaseName()).listFiles()) {
+			for (File localFile : new File(localPath + foldername).listFiles()) {
 				if (!remoteFiles.contains(localFile.getName())) {
 					Files.delete(localFile.toPath());
 					localFilesDeleted++;
