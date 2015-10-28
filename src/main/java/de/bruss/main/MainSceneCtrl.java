@@ -1,7 +1,8 @@
 package de.bruss.main;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
@@ -64,22 +65,22 @@ public class MainSceneCtrl implements Initializable {
 
 		showConsole(Boolean.parseBoolean(Settings.getInstance().getProperty("consoleVisible")));
 
-		OutputStream out = new OutputStream() {
-			@Override
-			public void write(int b) throws IOException {
-				appendText(String.valueOf((char) b));
-			}
-		};
-		System.setOut(new PrintStream(out, true));
-		System.setErr(new PrintStream(out, true));
-
-		// PrintStream out;
-		// try {
-		// out = new PrintStream(new FileOutputStream(Settings.appDataPath + "\\output.txt"));
-		// System.setOut(out);
-		// } catch (FileNotFoundException e1) {
-		// e1.printStackTrace();
+		// OutputStream out = new OutputStream() {
+		// @Override
+		// public void write(int b) throws IOException {
+		// appendText(String.valueOf((char) b));
 		// }
+		// };
+		// System.setOut(new PrintStream(out, true));
+		// System.setErr(new PrintStream(out, true));
+
+		PrintStream out;
+		try {
+			out = new PrintStream(new FileOutputStream(Settings.appDataPath + "\\log.txt"));
+			System.setOut(out);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
 
 	}
 
@@ -133,8 +134,12 @@ public class MainSceneCtrl implements Initializable {
 	}
 
 	@FXML
-	protected void syncData(ActionEvent event) {
-		Context.getEditConfigCtrl().syncData();
+	protected void syncData(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/FileSyncModal.fxml"));
+
+		Stage stage = new Stage(StageStyle.UTILITY);
+		stage.setScene(new Scene((Pane) loader.load()));
+		stage.show();
 	}
 
 	@FXML

@@ -6,15 +6,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import de.bruss.Context;
-import de.bruss.deployment.Config;
-import de.bruss.deployment.DeploymentUtils;
-import de.bruss.filesync.FileSyncContainer;
-import de.bruss.filesync.FileSyncService;
-import de.bruss.remoteDatabase.RemoteDatabaseUtils;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -37,6 +28,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import de.bruss.Context;
+import de.bruss.deployment.Config;
+import de.bruss.deployment.DeploymentUtils;
+import de.bruss.filesync.FileSyncContainer;
+import de.bruss.remoteDatabase.RemoteDatabaseUtils;
 
 public class EditConfigCtrl implements Initializable {
 
@@ -154,7 +154,7 @@ public class EditConfigCtrl implements Initializable {
 		} else {
 			this.editConfig = editConfig;
 		}
-		
+
 		setConfigInView();
 	}
 
@@ -340,17 +340,6 @@ public class EditConfigCtrl implements Initializable {
 		newConfig.setName("Kopie von " + newConfig.getName());
 		initData(newConfig);
 		save();
-	}
-
-	public void syncData() {
-		try {
-			FileSyncService fileSyncService = new FileSyncService(editConfig);
-			Thread t = new Thread(fileSyncService);
-			t.start();
-		} catch (Exception e) {
-			System.err.println("FyleSync Operation failed!");
-			e.printStackTrace();
-		}
 	}
 
 	public void dumpAndRestoreDb() {

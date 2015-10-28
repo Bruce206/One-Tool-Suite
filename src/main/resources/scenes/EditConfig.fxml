@@ -210,9 +210,16 @@
 		</ScrollPane>
 	</center>
 	<bottom>
-		<BorderPane prefHeight="27.0" prefWidth="361.0" BorderPane.alignment="CENTER">
-			<right>
-				<HBox alignment="BOTTOM_RIGHT" BorderPane.alignment="BOTTOM_RIGHT">
+      <AnchorPane BorderPane.alignment="CENTER">
+         <children>
+				<ProgressBar fx:id="progressBar" prefHeight="18.0" prefWidth="227.0" progress="0.0" visible="false" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.topAnchor="1.0" />
+				<HBox fx:id="fileCounterBox" alignment="CENTER" visible="false" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="1.0">
+					<children>
+						<Label text="Dateien / Ordner geprüft: " />
+						<Label fx:id="fileCounter" text="0" />
+					</children>
+				</HBox>
+				<HBox alignment="BOTTOM_RIGHT" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="1.0">
 					<children>
 						<Button mnemonicParsing="false" onAction="#toggleConsoleout" text="" textAlignment="CENTER">
 							<graphic>
@@ -226,22 +233,7 @@
 						</Button>
 					</children>
 				</HBox>
-			</right>
-			<left>
-				<ProgressBar fx:id="progressBar" prefHeight="18.0" prefWidth="227.0" progress="0.0" visible="false" BorderPane.alignment="CENTER">
-					<padding>
-						<Insets left="100.0" />
-					</padding>
-				</ProgressBar>
-			</left>
-			<center>
-				<HBox fx:id="fileCounterBox" alignment="CENTER" visible="false" BorderPane.alignment="CENTER_LEFT">
-					<children>
-						<Label text="Dateien / Ordner geprüft: " />
-						<Label fx:id="fileCounter" text="0" />
-					</children>
-				</HBox>
-			</center>
-		</BorderPane>
+         </children>
+      </AnchorPane>
 	</bottom>
 </BorderPane>
