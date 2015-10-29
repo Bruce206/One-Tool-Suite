@@ -1,6 +1,8 @@
 package de.bruss.config;
 
-import javafx.scene.control.Button;
+import com.cathive.fonts.fontawesome.FontAwesomeIcon;
+import com.cathive.fonts.fontawesome.FontAwesomeIconView;
+
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
@@ -19,11 +21,12 @@ public class DeleteFileSyncContainerCellFactory<FileSyncContainer, String> imple
 					if (container != null) {
 						super.updateItem((String) item, empty);
 
-						Button button = new Button("Löschen");
-						button.setOnAction(e -> {
+						FontAwesomeIconView fai = new FontAwesomeIconView();
+						fai.setIcon(FontAwesomeIcon.ICON_REMOVE);
+						fai.setOnMouseClicked(e -> {
 							getTableView().getItems().remove(container);
 						});
-						setGraphic(button);
+						setGraphic(fai);
 					}
 
 				}

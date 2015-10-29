@@ -194,9 +194,9 @@
 							</Button>
 							<TableView fx:id="fileSyncTable" editable="true" fixedCellSize="25.0">
 								<columns>
-									<TableColumn fx:id="remotePathCol" maxWidth="-1.0" minWidth="140.0" prefWidth="-1.0" styleClass="fileSyncTable" text="Verzeichnis Server" />
-									<TableColumn fx:id="localPathCol" maxWidth="-1.0" minWidth="140.0" prefWidth="-1.0" text="Verzeichnis Lokal" />
-									<TableColumn fx:id="actionColumn" maxWidth="-1.0" minWidth="60.0" prefWidth="-1.0" />
+									<TableColumn fx:id="remotePathCol" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="-1.0" styleClass="fileSyncTable" text="Verzeichnis Server" />
+									<TableColumn fx:id="localPathCol" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="-1.0" text="Verzeichnis Lokal" />
+									<TableColumn fx:id="actionColumn" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
 								</columns>
 							</TableView>
 						</children>
