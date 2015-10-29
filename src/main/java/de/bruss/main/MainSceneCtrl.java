@@ -9,11 +9,17 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import de.bruss.Context;
+import de.bruss.Starter;
+import de.bruss.UpdateService;
+import de.bruss.deployment.Config;
+import de.bruss.settings.Settings;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -23,13 +29,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import de.bruss.Context;
-import de.bruss.Starter;
-import de.bruss.UpdateService;
-import de.bruss.deployment.Config;
-import de.bruss.settings.Settings;
 
 public class MainSceneCtrl implements Initializable {
 
@@ -134,10 +136,12 @@ public class MainSceneCtrl implements Initializable {
 	}
 
 	@FXML
-	protected void syncData(ActionEvent event) throws IOException {
+	protected void syncData(ActionEvent event) throws IOException { 
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/FileSyncModal.fxml"));
 
-		Stage stage = new Stage(StageStyle.UTILITY);
+		Stage stage = new Stage();
+		stage.initModality(Modality.WINDOW_MODAL);
+	    stage.initOwner(((Node) event.getSource()).getScene().getWindow());
 		stage.setScene(new Scene((Pane) loader.load()));
 		stage.show();
 	}
