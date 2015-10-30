@@ -85,6 +85,6 @@
             <Font name="System Bold" size="17.0" />
          </font>
       </Label>
-      <Button fx:id="close" layoutX="120.0" layoutY="395.0" mnemonicParsing="false" onAction="#close" text="Abschließen" AnchorPane.bottomAnchor="15.0" />
+      <Button fx:id="close" disable="true" layoutX="120.0" layoutY="395.0" mnemonicParsing="false" onAction="#close" text="FileSync läuft..." AnchorPane.bottomAnchor="15.0" />
    </children>
 </AnchorPane>

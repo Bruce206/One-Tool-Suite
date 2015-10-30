@@ -25,7 +25,11 @@ import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
 import de.bruss.Context;
 import de.bruss.deployment.Config;
 import de.bruss.settings.Settings;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.util.Duration;
 
 public class FileSyncService implements Runnable {
 
@@ -37,12 +41,13 @@ public class FileSyncService implements Runnable {
 	public long downloadSizeCount = 0;
 	public int localFilesDeleted = 0;
 	public int localFoldersDeleted = 0;
+	public FileObject currentfile;
 
 	private String host;
 	private List<FileSyncContainer> fileSyncList;
 	private FileSyncController fileSyncController;
-	
-	LocalDateTime lock = LocalDateTime.MIN;
+
+	Thread t;
 
 	public static DefaultFileSystemManager fsManager = null;
 
@@ -62,6 +67,11 @@ public class FileSyncService implements Runnable {
 		downloadSizeCount = 0;
 		localFilesDeleted = 0;
 		localFoldersDeleted = 0;
+
+		// UpdateGuiThread updateGuiThread = new UpdateGuiThread();
+		// t = new Thread(updateGuiThread);
+		// t.start();
+
 		FileSystemOptions fsOptions = new FileSystemOptions();
 
 		try {
@@ -83,15 +93,19 @@ public class FileSyncService implements Runnable {
 				String localFilePath = container.getLocalFilePath();
 				File localFolder = new File(localFilePath.substring(0, localFilePath.length() - 1));
 				if (!localFolder.exists()) {
-					localFolder.mkdir();
+					Files.createDirectories(localFolder.toPath());
 				}
 
-				syncFiles(fo, localFilePath, true);
+				try {
+					syncFiles(fo, localFilePath, true);
+				} catch (InterruptedException e) {
+					System.out.println("interrupted");
+					fo.close();
+					break;
+				}
 				fo.close();
 			}
 
-		} catch (FileSystemException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -104,35 +118,37 @@ public class FileSyncService implements Runnable {
 		System.out.println("Files deleted locally: " + localFilesDeleted);
 		System.out.println("Folders deleted locally: " + localFoldersDeleted);
 		System.out.println("Downloaded total: " + FileUtils.byteCountToDisplaySize(downloadSizeCount));
-		Context.getFileCounterBox().setVisible(false);
-		Context.getProgressBar().setVisible(false);
+		Platform.runLater(() -> {
+			fileSyncController.setFinished();
+		});
+		
 	}
 
-	private void syncFiles(FileObject file, String localPath, boolean initial) throws FileSystemException, IOException {
-		if (LocalDateTime.now().isAfter(lock)) {
-			lock = LocalDateTime.now().plusSeconds(1);
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					fileSyncController.setFoldersChecked(String.valueOf(checkFolderCount));
-					fileSyncController.setFoldersCreated(String.valueOf(createdFolderCount));
-					fileSyncController.setFilesChecked(String.valueOf(checkFileCount));
-					fileSyncController.setFilesUpdated(String.valueOf(updateFileCount));
-					fileSyncController.setFilesCreated(String.valueOf(createdFileCount));
-					fileSyncController.setFilesDeleted(String.valueOf(localFilesDeleted));
-					fileSyncController.setFoldersDeleted(String.valueOf(localFoldersDeleted));
-					fileSyncController.setTotalDowloadSize(FileUtils.byteCountToDisplaySize(downloadSizeCount));
-					fileSyncController.setCurrentFile(file.getName().getPath());
-					try {
-						fileSyncController.setCurrentSize(FileUtils.byteCountToDisplaySize(file.getContent().getSize()));
-					} catch (FileSystemException e) {
-						fileSyncController.setCurrentSize("?");
-					}
-				}
+	private void syncFiles(FileObject file, String localPath, boolean initial) throws FileSystemException, IOException, InterruptedException {
 
-			});
+		String fileSize;
+		try {
+			fileSize = FileUtils.byteCountToDisplaySize(file.getContent().getSize());
+		} catch (FileSystemException e) {
+			fileSize = "?";
 		}
+
+		String finalFileSize = fileSize;
 		
+		Platform.runLater(() -> {
+			fileSyncController.setFoldersChecked(String.valueOf(checkFolderCount));
+			fileSyncController.setFoldersCreated(String.valueOf(createdFolderCount));
+			fileSyncController.setFilesChecked(String.valueOf(checkFileCount));
+			fileSyncController.setFilesUpdated(String.valueOf(updateFileCount));
+			fileSyncController.setFilesCreated(String.valueOf(createdFileCount));
+			fileSyncController.setFilesDeleted(String.valueOf(localFilesDeleted));
+			fileSyncController.setFoldersDeleted(String.valueOf(localFoldersDeleted));
+			fileSyncController.setTotalDowloadSize(FileUtils.byteCountToDisplaySize(downloadSizeCount));
+			fileSyncController.setCurrentFile(file.getName().getPath());
+			fileSyncController.setCurrentSize(finalFileSize);
+		});
+
+		currentfile = file;
 
 		String foldername = "/" + file.getName().getBaseName();
 		File newFile = new File(localPath + foldername);
@@ -183,7 +199,6 @@ public class FileSyncService implements Runnable {
 				Context.getProgressBar().setProgress(0);
 
 				copy(file, newFile, new CopyStreamListener() {
-
 					double percentage = 0;
 
 					@Override
@@ -193,12 +208,9 @@ public class FileSyncService implements Runnable {
 
 					@Override
 					public void bytesTransferred(long totalBytesTransferred, int bytesTransferred, long streamSize) {
-
 						percentage = Double.valueOf(totalBytesTransferred) / Double.valueOf(streamSize);
-						System.out.println(totalBytesTransferred + " von " + streamSize + " | " + percentage + " Datei: " + file.getName());
 						fileSyncController.setSyncProgress(percentage);
 					}
-
 				});
 
 				// FileUtils.copyInputStreamToFile(file.getContent().getInputStream(), newFile);
@@ -207,6 +219,7 @@ public class FileSyncService implements Runnable {
 
 		}
 		file.close();
+
 	}
 
 	private void copy(FileObject sourceFile, File newFile, CopyStreamListener progressMonitor) throws IOException {
@@ -222,5 +235,34 @@ public class FileSyncService implements Runnable {
 			sourceFileIn.close();
 		}
 	}
-	
+
+	class UpdateGuiThread implements Runnable {
+
+		@Override
+		public void run() {
+			Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1000), ae -> {
+				System.out.println("update " + LocalDateTime.now() + " " + Thread.currentThread().isInterrupted() + " files: " + checkFileCount);
+				Platform.runLater(() -> {
+
+					fileSyncController.setFoldersChecked(String.valueOf(checkFolderCount));
+					fileSyncController.setFoldersCreated(String.valueOf(createdFolderCount));
+					fileSyncController.setFilesChecked(String.valueOf(checkFileCount));
+					fileSyncController.setFilesUpdated(String.valueOf(updateFileCount));
+					fileSyncController.setFilesCreated(String.valueOf(createdFileCount));
+					fileSyncController.setFilesDeleted(String.valueOf(localFilesDeleted));
+					fileSyncController.setFoldersDeleted(String.valueOf(localFoldersDeleted));
+					fileSyncController.setTotalDowloadSize(FileUtils.byteCountToDisplaySize(downloadSizeCount));
+					fileSyncController.setCurrentFile(currentfile.getName().getPath());
+					// try {
+					// fileSyncController.setCurrentSize(FileUtils.byteCountToDisplaySize(currentfile.getContent().getSize()));
+					// } catch (FileSystemException e) {
+					// fileSyncController.setCurrentSize("?");
+					// }
+				});
+			}));
+			timeline.setCycleCount(Animation.INDEFINITE);
+			timeline.play();
+		}
+
+	}
 }

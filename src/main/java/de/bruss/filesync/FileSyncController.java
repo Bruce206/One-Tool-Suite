@@ -3,13 +3,14 @@ package de.bruss.filesync;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import de.bruss.Context;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
-import de.bruss.Context;
 
 public class FileSyncController implements Initializable {
 
@@ -38,12 +39,17 @@ public class FileSyncController implements Initializable {
 	Label currentSize;
 	@FXML
 	ProgressBar syncProgressBar;
+	
+	@FXML
+	Button close;
+	
+	Thread t;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
 			FileSyncService fileSyncService = new FileSyncService(Context.getEditConfigCtrl().getEditConfig(), this);
-			Thread t = new Thread(fileSyncService);
+			t = new Thread(fileSyncService);
 			t.start();
 		} catch (Exception e) {
 			System.err.println("FyleSync Operation failed!");
@@ -52,7 +58,7 @@ public class FileSyncController implements Initializable {
 	}
 
 	@FXML
-	public void close(ActionEvent event) {
+	public void close(ActionEvent event)  {
 		((Stage) foldersChecked.getScene().getWindow()).close();
 	}
 
@@ -98,6 +104,11 @@ public class FileSyncController implements Initializable {
 
 	public void setTotalDowloadSize(String totalDownloadSize) {
 		this.totalDownloadSize.setText(totalDownloadSize);
+	}
+	
+	public void setFinished () {
+		this.close.setText("Schließen");
+		this.close.setDisable(false);
 	}
 
 }
