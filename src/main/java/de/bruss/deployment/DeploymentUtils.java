@@ -72,6 +72,8 @@ public class DeploymentUtils implements Runnable {
 					createApacheConfigOnServer();
 					restartApache();
 				}
+				
+				
 			} else {
 				System.out.println("Überspringe Autoconfig");
 			}
