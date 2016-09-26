@@ -23,6 +23,9 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -80,6 +83,14 @@ public class MainSceneCtrl implements Initializable {
 		System.setOut(new PrintStream(out, true));
 		System.setErr(new PrintStream(out, true));
 
+		Platform.runLater(() -> {
+			save_btn.getScene().getAccelerators().put(new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN), new Runnable() {
+				@Override
+				public void run() {
+					save_btn.fire();
+				}
+			});
+		});
 		// PrintStream out;
 		// try {
 		// out = new PrintStream(new FileOutputStream(Settings.appDataPath + "\\log.txt"));

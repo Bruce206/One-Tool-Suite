@@ -36,36 +36,14 @@ public class SshUtils {
 		try {
 			JSch jsch = new JSch();
 
-			// String user = Settings.getInstance().getProperty("username");
-			// String privateKey = Settings.getInstance().getProperty("sshPath");
-
-			// jsch.addIdentity(privateKey, Settings.getInstance().getProperty("password"));
-
-			// Session session = jsch.getSession(user, host, 22);
-
-			Connector con = null;
-
-			try {
-				ConnectorFactory cf = ConnectorFactory.getDefault();
-				con = cf.createConnector();
-
-			} catch (AgentProxyException e) {
-				System.err.println("Auth failed :(");
-			}
-
-			if (con != null && con.isAvailable()) {
-				IdentityRepository irepo = new RemoteIdentityRepository(con);
-				if (irepo.getIdentities().size() > 0) {
-					jsch.setIdentityRepository(irepo);
-				}
-			}
+			authenticateJschWithPageant(jsch);
 
 			//@formatter:off
-			if (jsch.getIdentityRepository() == null 
-					|| jsch.getIdentityNames().size() == 0 
-					|| StringUtils.isBlank(Settings.getInstance().getPassword()) 
-					|| StringUtils.isBlank(Settings.getInstance().getProperty("username")) 
-					|| StringUtils.isBlank(Settings.getInstance().getProperty("sshPath"))) { //@formatter:on
+			if (jsch.getIdentityNames().size() == 0 
+					&& (StringUtils.isBlank(Settings.getInstance().getPassword())
+						|| StringUtils.isBlank(Settings.getInstance().getProperty("username")) 
+						|| StringUtils.isBlank(Settings.getInstance().getProperty("sshPath")))) { //@formatter:on
+
 				FXMLLoader loader = new FXMLLoader(Context.getMainSceneCtrl().getClass().getResource("/scenes/SSH_Dialog.fxml"));
 
 				Stage stage = new Stage();
@@ -91,6 +69,27 @@ public class SshUtils {
 			System.err.println(e);
 		}
 		return null;
+	}
+
+	public static JSch authenticateJschWithPageant(JSch jsch) throws JSchException, IOException {
+		Connector con = null;
+
+		try {
+			ConnectorFactory cf = ConnectorFactory.getDefault();
+			con = cf.createConnector();
+
+		} catch (AgentProxyException e) {
+			System.err.println("Auth failed :(");
+		}
+
+		if (con != null && con.isAvailable()) {
+			IdentityRepository irepo = new RemoteIdentityRepository(con);
+			if (irepo.getIdentities().size() > 0) {
+				jsch.setIdentityRepository(irepo);
+			}
+		}
+
+		return jsch;
 	}
 
 	public static ChannelSftp getSftpChannel(Session session) throws JSchException {

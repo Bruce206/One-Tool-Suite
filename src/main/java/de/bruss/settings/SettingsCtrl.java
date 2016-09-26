@@ -10,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
@@ -22,9 +21,6 @@ public class SettingsCtrl implements Initializable {
 
 	@FXML
 	private TextField username;
-
-	@FXML
-	private PasswordField password;
 
 	@FXML
 	private TextField filePath;
@@ -39,7 +35,6 @@ public class SettingsCtrl implements Initializable {
 		if (!Settings.isEmpty()) {
 			isInitialEdit = false;
 			username.setText(Settings.getInstance().getProperty("username"));
-			password.setText(Settings.getInstance().getProperty("password"));
 			filePath.setText(Settings.getInstance().getProperty("sshPath"));
 			postgresPath.setText(Settings.getInstance().getProperty("postgresPath"));
 		} else {
@@ -65,7 +60,7 @@ public class SettingsCtrl implements Initializable {
 
 	@FXML
 	protected void save(ActionEvent event) throws IOException {
-		Settings.getInstance().create(username.getText(), password.getText(), filePath.getText(), postgresPath.getText());
+		Settings.getInstance().create(username.getText(), filePath.getText(), postgresPath.getText());
 
 		if (isInitialEdit) {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/MainScene.fxml"));

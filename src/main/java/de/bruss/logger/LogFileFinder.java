@@ -1,5 +1,6 @@
 package de.bruss.logger;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -58,9 +59,10 @@ public class LogFileFinder implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		logList.setCellFactory(TextFieldListCell.forListView());
-
 		try {
+			SftpService.init();
+			logList.setCellFactory(TextFieldListCell.forListView());
+
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -76,7 +78,7 @@ public class LogFileFinder implements Initializable {
 						try {
 							fo = SftpService.resolveFile(uri);
 							findLogFiles(fo);
-						} catch (FileSystemException e) {
+						} catch (IOException e) {
 							e.printStackTrace();
 						} finally {
 							if (fo != null) {

@@ -17,4 +17,11 @@
 			</BorderPane.margin>
 		</ProgressIndicator>
 	</bottom>
+   <top>
+      <Label prefHeight="21.0" prefWidth="590.0" text="Logdatei per Klick wählen." BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets left="10.0" />
+         </BorderPane.margin>
+      </Label>
+   </top>
 </BorderPane>

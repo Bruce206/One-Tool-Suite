@@ -15,7 +15,10 @@ import java.util.Set;
 public class Settings {
 
 	private Properties configProp = new Properties();
+
+	// not permanently saved!
 	private String password;
+
 	public final static Path appDataPath = Paths.get(System.getenv("APPDATA") + "\\OneToolSuite");
 	private final static Path configFilePath = Paths.get(System.getenv("APPDATA") + "\\OneToolSuite\\config.properties");
 
@@ -34,6 +37,9 @@ public class Settings {
 		if (in != null) {
 			try {
 				configProp.load(in);
+
+				// remove if present from previous versions
+				configProp.remove("password");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -61,11 +67,10 @@ public class Settings {
 		return configProp.containsKey(key);
 	}
 
-	public void create(String username, String password, String sshPath, String postgresPath) {
+	public void create(String username, String sshPath, String postgresPath) {
 		System.out.println("Saving Settings...");
 		try {
 			configProp.setProperty("username", username);
-			configProp.setProperty("password", password);
 			configProp.setProperty("sshPath", sshPath);
 			configProp.setProperty("postgresPath", postgresPath);
 

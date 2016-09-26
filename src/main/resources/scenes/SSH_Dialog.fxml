@@ -41,7 +41,7 @@
 		</GridPane>
 	</center>
 	<bottom>
-		<Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#saveCredentials" text="Speichern" BorderPane.alignment="CENTER_RIGHT">
+		<Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#saveCredentials" text="Speichern" BorderPane.alignment="CENTER_RIGHT" defaultButton="true">
 			<BorderPane.margin>
 				<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
 			</BorderPane.margin>

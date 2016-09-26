@@ -23,6 +23,10 @@ public class Starter extends Application {
 
 	private static Scene scene;
 
+	static {
+		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
+	}
+
 	@Override
 	public void start(final Stage primaryStage) throws IOException {
 

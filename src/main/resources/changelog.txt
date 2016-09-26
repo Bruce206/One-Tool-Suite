@@ -1,0 +1,27 @@
+3.0
+- Suchfunktion für .log-Dateien in den Verzeichnissen "/var/log/" und "/var/www/"
+- SSH-Zugangsdaten können pageant zum Server-Login nutzen.
+- Keine dauerthafte Speicherung des Passwortes mehr. Entweder es wird pageant genutzt oder das Passwort wird beim ersten Bedarf abgefragt und bis Laufzeitende gespeichert.
+
+2.3
+- Logdateien können "getailt" werden.
+
+2.1
+- Dateisynchronisations-Fenster mit Statistiken
+
+2.0 
+- Layout überarbeitet
+- Automatische Apache-Config
+
+1.6
+- Dateisynchronisation
+
+1.2
+- Automatische Updates
+
+1.1
+- Automatisches Datenbankbackup und -restore (Server -> Lokal) [postgres]
+- Datenbankdownload [postgres]
+
+1.0
+- Deployment von Spring Boot-Apps

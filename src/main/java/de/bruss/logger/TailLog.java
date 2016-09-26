@@ -88,7 +88,9 @@ public class TailLog implements Runnable {
 	}
 
 	public void stop() {
-		timer.cancel();
+		if (timer != null) {
+			timer.cancel();
+		}
 	}
 
 }

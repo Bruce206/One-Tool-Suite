@@ -64,6 +64,7 @@ public class ConfigTableCtrl implements Initializable {
 			});
 			return row;
 		});
+
 	}
 
 	public void refresh() {
