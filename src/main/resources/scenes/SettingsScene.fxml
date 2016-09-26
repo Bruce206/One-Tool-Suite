@@ -16,20 +16,18 @@
 			</font>
 		</Text>
 		<Label text="Benutzername" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-		<Label text="Passwort" GridPane.columnIndex="0" GridPane.rowIndex="2" />
 		<TextField fx:id="username" prefWidth="200.0" text="root" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-		<PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-		<TextField fx:id="filePath" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-		<HBox GridPane.columnIndex="1" GridPane.rowIndex="6">
+		<TextField fx:id="filePath" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+		<HBox GridPane.columnIndex="1" GridPane.rowIndex="5">
 			<children>
 				<Button mnemonicParsing="false" onAction="#save" text="Speichern" />
 			</children>
 		</HBox>
-		<Label text="OpenSSH-File" GridPane.rowIndex="3" />
-		<Button mnemonicParsing="false" onAction="#searchFile" text="Durchsuchen" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-      <Label text="Postgres-Pfad" GridPane.rowIndex="4" />
-      <TextField fx:id="postgresPath" prefWidth="200.0" promptText="meist: C:\Program Files\PostgreSQL\9.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Button mnemonicParsing="false" onAction="#searchPostgresPath" text="Durchsuchen" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+		<Label text="OpenSSH-File" GridPane.rowIndex="2" />
+		<Button mnemonicParsing="false" onAction="#searchFile" text="Durchsuchen" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+      <Label text="Postgres-Pfad" GridPane.rowIndex="3" />
+      <TextField fx:id="postgresPath" prefWidth="200.0" promptText="meist: C:\Program Files\PostgreSQL\9.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <Button mnemonicParsing="false" onAction="#searchPostgresPath" text="Durchsuchen" GridPane.columnIndex="2" GridPane.rowIndex="3" />
 	</children>
 	<padding>
 		<Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
@@ -40,7 +38,6 @@
 		<ColumnConstraints minWidth="10.0" prefWidth="100.0" />
 	</columnConstraints>
 	<rowConstraints>
-		<RowConstraints />
 		<RowConstraints />
 		<RowConstraints />
 		<RowConstraints minHeight="10.0" prefHeight="30.0" />

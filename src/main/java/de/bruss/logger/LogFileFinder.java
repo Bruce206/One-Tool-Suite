@@ -60,7 +60,8 @@ public class LogFileFinder implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
-			SftpService.init();
+			// call before Thread is created
+			SftpService.getFsManager();
 			logList.setCellFactory(TextFieldListCell.forListView());
 
 			new Thread(new Runnable() {
@@ -73,7 +74,7 @@ public class LogFileFinder implements Initializable {
 							break;
 						}
 						String uri = "sftp://" + Settings.getInstance().getProperty("username") + "@" + Context.getEditConfigCtrl().getEditConfig().getHost() + path;
-
+						System.out.println(uri);
 						FileObject fo = null;
 						try {
 							fo = SftpService.resolveFile(uri);

@@ -78,6 +78,7 @@ public class Starter extends Application {
 			}
 		});
 
+		SftpService.init();
 		primaryStage.show();
 	}
 

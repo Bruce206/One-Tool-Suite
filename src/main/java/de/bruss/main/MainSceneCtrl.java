@@ -31,11 +31,15 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+
+import com.jcraft.jsch.JSchException;
+
 import de.bruss.Context;
 import de.bruss.Starter;
 import de.bruss.UpdateService;
 import de.bruss.deployment.Config;
-import de.bruss.logger.TailLogCtrl;
+import de.bruss.logger.DownloadLogService;
+import de.bruss.logger.LogFileCtrl;
 import de.bruss.settings.Settings;
 
 public class MainSceneCtrl implements Initializable {
@@ -53,6 +57,8 @@ public class MainSceneCtrl implements Initializable {
 	private Button file_btn_1;
 	@FXML
 	private Button tailLog_btn;
+	@FXML
+	private Button downloadLog_btn;
 
 	@FXML
 	private Button save_btn;
@@ -146,6 +152,13 @@ public class MainSceneCtrl implements Initializable {
 	}
 
 	@FXML
+	protected void downloadLog(ActionEvent event) throws IOException, JSchException {
+		DownloadLogService downloadLogService = new DownloadLogService(Context.getEditConfigCtrl().getEditConfig(), Context.getProgressBar());
+
+		new Thread(downloadLogService).start();
+	}
+
+	@FXML
 	protected void dumpAndRestoreDb(ActionEvent event) {
 		Context.getEditConfigCtrl().dumpAndRestoreDb();
 	}
@@ -170,7 +183,7 @@ public class MainSceneCtrl implements Initializable {
 		stage.setTitle("Log für " + Context.getEditConfigCtrl().getEditConfig().getName());
 		stage.setScene(new Scene((Pane) loader.load()));
 
-		final TailLogCtrl controller = (TailLogCtrl) loader.getController();
+		final LogFileCtrl controller = (LogFileCtrl) loader.getController();
 
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
@@ -262,6 +275,7 @@ public class MainSceneCtrl implements Initializable {
 
 	public void toggleLogFileButtons(boolean visible) {
 		this.tailLog_btn.setDisable(!visible);
+		this.downloadLog_btn.setDisable(!visible);
 	}
 
 }

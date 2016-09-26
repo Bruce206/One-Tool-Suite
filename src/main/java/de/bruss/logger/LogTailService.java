@@ -19,19 +19,19 @@ import com.jcraft.jsch.Session;
 import de.bruss.deployment.Config;
 import de.bruss.ssh.SshUtils;
 
-public class TailLog implements Runnable {
+public class LogTailService implements Runnable {
 
 	private Session session;
 	private Config config;
-	private TailLogCtrl tailLogCtrl;
+	private LogFileCtrl logFileCtrl;
 	private Timer timer;
 
-	public TailLog(Config config, TailLogCtrl tailLogCtrl) throws JSchException {
+	public LogTailService(Config config, LogFileCtrl logFileCtrl) throws JSchException {
 		super();
 		this.session = SshUtils.getSession(config.getHost());
 		this.config = config;
 		this.session.connect();
-		this.tailLogCtrl = tailLogCtrl;
+		this.logFileCtrl = logFileCtrl;
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class TailLog implements Runnable {
 								Platform.runLater(new Runnable() {
 									@Override
 									public void run() {
-										tailLogCtrl.logView.appendText(output);
+										logFileCtrl.logView.appendText(output);
 									}
 								});
 

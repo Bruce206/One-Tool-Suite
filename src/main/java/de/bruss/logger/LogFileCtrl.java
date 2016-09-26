@@ -10,11 +10,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextArea;
 import de.bruss.Context;
 
-public class TailLogCtrl implements Initializable {
+public class LogFileCtrl implements Initializable {
 	@FXML
 	public TextArea logView;
 
-	private TailLog tailLog;
+	private LogTailService logTailService;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -27,8 +27,8 @@ public class TailLogCtrl implements Initializable {
 		});
 
 		try {
-			tailLog = new TailLog(Context.getEditConfigCtrl().getEditConfig(), this);
-			Thread t = new Thread(tailLog);
+			logTailService = new LogTailService(Context.getEditConfigCtrl().getEditConfig(), this);
+			Thread t = new Thread(logTailService);
 			t.start();
 		} catch (Exception e) {
 			System.err.println("Tailing Log failed!");
@@ -38,7 +38,7 @@ public class TailLogCtrl implements Initializable {
 	}
 
 	public void stop() {
-		tailLog.stop();
+		logTailService.stop();
 	}
 
 }
