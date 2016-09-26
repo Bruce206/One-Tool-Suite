@@ -13,7 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import de.bruss.filesync.FileSyncService;
+import de.bruss.filesync.SftpService;
 import de.bruss.settings.Settings;
 
 public class Starter extends Application {
@@ -66,8 +66,8 @@ public class Starter extends Application {
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent t) {
-				if (FileSyncService.fsManager != null) {
-					FileSyncService.fsManager.close();
+				if (SftpService.fsManager != null) {
+					SftpService.fsManager.close();
 				}
 				Platform.exit();
 				System.exit(0);

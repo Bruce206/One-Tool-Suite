@@ -10,26 +10,23 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.util.Duration;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.io.CopyStreamEvent;
 import org.apache.commons.net.io.CopyStreamListener;
 import org.apache.commons.net.io.Util;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.FileType;
-import org.apache.commons.vfs2.VFS;
-import org.apache.commons.vfs2.impl.DefaultFileSystemManager;
-import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
 
 import de.bruss.Context;
 import de.bruss.deployment.Config;
 import de.bruss.settings.Settings;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.util.Duration;
 
 public class FileSyncService implements Runnable {
 
@@ -48,8 +45,6 @@ public class FileSyncService implements Runnable {
 	private FileSyncController fileSyncController;
 
 	Thread t;
-
-	public static DefaultFileSystemManager fsManager = null;
 
 	public FileSyncService(final Config config, final FileSyncController fileSyncController) {
 		this.host = config.getHost();
@@ -72,24 +67,11 @@ public class FileSyncService implements Runnable {
 		// t = new Thread(updateGuiThread);
 		// t.start();
 
-		FileSystemOptions fsOptions = new FileSystemOptions();
-
 		try {
-			SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking(fsOptions, "no");
-			File ppk = new File(Settings.getInstance().getProperty("sshPath"));
-			SftpFileSystemConfigBuilder.getInstance().setIdentities(fsOptions, new File[] { ppk });
-
-			SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(fsOptions, false);
-			SftpFileSystemConfigBuilder.getInstance().setUserInfo(fsOptions, new MyUserInfo(Settings.getInstance().getProperty("password")));
-
-			if (fsManager == null) {
-				fsManager = (DefaultFileSystemManager) VFS.getManager();
-			}
-
 			for (FileSyncContainer container : fileSyncList) {
 				String uri = "sftp://" + Settings.getInstance().getProperty("username") + "@" + host + container.getRemoteFilePath();
 
-				FileObject fo = fsManager.resolveFile(uri, fsOptions);
+				FileObject fo = SftpService.resolveFile(uri);
 				String localFilePath = container.getLocalFilePath();
 				File localFolder = new File(localFilePath.substring(0, localFilePath.length() - 1));
 				if (!localFolder.exists()) {
@@ -121,7 +103,7 @@ public class FileSyncService implements Runnable {
 		Platform.runLater(() -> {
 			fileSyncController.setFinished();
 		});
-		
+
 	}
 
 	private void syncFiles(FileObject file, String localPath, boolean initial) throws FileSystemException, IOException, InterruptedException {
@@ -134,7 +116,7 @@ public class FileSyncService implements Runnable {
 		}
 
 		String finalFileSize = fileSize;
-		
+
 		Platform.runLater(() -> {
 			fileSyncController.setFoldersChecked(String.valueOf(checkFolderCount));
 			fileSyncController.setFoldersCreated(String.valueOf(createdFolderCount));

@@ -3,7 +3,12 @@ package de.bruss.ssh;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -12,12 +17,18 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelShell;
+import com.jcraft.jsch.IdentityRepository;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.SftpProgressMonitor;
+import com.jcraft.jsch.agentproxy.AgentProxyException;
+import com.jcraft.jsch.agentproxy.Connector;
+import com.jcraft.jsch.agentproxy.ConnectorFactory;
+import com.jcraft.jsch.agentproxy.RemoteIdentityRepository;
 
+import de.bruss.Context;
 import de.bruss.settings.Settings;
 
 public class SshUtils {
@@ -25,12 +36,50 @@ public class SshUtils {
 		try {
 			JSch jsch = new JSch();
 
-			String user = Settings.getInstance().getProperty("username");
-			String privateKey = Settings.getInstance().getProperty("sshPath");
+			// String user = Settings.getInstance().getProperty("username");
+			// String privateKey = Settings.getInstance().getProperty("sshPath");
 
-			jsch.addIdentity(privateKey, Settings.getInstance().getProperty("password"));
+			// jsch.addIdentity(privateKey, Settings.getInstance().getProperty("password"));
 
-			Session session = jsch.getSession(user, host, 22);
+			// Session session = jsch.getSession(user, host, 22);
+
+			Connector con = null;
+
+			try {
+				ConnectorFactory cf = ConnectorFactory.getDefault();
+				con = cf.createConnector();
+
+			} catch (AgentProxyException e) {
+				System.err.println("Auth failed :(");
+			}
+
+			if (con != null && con.isAvailable()) {
+				IdentityRepository irepo = new RemoteIdentityRepository(con);
+				if (irepo.getIdentities().size() > 0) {
+					jsch.setIdentityRepository(irepo);
+				}
+			}
+
+			//@formatter:off
+			if (jsch.getIdentityRepository() == null 
+					|| jsch.getIdentityNames().size() == 0 
+					|| StringUtils.isBlank(Settings.getInstance().getPassword()) 
+					|| StringUtils.isBlank(Settings.getInstance().getProperty("username")) 
+					|| StringUtils.isBlank(Settings.getInstance().getProperty("sshPath"))) { //@formatter:on
+				FXMLLoader loader = new FXMLLoader(Context.getMainSceneCtrl().getClass().getResource("/scenes/SSH_Dialog.fxml"));
+
+				Stage stage = new Stage();
+				stage.initModality(Modality.WINDOW_MODAL);
+				stage.setTitle("SSH Zugangsdaten");
+				stage.setScene(new Scene((Pane) loader.load()));
+
+				stage.showAndWait();
+
+				String privateKey = Settings.getInstance().getProperty("sshPath");
+				jsch.addIdentity(privateKey, Settings.getInstance().getPassword());
+			}
+
+			Session session = jsch.getSession(Settings.getInstance().getProperty("username"), host, 22);
 
 			java.util.Properties props = new java.util.Properties();
 			props.put("StrictHostKeyChecking", "no");

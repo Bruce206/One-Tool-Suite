@@ -10,7 +10,9 @@ import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -26,6 +28,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -36,6 +39,7 @@ import de.bruss.Context;
 import de.bruss.deployment.Config;
 import de.bruss.deployment.DeploymentUtils;
 import de.bruss.filesync.FileSyncContainer;
+import de.bruss.logger.LogFileFinder;
 import de.bruss.remoteDatabase.RemoteDatabaseUtils;
 
 public class EditConfigCtrl implements Initializable {
@@ -173,6 +177,21 @@ public class EditConfigCtrl implements Initializable {
 			localPath.setText(file.getAbsolutePath());
 		}
 
+	}
+
+	@FXML
+	protected void searchLogFile(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/LogFileFinder.fxml"));
+
+		Stage stage = new Stage();
+		stage.initModality(Modality.WINDOW_MODAL);
+		stage.setTitle("Log-Files gefunden auf Server: " + Context.getEditConfigCtrl().getEditConfig().getHost());
+		stage.setScene(new Scene((Pane) loader.load()));
+
+		final LogFileFinder controller = (LogFileFinder) loader.getController();
+		controller.setLogFilePathField(logFilePath);
+
+		stage.show();
 	}
 
 	public void setConfigInView() {
@@ -346,7 +365,8 @@ public class EditConfigCtrl implements Initializable {
 			editConfig.setAutoconfig(this.autoconfig.isSelected());
 			editConfig.setIP(this.ip.getText());
 			editConfig.setServerName(this.serverName.getText());
-			editConfig.setFileSyncList(fileSyncTable.getItems());
+			editConfig.setFileSyncList(this.fileSyncTable.getItems());
+			editConfig.setLogFilePath(this.logFilePath.getText());
 			ConfigService.save(editConfig);
 		}
 

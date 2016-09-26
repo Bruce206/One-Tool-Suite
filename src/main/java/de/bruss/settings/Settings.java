@@ -15,6 +15,7 @@ import java.util.Set;
 public class Settings {
 
 	private Properties configProp = new Properties();
+	private String password;
 	public final static Path appDataPath = Paths.get(System.getenv("APPDATA") + "\\OneToolSuite");
 	private final static Path configFilePath = Paths.get(System.getenv("APPDATA") + "\\OneToolSuite\\config.properties");
 
@@ -92,5 +93,13 @@ public class Settings {
 		configProp.store(fileOut, "Configurations - don't share!!");
 		fileOut.close();
 		init();
+	}
+
+	public String getPassword() {
+		return this.password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

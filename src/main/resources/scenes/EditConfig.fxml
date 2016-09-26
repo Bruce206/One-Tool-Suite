@@ -159,8 +159,20 @@
                      <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   </rowConstraints>
                   <children>
-                     <Label text="Pfad zur Logdatei" GridPane.rowIndex="1" />
-                     <TextField fx:id="logFilePath" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     <Label text="Pfad zur Logdatei" GridPane.rowIndex="1">
+                        <GridPane.margin>
+                           <Insets right="40.0" />
+                        </GridPane.margin></Label>
+                     <TextField fx:id="logFilePath" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                     <Button fx:id="searchLogFileBtn" mnemonicParsing="false" onAction="#searchLogFile" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                        <graphic>
+                           <ImageView fitHeight="17.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@../images/folder_explore.png" />
+                              </image>
+                           </ImageView>
+                        </graphic>
+                     </Button>
                   </children>
                   <styleClass>
                      <String fx:value="border-grid" />
