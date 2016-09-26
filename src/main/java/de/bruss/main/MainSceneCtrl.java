@@ -106,6 +106,7 @@ public class MainSceneCtrl implements Initializable {
 					alert.setHeaderText(null);
 					alert.setContentText(IOUtils.toString(getClass().getResourceAsStream("/changelog.txt"), "UTF-8"));
 					alert.showAndWait();
+					Settings.getInstance().setProperty("showChangelog", "false");
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
