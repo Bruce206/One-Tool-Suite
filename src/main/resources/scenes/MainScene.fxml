@@ -11,7 +11,7 @@
 <?import javafx.scene.text.*?>
 <?import com.cathive.fonts.fontawesome.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.main.MainSceneCtrl">
+<BorderPane prefHeight="946.0" prefWidth="1094.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.main.MainSceneCtrl">
 	<center>
 		<fx:include fx:id="deploymentTab" source="deploymentTab.fxml" BorderPane.alignment="CENTER" />
 	</center>
@@ -101,6 +101,18 @@
                </graphic>
             </Button>
             <Separator orientation="VERTICAL" prefHeight="100.0" prefWidth="29.0" />
+            <Button fx:id="tailLog_btn" alignment="CENTER" contentDisplay="TOP" disable="true" mnemonicParsing="false" onAction="#tailLog" prefHeight="90.0" prefWidth="90.0" text="Log lesen" textAlignment="CENTER">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <image>
+                        <Image url="@../images/taillog.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Separator layoutX="570.0" layoutY="15.0" orientation="VERTICAL" prefHeight="100.0" prefWidth="29.0" />
             <Button fx:id="spring_btn_1" alignment="CENTER" contentDisplay="TOP" disable="true" ellipsisString="" mnemonicParsing="false" onAction="#deploy" prefHeight="90.0" prefWidth="90.0" text="Boot-App Deployment" textAlignment="CENTER" wrapText="true">
                <graphic>
                   <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
@@ -152,7 +164,21 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#reloadCss" prefHeight="90.0" prefWidth="90.0" text="Reload-Css" textAlignment="CENTER" visible="false" />
+            <Button fx:id="spring_btn_11" alignment="CENTER" contentDisplay="TOP" disable="true" ellipsisString="" mnemonicParsing="false" onAction="#deploy" prefHeight="90.0" prefWidth="90.0" text="Boot-App Deployment" textAlignment="CENTER" wrapText="true">
+               <graphic>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport>
+                     <image>
+                        <Image url="@../images/deploy-2.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font size="9.0" />
+               </font>
+            </Button>
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

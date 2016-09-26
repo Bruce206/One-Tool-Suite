@@ -49,6 +49,12 @@ public class FormattedTableCellFactory<Config, String> implements Callback<Table
 						}
 						break;
 					}
+					case "logFileConfig": {
+						if (config.isLogFileConfig()) {
+							checked = true;
+						}
+						break;
+					}
 					}
 				}
 

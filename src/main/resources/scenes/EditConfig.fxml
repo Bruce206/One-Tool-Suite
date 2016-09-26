@@ -10,7 +10,7 @@
 <?import javafx.scene.text.*?>
 <?import com.cathive.fonts.fontawesome.*?>
 
-<BorderPane minHeight="545.0" minWidth="-Infinity" prefHeight="678.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.config.EditConfigCtrl">
+<BorderPane minHeight="545.0" minWidth="-Infinity" prefHeight="803.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.config.EditConfigCtrl">
 	<center>
 		<ScrollPane fx:id="scrollPane" fitToWidth="true" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
 			<content>
@@ -134,6 +134,39 @@
 							<String fx:value="form-grid" />
 						</styleClass>
 					</GridPane>
+               <CheckBox fx:id="logFileConfig" layoutX="20.0" layoutY="364.0" mnemonicParsing="false" onAction="#toggleLogFileConfig" text="Log-Datei">
+                  <font>
+                     <Font name="System Bold" size="15.0" />
+                  </font>
+                  <graphic>
+                     <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                           <Image url="@../images/taillog.png" />
+                        </image>
+                     </ImageView>
+                  </graphic>
+                  <VBox.margin>
+                     <Insets left="10.0" />
+                  </VBox.margin>
+               </CheckBox>
+               <GridPane fx:id="logFileGrid" hgap="15.0" layoutX="10.0" layoutY="385.0">
+                  <columnConstraints>
+                     <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  </columnConstraints>
+                  <rowConstraints>
+                     <RowConstraints />
+                     <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  </rowConstraints>
+                  <children>
+                     <Label text="Pfad zur Logdatei" GridPane.rowIndex="1" />
+                     <TextField fx:id="logFilePath" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  </children>
+                  <styleClass>
+                     <String fx:value="border-grid" />
+                     <String fx:value="form-grid" />
+                  </styleClass>
+               </GridPane>
 					<CheckBox fx:id="databaseConfig" mnemonicParsing="false" onAction="#toggleDatabaseConfig" text="Datenbank">
 						<font>
 							<Font name="System Bold" size="15.0" />
@@ -210,7 +243,7 @@
 		</ScrollPane>
 	</center>
 	<bottom>
-      <AnchorPane BorderPane.alignment="CENTER">
+      <AnchorPane prefWidth="480.0" BorderPane.alignment="CENTER">
          <children>
 				<ProgressBar fx:id="progressBar" prefHeight="18.0" prefWidth="227.0" progress="0.0" visible="false" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.topAnchor="1.0" />
 				<HBox fx:id="fileCounterBox" alignment="CENTER" visible="false" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="1.0">

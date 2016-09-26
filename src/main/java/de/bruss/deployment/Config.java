@@ -31,6 +31,10 @@ public class Config implements Comparable<Config> {
 	private String remoteDbName;
 	private String localDbName;
 
+	// logfile
+	private boolean logFileConfig = false;
+	private String logFilePath;
+
 	// autoconfig
 	private boolean autoconfig = false;
 	private String port;
@@ -59,7 +63,8 @@ public class Config implements Comparable<Config> {
 					boolean autoconfig,
 					String ip,
 					String serverName,
-					List<FileSyncContainer> fileSyncList) {
+					List<FileSyncContainer> fileSyncList,
+					String logFilePath) {
 		super();
 		setLocalPath(localPath);
 		setRemotePath(remotePath);
@@ -76,6 +81,7 @@ public class Config implements Comparable<Config> {
 		this.ip = ip;
 		this.serverName = serverName;
 		this.fileSyncList = fileSyncList;
+		this.logFilePath = logFilePath;
 	}
 	
 	// @formatter:on
@@ -227,6 +233,22 @@ public class Config implements Comparable<Config> {
 
 	public void setFileSyncList(List<FileSyncContainer> fileSyncList) {
 		this.fileSyncList = fileSyncList;
+	}
+
+	public String getLogFilePath() {
+		return logFilePath;
+	}
+
+	public void setLogFilePath(String logFilePath) {
+		this.logFilePath = logFilePath;
+	}
+
+	public boolean isLogFileConfig() {
+		return logFileConfig;
+	}
+
+	public void setLogFileConfig(boolean logFileConfig) {
+		this.logFileConfig = logFileConfig;
 	}
 
 	@Override

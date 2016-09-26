@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -55,6 +56,12 @@ public class SshUtils {
 		Channel channel;
 		channel = session.openChannel("exec");
 		return (ChannelExec) channel;
+	}
+
+	public static ChannelShell getShellChannel(Session session) throws JSchException {
+		Channel channel;
+		channel = session.openChannel("shell");
+		return (ChannelShell) channel;
 	}
 
 	public static void copyFile(String from, String to, Session session, ProgressBar progressBar) throws JSchException, SftpException {

@@ -8,13 +8,9 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import de.bruss.Context;
-import de.bruss.Starter;
-import de.bruss.UpdateService;
-import de.bruss.deployment.Config;
-import de.bruss.settings.Settings;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -31,6 +27,13 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
+import de.bruss.Context;
+import de.bruss.Starter;
+import de.bruss.UpdateService;
+import de.bruss.deployment.Config;
+import de.bruss.logger.TailLogCtrl;
+import de.bruss.settings.Settings;
 
 public class MainSceneCtrl implements Initializable {
 
@@ -45,6 +48,8 @@ public class MainSceneCtrl implements Initializable {
 	private Button db_btn_2;
 	@FXML
 	private Button file_btn_1;
+	@FXML
+	private Button tailLog_btn;
 
 	@FXML
 	private Button save_btn;
@@ -146,6 +151,27 @@ public class MainSceneCtrl implements Initializable {
 	}
 
 	@FXML
+	protected void tailLog(ActionEvent event) throws IOException {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/TailLog.fxml"));
+
+		Stage stage = new Stage();
+		stage.initModality(Modality.WINDOW_MODAL);
+		stage.setTitle("Log für " + Context.getEditConfigCtrl().getEditConfig().getName());
+		stage.setScene(new Scene((Pane) loader.load()));
+
+		final TailLogCtrl controller = (TailLogCtrl) loader.getController();
+
+		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			@Override
+			public void handle(WindowEvent event) {
+				controller.stop();
+			}
+
+		});
+		stage.show();
+	}
+
+	@FXML
 	protected void addConfig(ActionEvent event) {
 		Context.getEditConfigCtrl().addConfig();
 	}
@@ -221,6 +247,10 @@ public class MainSceneCtrl implements Initializable {
 		this.duplicate_btn.setDisable(!visible);
 		this.delete_btn.setDisable(!visible);
 		this.save_btn.setDisable(false);
+	}
+
+	public void toggleLogFileButtons(boolean visible) {
+		this.tailLog_btn.setDisable(!visible);
 	}
 
 }

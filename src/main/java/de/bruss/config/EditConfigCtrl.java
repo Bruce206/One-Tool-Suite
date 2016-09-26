@@ -61,6 +61,8 @@ public class EditConfigCtrl implements Initializable {
 	@FXML
 	private TextField serverName;
 	@FXML
+	private TextField logFilePath;
+	@FXML
 	private CheckBox springBootConfig;
 	@FXML
 	private CheckBox databaseConfig;
@@ -68,6 +70,8 @@ public class EditConfigCtrl implements Initializable {
 	private CheckBox fileSyncConfig;
 	@FXML
 	private CheckBox autoconfig;
+	@FXML
+	private CheckBox logFileConfig;
 
 	@FXML
 	private GridPane springBootConfigGrid;
@@ -77,6 +81,8 @@ public class EditConfigCtrl implements Initializable {
 	private VBox fileSyncConfigVBox;
 	@FXML
 	private GridPane autoconfigGrid;
+	@FXML
+	private GridPane logFileGrid;
 
 	@FXML
 	private ProgressBar progressBar;
@@ -181,6 +187,8 @@ public class EditConfigCtrl implements Initializable {
 		this.springBootConfig.setSelected(editConfig.isSpringBootConfig());
 		this.databaseConfig.setSelected(editConfig.isDatabaseConfig());
 		this.fileSyncConfig.setSelected(editConfig.isFileSyncConfig());
+		this.logFileConfig.setSelected(editConfig.isLogFileConfig());
+		this.logFilePath.setText(editConfig.getLogFilePath());
 		this.autoconfig.setSelected(editConfig.isAutoconfig());
 		this.serverName.setText(editConfig.getServerName());
 		this.ip.setText(editConfig.getIP());
@@ -194,6 +202,7 @@ public class EditConfigCtrl implements Initializable {
 		setVisibility(VisibilityGroup.FILE_SYNC, editConfig.isFileSyncConfig());
 		setVisibility(VisibilityGroup.EDIT_ONLY, editConfig.getId() != null);
 		setVisibility(VisibilityGroup.AUTOCONFIG, editConfig.isAutoconfig());
+		setVisibility(VisibilityGroup.LOGFILE, editConfig.isLogFileConfig());
 
 	}
 
@@ -227,8 +236,14 @@ public class EditConfigCtrl implements Initializable {
 		setVisibility(VisibilityGroup.AUTOCONFIG, editConfig.isAutoconfig());
 	}
 
+	@FXML
+	protected void toggleLogFileConfig(ActionEvent event) {
+		editConfig.setLogFileConfig(!editConfig.isLogFileConfig());
+		setVisibility(VisibilityGroup.LOGFILE, editConfig.isLogFileConfig());
+	}
+
 	enum VisibilityGroup {
-		SPRING_BOOT, DABATASE, FILE_SYNC, EDIT_ONLY, AUTOCONFIG
+		SPRING_BOOT, DABATASE, FILE_SYNC, EDIT_ONLY, AUTOCONFIG, LOGFILE
 	}
 
 	private void setVisibility(VisibilityGroup visibilityGroup, boolean visible) {
@@ -260,6 +275,11 @@ public class EditConfigCtrl implements Initializable {
 			break;
 		case AUTOCONFIG:
 			pane = autoconfigGrid;
+		case LOGFILE:
+			if (Context.getMainSceneCtrl() != null) {
+				Context.getMainSceneCtrl().toggleLogFileButtons(visible && editConfig.getId() != null);
+			}
+			pane = logFileGrid;
 		default:
 			break;
 		}
@@ -306,7 +326,8 @@ public class EditConfigCtrl implements Initializable {
 					autoconfig.isSelected(),
 					ip.getText(),
 					serverName.getText(),
-					fileSyncTable.getItems());
+					fileSyncTable.getItems(),
+					logFilePath.getText());
 			// @formatter:on
 			ConfigService.addConfig(config);
 			editConfig = config;

@@ -30,6 +30,8 @@ public class ConfigTableCtrl implements Initializable {
 	private TableColumn<Config, String> databaseConfigColumn;
 	@FXML
 	private TableColumn<Config, String> fileSyncConfigColumn;
+	@FXML
+	private TableColumn<Config, String> logFileConfigColumn;
 
 	private static ObservableList<Config> data;
 
@@ -45,6 +47,7 @@ public class ConfigTableCtrl implements Initializable {
 		springBootConfigColumn.setCellFactory(new FormattedTableCellFactory<Config, String>("springBootConfig"));
 		databaseConfigColumn.setCellFactory(new FormattedTableCellFactory<Config, String>("databaseConfig"));
 		fileSyncConfigColumn.setCellFactory(new FormattedTableCellFactory<Config, String>("fileSyncConfig"));
+		logFileConfigColumn.setCellFactory(new FormattedTableCellFactory<Config, String>("logFileConfig"));
 
 		configTable.getSortOrder().add(name);
 		refresh();

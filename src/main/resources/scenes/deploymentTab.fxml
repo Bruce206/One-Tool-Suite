@@ -14,7 +14,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.config.ConfigTableCtrl">
 	<left>
-		<TableView fx:id="configTable" style="-fx-font-size: 12px;" BorderPane.alignment="CENTER">
+		<TableView fx:id="configTable" prefHeight="803.0" prefWidth="551.0" style="-fx-font-size: 12px;" BorderPane.alignment="CENTER">
 			<columns>
 				<TableColumn fx:id="name" editable="false" maxWidth="-1.0" minWidth="220.0" prefWidth="-1.0" text="Name" />
 				<TableColumn fx:id="host" editable="false" maxWidth="-1.0" minWidth="200.0" prefWidth="-1.0" text="Hostname / IP" />
@@ -45,6 +45,15 @@
                   </ImageView>
                </graphic>
 				</TableColumn>
+            <TableColumn fx:id="logFileConfigColumn" editable="false" prefWidth="20.0">
+               <graphic>
+                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/taillog.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </TableColumn>
 			</columns>
 		</TableView>
 	</left>
