@@ -32,6 +32,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
+import org.apache.commons.io.IOUtils;
+
 import com.jcraft.jsch.JSchException;
 
 import de.bruss.Context;
@@ -96,7 +98,21 @@ public class MainSceneCtrl implements Initializable {
 					save_btn.fire();
 				}
 			});
+
+			try {
+				if ("true".equals(Settings.getInstance().getProperty("showChangelog"))) {
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Changelog");
+					alert.setHeaderText(null);
+					alert.setContentText(IOUtils.toString(getClass().getResourceAsStream("/changelog.txt"), "UTF-8"));
+					alert.showAndWait();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		});
+
 		// PrintStream out;
 		// try {
 		// out = new PrintStream(new FileOutputStream(Settings.appDataPath + "\\log.txt"));

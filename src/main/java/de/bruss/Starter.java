@@ -47,6 +47,7 @@ public class Starter extends Application {
 
 		}
 
+		SftpService.init();
 		Context.setPrimaryStage(primaryStage);
 		String version = Starter.class.getPackage().getImplementationVersion();
 		primaryStage.setTitle("One Tool Suite - Version: " + version);
@@ -78,7 +79,6 @@ public class Starter extends Application {
 			}
 		});
 
-		SftpService.init();
 		primaryStage.show();
 	}
 

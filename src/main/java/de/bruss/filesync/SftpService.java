@@ -60,19 +60,22 @@ public class SftpService {
 	}
 
 	private static FileSystemOptions getFileSystemOptions() throws IOException {
-		if (SftpFileSystemConfigBuilder.getInstance().getIdentityInfo(fsOptions) == null && (StringUtils.isBlank(Settings.getInstance().getPassword()) || StringUtils.isBlank(Settings.getInstance().getProperty("username")) || StringUtils.isBlank(Settings.getInstance().getProperty("sshPath")))) { // @formatter:on
+		if (SftpFileSystemConfigBuilder.getInstance().getIdentityRepositoryFactory(fsOptions) == null) { // @formatter:on
 
-			FXMLLoader loader = new FXMLLoader(Context.getMainSceneCtrl().getClass().getResource("/scenes/SSH_Dialog.fxml"));
+			if (StringUtils.isBlank(Settings.getInstance().getPassword()) || StringUtils.isBlank(Settings.getInstance().getProperty("username")) || StringUtils.isBlank(Settings.getInstance().getProperty("sshPath"))) {
+				FXMLLoader loader = new FXMLLoader(Context.getMainSceneCtrl().getClass().getResource("/scenes/SSH_Dialog.fxml"));
 
-			Stage stage = new Stage();
-			stage.initModality(Modality.WINDOW_MODAL);
-			stage.setTitle("SSH Zugangsdaten");
-			stage.setScene(new Scene((Pane) loader.load()));
+				Stage stage = new Stage();
+				stage.initModality(Modality.WINDOW_MODAL);
+				stage.setTitle("SSH Zugangsdaten");
+				stage.setScene(new Scene((Pane) loader.load()));
 
-			stage.showAndWait();
+				stage.showAndWait();
+			}
+
+			SftpFileSystemConfigBuilder.getInstance().setIdentityInfo(fsOptions, new IdentityInfo(new File(Settings.getInstance().getProperty("sshPath")), Settings.getInstance().getPassword().getBytes()));
+
 		}
-
-		SftpFileSystemConfigBuilder.getInstance().setIdentityInfo(fsOptions, new IdentityInfo(new File(Settings.getInstance().getProperty("sshPath")), Settings.getInstance().getPassword().getBytes()));
 
 		return fsOptions;
 	}

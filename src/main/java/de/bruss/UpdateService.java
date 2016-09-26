@@ -11,6 +11,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.Scanner;
 
 import javafx.application.Platform;
+import de.bruss.settings.Settings;
 
 public class UpdateService implements Runnable {
 
@@ -36,7 +37,7 @@ public class UpdateService implements Runnable {
 
 			if (updateRequired) {
 				System.out.println("Neue Version gefunden! Starte Download...");
-
+				Settings.getInstance().setProperty("showChangelog", "true");
 				File tempDir = File.createTempFile("update_OneToolSuite", Long.toString(System.nanoTime()));
 				// file only needed to create path
 				tempDir.delete();
@@ -63,16 +64,7 @@ public class UpdateService implements Runnable {
 
 				ProcessBuilder pb = new ProcessBuilder("java", "-jar", updater.getAbsolutePath(), path);
 
-				System.out.println("Update heruntergeladen! Neustart in: ");
-
-				try {
-					for (int i = 5; i >= 0; i--) {
-						System.out.println(i + " Sekunden...");
-						Thread.sleep(1000);
-					}
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				System.out.println("Update heruntergeladen! Starte Neu!");
 
 				pb.start();
 				Platform.exit();
