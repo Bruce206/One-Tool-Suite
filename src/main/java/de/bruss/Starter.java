@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import com.jcraft.jsch.JSchException;
+
+import de.bruss.filesync.SftpService;
+import de.bruss.settings.Settings;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -13,8 +17,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import de.bruss.filesync.SftpService;
-import de.bruss.settings.Settings;
 
 public class Starter extends Application {
 	public static void main(String[] args) {
@@ -28,7 +30,7 @@ public class Starter extends Application {
 	}
 
 	@Override
-	public void start(final Stage primaryStage) throws IOException {
+	public void start(final Stage primaryStage) throws IOException, JSchException {
 
 		System.setProperty("objectdb.home", Settings.appDataPath.toString());
 		// System.setProperty("objectdb.conf", getClass().getResource("/objectdb.conf").getPath());
@@ -47,7 +49,6 @@ public class Starter extends Application {
 
 		}
 
-		SftpService.init();
 		Context.setPrimaryStage(primaryStage);
 		String version = Starter.class.getPackage().getImplementationVersion();
 		primaryStage.setTitle("One Tool Suite - Version: " + version);

@@ -10,12 +10,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.util.Duration;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.io.CopyStreamEvent;
 import org.apache.commons.net.io.CopyStreamListener;
@@ -27,6 +21,11 @@ import org.apache.commons.vfs2.FileType;
 import de.bruss.Context;
 import de.bruss.deployment.Config;
 import de.bruss.settings.Settings;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.util.Duration;
 
 public class FileSyncService implements Runnable {
 
@@ -62,10 +61,6 @@ public class FileSyncService implements Runnable {
 		downloadSizeCount = 0;
 		localFilesDeleted = 0;
 		localFoldersDeleted = 0;
-
-		// UpdateGuiThread updateGuiThread = new UpdateGuiThread();
-		// t = new Thread(updateGuiThread);
-		// t.start();
 
 		try {
 			for (FileSyncContainer container : fileSyncList) {

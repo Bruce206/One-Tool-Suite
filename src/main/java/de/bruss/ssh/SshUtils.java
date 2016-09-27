@@ -3,13 +3,6 @@ package de.bruss.ssh;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,6 +23,12 @@ import com.jcraft.jsch.agentproxy.RemoteIdentityRepository;
 
 import de.bruss.Context;
 import de.bruss.settings.Settings;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class SshUtils {
 	public static Session getSession(String host) {
@@ -39,19 +38,20 @@ public class SshUtils {
 			authenticateJschWithPageant(jsch);
 
 			//@formatter:off
-			if (jsch.getIdentityNames().size() == 0 
-					&& (StringUtils.isBlank(Settings.getInstance().getPassword())
+			if (jsch.getIdentityNames().size() == 0) {
+				if (StringUtils.isBlank(Settings.getInstance().getPassword())
 						|| StringUtils.isBlank(Settings.getInstance().getProperty("username")) 
-						|| StringUtils.isBlank(Settings.getInstance().getProperty("sshPath")))) { //@formatter:on
+						|| StringUtils.isBlank(Settings.getInstance().getProperty("sshPath"))) { //@formatter:on
 
-				FXMLLoader loader = new FXMLLoader(Context.getMainSceneCtrl().getClass().getResource("/scenes/SSH_Dialog.fxml"));
+					FXMLLoader loader = new FXMLLoader(Context.getMainSceneCtrl().getClass().getResource("/scenes/SSH_Dialog.fxml"));
 
-				Stage stage = new Stage();
-				stage.initModality(Modality.WINDOW_MODAL);
-				stage.setTitle("SSH Zugangsdaten");
-				stage.setScene(new Scene((Pane) loader.load()));
+					Stage stage = new Stage();
+					stage.initModality(Modality.WINDOW_MODAL);
+					stage.setTitle("SSH Zugangsdaten");
+					stage.setScene(new Scene((Pane) loader.load()));
 
-				stage.showAndWait();
+					stage.showAndWait();
+				}
 
 				String privateKey = Settings.getInstance().getProperty("sshPath");
 				jsch.addIdentity(privateKey, Settings.getInstance().getPassword());
@@ -71,7 +71,7 @@ public class SshUtils {
 		return null;
 	}
 
-	public static JSch authenticateJschWithPageant(JSch jsch) throws JSchException, IOException {
+	public static JSch authenticateJschWithPageant(JSch jsch) {
 		Connector con = null;
 
 		try {
@@ -86,10 +86,20 @@ public class SshUtils {
 			IdentityRepository irepo = new RemoteIdentityRepository(con);
 			if (irepo.getIdentities().size() > 0) {
 				jsch.setIdentityRepository(irepo);
+				return jsch;
 			}
 		}
 
-		return jsch;
+		System.err.println("Identities could not be added");
+		return null;
+	}
+	
+	public static boolean isPageantAvailable () throws JSchException {
+		JSch jsch = new JSch();
+		authenticateJschWithPageant(jsch);
+		
+		return jsch.getIdentityNames().size() > 0;
+		
 	}
 
 	public static ChannelSftp getSftpChannel(Session session) throws JSchException {

@@ -8,8 +8,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
-import javafx.application.Platform;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.jcraft.jsch.Channel;
@@ -18,6 +16,7 @@ import com.jcraft.jsch.Session;
 
 import de.bruss.deployment.Config;
 import de.bruss.ssh.SshUtils;
+import javafx.application.Platform;
 
 public class LogTailService implements Runnable {
 
@@ -46,7 +45,7 @@ public class LogTailService implements Runnable {
 			channel.connect();
 			InputStream input = channel.getInputStream();
 
-			ps.println("tail -n 100 -f " + config.getLogFilePath());
+			ps.println("tail -n 500 -f " + config.getLogFilePath());
 			ps.close();
 
 			int SIZE = 1024;

@@ -54,7 +54,7 @@ public class LogFileFinder implements Initializable {
 		stage.close();
 	}
 
-	private static final String[] logFolders = { "/var/log/", "/var/www" };
+	private static final String[] logFolders = { "/var/log/" };
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
