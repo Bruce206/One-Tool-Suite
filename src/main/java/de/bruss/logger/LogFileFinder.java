@@ -2,6 +2,8 @@ package de.bruss.logger;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import org.apache.commons.vfs2.FileObject;
@@ -44,6 +46,8 @@ public class LogFileFinder implements Initializable {
 
 	int fileCounter = 0;
 	int folderCounter = 0;
+	
+	private static final int MAX_DEPTH = 2;
 
 	@FXML
 	public void logFileSelected(MouseEvent event) {
@@ -54,7 +58,8 @@ public class LogFileFinder implements Initializable {
 		stage.close();
 	}
 
-	private static final String[] logFolders = { "/var/log/" };
+	private static final String[] logFolders = { "/var/log/", "/var/www" };
+	private static final List<String> excludeFolders = Arrays.asList("apache2", "dist-upgrade", "ntpstats", "fsck", "exim4", "samba", "installer", "cron-apt", "landscape", "ConsoleKit", "unattended-upgrades");
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -76,7 +81,7 @@ public class LogFileFinder implements Initializable {
 						FileObject fo = null;
 						try {
 							fo = SftpService.resolveFile(uri);
-							findLogFiles(fo);
+							findLogFiles(fo, 0);
 						} catch (IOException e) {
 							e.printStackTrace();
 						} finally {
@@ -95,15 +100,19 @@ public class LogFileFinder implements Initializable {
 					progressIndicator.setVisible(false);
 				}
 
-				private void findLogFiles(FileObject fo) throws FileSystemException {
+				private void findLogFiles(FileObject fo, int depth) throws FileSystemException {
+					if (depth++ > MAX_DEPTH || excludeFolders.contains(fo.getName().getBaseName())) {
+						return;
+					}
+					
 					for (FileObject file : fo.getChildren()) {
 						if (cancelled) {
 							return;
 						}
-
+						
 						if (file.getType().equals(FileType.FOLDER)) {
 							folderCounter++;
-							findLogFiles(file);
+							findLogFiles(file, depth);
 						} else {
 							fileCounter++;
 							if (file.getName().getExtension().equals("log")) {
