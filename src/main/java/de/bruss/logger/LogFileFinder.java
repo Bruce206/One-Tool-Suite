@@ -4,6 +4,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileType;
+
+import de.bruss.Context;
+import de.bruss.filesync.SftpService;
+import de.bruss.settings.Settings;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,14 +23,6 @@ import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileType;
-
-import de.bruss.Context;
-import de.bruss.filesync.SftpService;
-import de.bruss.settings.Settings;
 
 public class LogFileFinder implements Initializable {
 	ObservableList<String> items = FXCollections.observableArrayList();
@@ -103,7 +102,6 @@ public class LogFileFinder implements Initializable {
 						}
 
 						if (file.getType().equals(FileType.FOLDER)) {
-							System.out.println(file.getName().getPath());
 							folderCounter++;
 							findLogFiles(file);
 						} else {

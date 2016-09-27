@@ -3,12 +3,6 @@ package de.bruss.filesync;
 import java.io.File;
 import java.io.IOException;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemOptions;
@@ -25,6 +19,11 @@ import com.jcraft.jsch.JSchException;
 import de.bruss.Context;
 import de.bruss.settings.Settings;
 import de.bruss.ssh.SshUtils;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class SftpService {
 
@@ -60,7 +59,7 @@ public class SftpService {
 	}
 
 	private static FileSystemOptions getFileSystemOptions() throws IOException {
-		if (SftpFileSystemConfigBuilder.getInstance().getIdentityRepositoryFactory(fsOptions) == null) { // @formatter:on
+		if (SftpFileSystemConfigBuilder.getInstance().getIdentityInfo(fsOptions) == null || SftpFileSystemConfigBuilder.getInstance().getIdentityInfo(fsOptions).length < 1) { // @formatter:on
 
 			if (StringUtils.isBlank(Settings.getInstance().getPassword()) || StringUtils.isBlank(Settings.getInstance().getProperty("username")) || StringUtils.isBlank(Settings.getInstance().getProperty("sshPath"))) {
 				FXMLLoader loader = new FXMLLoader(Context.getMainSceneCtrl().getClass().getResource("/scenes/SSH_Dialog.fxml"));
