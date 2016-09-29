@@ -1,16 +1,13 @@
 package de.bruss.logger;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-
-import javafx.application.Platform;
-import javafx.scene.control.ProgressBar;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,6 +17,14 @@ import com.jcraft.jsch.SftpException;
 
 import de.bruss.deployment.Config;
 import de.bruss.ssh.SshUtils;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ProgressBar;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 public class DownloadLogService implements Runnable {
 
@@ -57,6 +62,29 @@ public class DownloadLogService implements Runnable {
 					if (file != null) {
 						Files.copy(tempFile, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
 						System.out.println("Logfile saved to: " + file.getAbsolutePath());
+						
+						Platform.runLater(new Runnable() {
+							
+							@Override
+							public void run() {
+								Alert alert = new Alert(AlertType.CONFIRMATION);
+								alert.setTitle("Download abgeschlossen");
+								alert.setHeaderText("Log-Datei öffnen?");
+								ButtonType buttonOk = new ButtonType("Ja", ButtonData.OK_DONE);
+								ButtonType buttonCancel = new ButtonType("Nein", ButtonData.CANCEL_CLOSE);
+								alert.getButtonTypes().setAll(buttonOk, buttonCancel);
+
+								Optional<ButtonType> result = alert.showAndWait();
+								if (result.get() == buttonOk){
+								    try {
+										Desktop.getDesktop().open(file);
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+								} 
+							}
+						});
+						
 					}
 				} catch (Exception e) {
 					System.err.println("Saving file failed!");
