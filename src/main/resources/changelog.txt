@@ -1,3 +1,7 @@
+3.31
+- Dialogbox nach Log-Download zum Öffnen des Logs
+- Tooltips
+
 3.0
 - Suchfunktion für .log-Dateien in den Verzeichnissen "/var/log/" und "/var/www/"
 - SSH-Zugangsdaten können pageant zum Server-Login nutzen.

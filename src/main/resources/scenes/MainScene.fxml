@@ -42,6 +42,9 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <tooltip>
+                        <Tooltip text="Einstellungen" />
+                     </tooltip>
                   </Button>
                   <Button alignment="CENTER" contentDisplay="TOP" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#checkForUpdates" prefHeight="45.0" prefWidth="45.0" text="Update">
                      <graphic>
@@ -54,6 +57,9 @@
                            </image>
                         </ImageView>
                      </graphic>
+                     <tooltip>
+                        <Tooltip text="Nach Updates suchen" />
+                     </tooltip>
                   </Button>
                </children>
             </VBox>
