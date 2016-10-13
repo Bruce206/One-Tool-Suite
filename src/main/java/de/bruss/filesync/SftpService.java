@@ -2,6 +2,7 @@ package de.bruss.filesync;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.vfs2.FileObject;
@@ -15,6 +16,7 @@ import com.jcraft.jsch.JSchException;
 
 import de.bruss.Context;
 import de.bruss.settings.Settings;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
@@ -82,12 +84,30 @@ public class SftpService {
 
 			FXMLLoader loader = new FXMLLoader(Context.getMainSceneCtrl().getClass().getResource("/scenes/SSH_Dialog.fxml"));
 
-			Stage stage = new Stage();
-			stage.initModality(Modality.WINDOW_MODAL);
-			stage.setTitle("SSH Zugangsdaten");
-			stage.setScene(new Scene((Pane) loader.load()));
+			final CountDownLatch latch = new CountDownLatch(1);
+			Platform.runLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					try {
+						Stage stage = new Stage();
+						stage.initModality(Modality.WINDOW_MODAL);
+						stage.setTitle("SSH Zugangsdaten");
+						stage.setScene(new Scene((Pane) loader.load()));
 
-			stage.showAndWait();
+						stage.showAndWait();
+						latch.countDown();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			
+			try {
+				latch.await();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 
 		SftpFileSystemConfigBuilder.getInstance().setIdentityInfo(fsOptions,
