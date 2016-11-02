@@ -65,7 +65,7 @@ public class LogFileFinder implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		try {
 			// call before Thread is created
-			SftpService.getFsManager();
+			//SftpService.getFsManager();
 			logList.setCellFactory(TextFieldListCell.forListView());
 
 			new Thread(new Runnable() {
