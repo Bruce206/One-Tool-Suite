@@ -60,7 +60,7 @@
 						<graphic>
 							<ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
 								<image>
-									<Image url="@../../../../../../Users/bruss/git/One-Tool-Suite/src/main/resources/images/spring-boot.png" />
+									<Image url="@../images/spring-boot.png" />
 								</image>
 							</ImageView>
 						</graphic>
@@ -96,7 +96,7 @@
       								<graphic>
       									<ImageView fitHeight="17.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
       										<image>
-      											<Image url="@../../../../../../Users/bruss/git/One-Tool-Suite/src/main/resources/images/folder_explore.png" />
+      											<Image url="@../images/folder_explore.png" />
       										</image>
       									</ImageView>
       								</graphic>
@@ -188,7 +188,7 @@
                   <graphic>
                      <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                           <Image url="@../../../../../../Users/bruss/git/One-Tool-Suite/src/main/resources/images/taillog.png" />
+                           <Image url="@../images/taillog.png" />
                         </image>
                      </ImageView>
                   </graphic>
@@ -215,7 +215,7 @@
                         <graphic>
                            <ImageView fitHeight="17.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                               <image>
-                                 <Image url="@../../../../../../Users/bruss/git/One-Tool-Suite/src/main/resources/images/folder_explore.png" />
+                                 <Image url="@../images/folder_explore.png" />
                               </image>
                            </ImageView>
                         </graphic>
@@ -236,7 +236,7 @@
 						<graphic>
 							<ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
 								<image>
-									<Image url="@../../../../../../Users/bruss/git/One-Tool-Suite/src/main/resources/images/db.png" />
+									<Image url="@../images/db.png" />
 								</image>
 							</ImageView>
 						</graphic>
@@ -278,7 +278,7 @@
 						<graphic>
 							<ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
 								<image>
-									<Image url="@../../../../../../Users/bruss/git/One-Tool-Suite/src/main/resources/images/network-local.png" />
+									<Image url="@../images/network-local.png" />
 								</image>
 							</ImageView>
 						</graphic>
