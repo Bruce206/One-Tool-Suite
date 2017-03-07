@@ -12,10 +12,10 @@
 
 <BorderPane minHeight="545.0" minWidth="-Infinity" prefHeight="803.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.config.EditConfigCtrl">
 	<center>
-		<ScrollPane fx:id="scrollPane" fitToWidth="true" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
+		<ScrollPane fx:id="scrollPane" fitToWidth="true" BorderPane.alignment="CENTER">
 			<content>
 				<VBox fx:id="editConfigVBox" prefHeight="620.0" prefWidth="452.0">
-					<GridPane alignment="TOP_CENTER" style="-fx-border-radius: 0 0 10 10; -fx-background-radius: 0 0 10 10;">
+					<GridPane alignment="TOP_CENTER" maxHeight="-Infinity" style="-fx-border-radius: 0 0 10 10; -fx-background-radius: 0 0 10 10;">
 						<columnConstraints>
 							<ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
 							<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
@@ -45,10 +45,10 @@
 						<VBox.margin>
 							<Insets top="1.0" />
 						</VBox.margin>
-						<styleClass>
-							<String fx:value="border-grid" />
-							<String fx:value="form-grid" />
-						</styleClass>
+                  <styleClass>
+                     <String fx:value="border-grid" />
+                     <String fx:value="form-grid" />
+                  </styleClass>
 					</GridPane>
 					<CheckBox fx:id="springBootConfig" mnemonicParsing="false" onAction="#toggleSpringBootConfig" text="Sping Boot">
 						<font>
@@ -60,80 +60,127 @@
 						<graphic>
 							<ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
 								<image>
-									<Image url="@../images/spring-boot.png" />
+									<Image url="@../../../../../../Users/bruss/git/One-Tool-Suite/src/main/resources/images/spring-boot.png" />
 								</image>
 							</ImageView>
 						</graphic>
 					</CheckBox>
-					<GridPane fx:id="springBootConfigGrid" hgap="15.0" prefHeight="300.0">
-						<columnConstraints>
-							<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-							<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-						</columnConstraints>
-						<rowConstraints>
-							<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-							<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-							<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-							<RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
-							<RowConstraints vgrow="SOMETIMES" />
-						</rowConstraints>
-						<children>
-							<Label text="Service / Jar Name" />
-
-							<Label text="Jar-Verzeichnis Lokal" GridPane.rowIndex="1">
-								<GridPane.margin>
-									<Insets right="40.0" />
-								</GridPane.margin>
-							</Label>
-
-							<TextField fx:id="serviceName" GridPane.columnIndex="1" />
-							<TextField fx:id="localPath" promptText="/target" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-
-							<Label text="Server-Verzeichnis" GridPane.rowIndex="2" />
-							<TextField fx:id="remotePath" promptText="/wwwhome/appname" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-							<Button mnemonicParsing="false" onAction="#searchJarPath" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
-								<graphic>
-									<ImageView fitHeight="17.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-										<image>
-											<Image url="@../images/folder_explore.png" />
-										</image>
-									</ImageView>
-								</graphic>
-							</Button>
-							<GridPane fx:id="autoconfigGrid" hgap="20.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" GridPane.rowSpan="2147483647">
-								<columnConstraints>
-									<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-									<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-								</columnConstraints>
-								<rowConstraints>
-									<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-									<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-									<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                           <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-								</rowConstraints>
-								<children>
-									<Label text="IP" />
-									<Label text="Server-Name" GridPane.rowIndex="1" />
-									<TextField fx:id="serverName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-									<TextField fx:id="ip" GridPane.columnIndex="1" />
-
-									<Label text="App-Port" GridPane.rowIndex="2" />
-									<TextField fx:id="port" promptText="7001" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                           <Label text="Datenbankname" GridPane.rowIndex="3" />
-                           <Label text="In Datenbankconfig eintragen!" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-								</children>
-							</GridPane>
-							<CheckBox fx:id="autoconfig" mnemonicParsing="false" onAction="#toggleAutoconfig" selected="true" text="Autoconfig bei erstem Start" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
+               <VBox fx:id="springBootConfigGrid">
+                  <children>
+      					<GridPane hgap="15.0" prefWidth="478.0">
+      						<columnConstraints>
+      							<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
+      							<ColumnConstraints hgrow="SOMETIMES" maxWidth="331.0" minWidth="10.0" prefWidth="308.0" />
+      						</columnConstraints>
+      						<rowConstraints>
+      							<RowConstraints minHeight="30.0" prefHeight="30.0" />
+      							<RowConstraints minHeight="30.0" prefHeight="30.0" />
+      							<RowConstraints minHeight="30.0" prefHeight="30.0" />
+                           <RowConstraints maxHeight="30.0" />
+      						</rowConstraints>
+      						<children>
+      							<Label text="Service / Jar Name" />
+      
+      							<Label text="Jar-Verzeichnis Lokal" GridPane.rowIndex="1">
+      								<GridPane.margin>
+      									<Insets right="40.0" />
+      								</GridPane.margin>
+      							</Label>
+      
+      							<TextField fx:id="serviceName" GridPane.columnIndex="1" />
+      							<TextField fx:id="localPath" promptText="/target" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      
+      							<Label text="Server-Verzeichnis" GridPane.rowIndex="2" />
+      							<TextField fx:id="remotePath" promptText="/wwwhome/appname" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      							<Button mnemonicParsing="false" onAction="#searchJarPath" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+      								<graphic>
+      									<ImageView fitHeight="17.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+      										<image>
+      											<Image url="@../../../../../../Users/bruss/git/One-Tool-Suite/src/main/resources/images/folder_explore.png" />
+      										</image>
+      									</ImageView>
+      								</graphic>
+      							</Button>
+      						</children>
+      					</GridPane>
+							<CheckBox fx:id="apacheConfig" mnemonicParsing="false" onAction="#toggleApacheConfig" selected="true" text="Apacheconfig erstellen">
 								<font>
 									<Font name="System Bold" size="12.0" />
 								</font>
+                        <VBox.margin>
+                           <Insets bottom="5.0" top="10.0" />
+                        </VBox.margin>
 							</CheckBox>
-						</children>
-						<styleClass>
-							<String fx:value="border-grid" />
-							<String fx:value="form-grid" />
-						</styleClass>
-					</GridPane>
+							<GridPane fx:id="apacheConfigGrid" hgap="20.0">
+								<columnConstraints>
+									<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
+									<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+								</columnConstraints>
+								<rowConstraints>
+									<RowConstraints minHeight="30.0" prefHeight="30.0" />
+									<RowConstraints minHeight="30.0" prefHeight="30.0" />
+								</rowConstraints>
+								<children>
+									<Label text="IP" />
+									<Label text="Domäne" GridPane.rowIndex="1" />
+									<TextField fx:id="serverName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+									<TextField fx:id="ip" GridPane.columnIndex="1" />
+								</children>
+							</GridPane>
+                     <CheckBox fx:id="applicationConfig" mnemonicParsing="false" onAction="#toggleApplicationConfig" selected="true" text="application.properties erstellen">
+                        <font>
+                           <Font name="System Bold" size="12.0" />
+                        </font>
+                        <VBox.margin>
+                           <Insets bottom="5.0" />
+                        </VBox.margin>
+                     </CheckBox>
+                     <GridPane fx:id="applicationConfigGrid" hgap="20.0">
+                        <columnConstraints>
+                           <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
+                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                           <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                        <children>
+                           <Label text="App-Port" />
+                           <TextField fx:id="port" promptText="7001" GridPane.columnIndex="1" />
+                           <Label text="Datenbankname" GridPane.rowIndex="1" />
+                           <Label text="In Datenbankconfig eintragen!" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        </children>
+                     </GridPane>
+                     <CheckBox fx:id="serviceConfig" mnemonicParsing="false" onAction="#toggleServiceConfig" selected="true" text="Upstart / Systemd anlegen">
+                        <font>
+                           <Font name="System Bold" size="12.0" />
+                        </font>
+                        <VBox.margin>
+                           <Insets bottom="5.0" />
+                        </VBox.margin>
+                     </CheckBox>
+                     <GridPane fx:id="serviceConfigGrid" hgap="20.0">
+                        <columnConstraints>
+                           <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
+                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                           <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                        <children>
+                           <Label text="Java-Pfad" />
+                           <Label text="JVM-Optionen" GridPane.rowIndex="1" />
+                           <TextField fx:id="javaPath" promptText="Default: Systemd - Java8, Upstart - java" GridPane.columnIndex="1" />
+                           <TextField fx:id="jvmOptions" promptText="Bspw.: -Xmx256" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        </children>
+                     </GridPane>
+                  </children>
+                  <styleClass>
+                     <String fx:value="form-grid" />
+                     <String fx:value="border-grid" />
+                  </styleClass>
+               </VBox>
                <CheckBox fx:id="logFileConfig" layoutX="20.0" layoutY="364.0" mnemonicParsing="false" onAction="#toggleLogFileConfig" text="Log-Datei">
                   <font>
                      <Font name="System Bold" size="15.0" />
@@ -141,7 +188,7 @@
                   <graphic>
                      <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                           <Image url="@../images/taillog.png" />
+                           <Image url="@../../../../../../Users/bruss/git/One-Tool-Suite/src/main/resources/images/taillog.png" />
                         </image>
                      </ImageView>
                   </graphic>
@@ -151,7 +198,7 @@
                </CheckBox>
                <GridPane fx:id="logFileGrid" hgap="15.0" layoutX="10.0" layoutY="385.0">
                   <columnConstraints>
-                     <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   </columnConstraints>
                   <rowConstraints>
@@ -168,7 +215,7 @@
                         <graphic>
                            <ImageView fitHeight="17.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                               <image>
-                                 <Image url="@../images/folder_explore.png" />
+                                 <Image url="@../../../../../../Users/bruss/git/One-Tool-Suite/src/main/resources/images/folder_explore.png" />
                               </image>
                            </ImageView>
                         </graphic>
@@ -189,26 +236,32 @@
 						<graphic>
 							<ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
 								<image>
-									<Image url="@../images/db.png" />
+									<Image url="@../../../../../../Users/bruss/git/One-Tool-Suite/src/main/resources/images/db.png" />
 								</image>
 							</ImageView>
 						</graphic>
 					</CheckBox>
 					<GridPane fx:id="databaseConfigGrid" hgap="15.0">
 						<columnConstraints>
-							<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+							<ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" />
 							<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
 						</columnConstraints>
 						<rowConstraints>
 							<RowConstraints />
 							<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
 							<RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     <RowConstraints minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
 						</rowConstraints>
 						<children>
 							<Label text="Name Lokal" GridPane.rowIndex="1" />
 							<TextField fx:id="localDbName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 							<Label text="Name Server" GridPane.rowIndex="2" />
 							<TextField fx:id="remoteDbName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                     <Label text="DB-Benutzername" GridPane.rowIndex="3" />
+                     <Label text="DB-Passwort" GridPane.rowIndex="4" />
+                     <TextField fx:id="dbUsername" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                     <TextField fx:id="dbPassword" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 						</children>
 						<styleClass>
 							<String fx:value="border-grid" />
@@ -225,7 +278,7 @@
 						<graphic>
 							<ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
 								<image>
-									<Image url="@../images/network-local.png" />
+									<Image url="@../../../../../../Users/bruss/git/One-Tool-Suite/src/main/resources/images/network-local.png" />
 								</image>
 							</ImageView>
 						</graphic>

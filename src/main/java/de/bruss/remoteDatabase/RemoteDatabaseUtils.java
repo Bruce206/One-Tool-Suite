@@ -54,10 +54,10 @@ public class RemoteDatabaseUtils implements Runnable {
 	private void restoreLocalDb(Path path) throws IOException {
 		Process p;
 		ProcessBuilder pb;
-		pb = new ProcessBuilder(Settings.getInstance().getProperty("postgresPath") + "\\bin\\pg_restore.exe", "--username", "cms_admin", "--dbname", config.getLocalDbName(), path.toString());
+		pb = new ProcessBuilder(Settings.getInstance().getProperty("postgresPath") + "\\bin\\pg_restore.exe", "--username", config.getDbUsername(), "--dbname", config.getLocalDbName(), path.toString());
 
 		Map<String, String> env = pb.environment();
-		env.put("PGPASSWORD", "cms");
+		env.put("PGPASSWORD", config.getDbPassword());
 		pb.redirectErrorStream(true);
 		p = pb.start();
 		InputStream is = p.getInputStream();
@@ -75,10 +75,10 @@ public class RemoteDatabaseUtils implements Runnable {
 
 		Process p;
 		ProcessBuilder pb;
-		pb = new ProcessBuilder(Settings.getInstance().getProperty("postgresPath") + "\\bin\\dropdb.exe", "--username", "cms_admin", config.getLocalDbName());
+		pb = new ProcessBuilder(Settings.getInstance().getProperty("postgresPath") + "\\bin\\dropdb.exe", "--username", config.getDbUsername(), config.getLocalDbName());
 
 		Map<String, String> env = pb.environment();
-		env.put("PGPASSWORD", "cms");
+		env.put("PGPASSWORD", config.getDbPassword());
 		pb.redirectErrorStream(true);
 		p = pb.start();
 
@@ -128,7 +128,7 @@ public class RemoteDatabaseUtils implements Runnable {
 	private void createLocalDb() throws IOException {
 		Process p;
 		ProcessBuilder pb;
-		pb = new ProcessBuilder(Settings.getInstance().getProperty("postgresPath") + "\\bin\\createdb.exe", "--username", "postgres", "--owner", "cms_admin", config.getLocalDbName());
+		pb = new ProcessBuilder(Settings.getInstance().getProperty("postgresPath") + "\\bin\\createdb.exe", "--username", config.getDbUsername(), "--owner", config.getDbUsername(), config.getLocalDbName());
 
 		Map<String, String> env = pb.environment();
 		env.put("PGPASSWORD", "postgres");
@@ -161,7 +161,7 @@ public class RemoteDatabaseUtils implements Runnable {
 			}
 
 			System.out.print("Sending pgdump for database: " + config.getRemoteDbName());
-			String response2 = SshUtils.sendCommand(this.session, "su - postgres -c \"pg_dump -Ucms_admin -f/tmp/" + config.getRemoteDbName() + ".dump -Fc " + config.getRemoteDbName() + "\"");
+			String response2 = SshUtils.sendCommand(this.session, "su - postgres -c \"pg_dump -U" + config.getDbUsername() + " -f/tmp/" + config.getRemoteDbName() + ".dump -Fc " + config.getRemoteDbName() + "\"");
 			System.out.println(" -> Database dump complete: " + response2);
 
 			// Download file

@@ -1,0 +1,12 @@
+[Unit]
+Description=JARNAME
+After=syslog.target
+
+[Service]
+User=root
+# The configuration file application.properties should be here:
+WorkingDirectory=JARPATH
+ExecStart=JAVAPATH JVMOPTIONS -jar JARNAME.jar
+
+[Install]
+WantedBy=multi-user.target

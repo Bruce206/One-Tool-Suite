@@ -44,397 +44,453 @@ import de.bruss.remoteDatabase.RemoteDatabaseUtils;
 
 public class EditConfigCtrl implements Initializable {
 
-	@FXML
-	private TextField host;
-	@FXML
-	private TextField name;
-	@FXML
-	private TextField localPath;
-	@FXML
-	private TextField remotePath;
-	@FXML
-	private TextField serviceName;
-	@FXML
-	private TextField port;
-	@FXML
-	private TextField localDbName;
-	@FXML
-	private TextField remoteDbName;
-	@FXML
-	private TextField ip;
-	@FXML
-	private TextField serverName;
-	@FXML
-	private TextField logFilePath;
-	@FXML
-	private CheckBox springBootConfig;
-	@FXML
-	private CheckBox databaseConfig;
-	@FXML
-	private CheckBox fileSyncConfig;
-	@FXML
-	private CheckBox autoconfig;
-	@FXML
-	private CheckBox logFileConfig;
+    @FXML
+    private TextField host;
+    @FXML
+    private TextField name;
+    @FXML
+    private TextField localPath;
+    @FXML
+    private TextField remotePath;
+    @FXML
+    private TextField serviceName;
+    @FXML
+    private TextField port;
+    @FXML
+    private TextField localDbName;
+    @FXML
+    private TextField remoteDbName;
+    @FXML
+    private TextField dbUsername;
+    @FXML
+    private TextField dbPassword;
+    @FXML
+    private TextField ip;
+    @FXML
+    private TextField javaPath;
+    @FXML
+    private TextField jvmOptions;
+    @FXML
+    private TextField serverName;
+    @FXML
+    private TextField logFilePath;
+    @FXML
+    private CheckBox springBootConfig;
+    @FXML
+    private CheckBox databaseConfig;
+    @FXML
+    private CheckBox fileSyncConfig;
+    @FXML
+    private CheckBox apacheConfig;
+    @FXML
+    private CheckBox applicationConfig;
+    @FXML
+    private CheckBox serviceConfig;
+    @FXML
+    private CheckBox logFileConfig;
 
-	@FXML
-	private GridPane springBootConfigGrid;
-	@FXML
-	private GridPane databaseConfigGrid;
-	@FXML
-	private VBox fileSyncConfigVBox;
-	@FXML
-	private GridPane autoconfigGrid;
-	@FXML
-	private GridPane logFileGrid;
+    @FXML
+    private VBox springBootConfigGrid;
+    @FXML
+    private GridPane databaseConfigGrid;
+    @FXML
+    private VBox fileSyncConfigVBox;
+    @FXML
+    private GridPane apacheConfigGrid;
+    @FXML
+    private GridPane applicationConfigGrid;
+    @FXML
+    private GridPane serviceConfigGrid;
+    @FXML
+    private GridPane logFileGrid;
 
-	@FXML
-	private ProgressBar progressBar;
+    @FXML
+    private ProgressBar progressBar;
 
-	private Config editConfig = new Config();
+    private Config editConfig = new Config();
 
-	@FXML
-	private ScrollPane scrollPane;
+    @FXML
+    private ScrollPane scrollPane;
 
-	@FXML
-	private VBox editConfigVBox;
+    @FXML
+    private VBox editConfigVBox;
 
-	@FXML
-	private HBox fileCounterBox;
+    @FXML
+    private HBox fileCounterBox;
 
-	@FXML
-	private Label fileCounter;
+    @FXML
+    private Label fileCounter;
 
-	@FXML
-	private TableView<FileSyncContainer> fileSyncTable;
-	@FXML
-	private TableColumn<FileSyncContainer, String> localPathCol;
-	@FXML
-	private TableColumn<FileSyncContainer, String> remotePathCol;
-	@FXML
-	private TableColumn<FileSyncContainer, String> actionColumn;
+    @FXML
+    private TableView<FileSyncContainer> fileSyncTable;
+    @FXML
+    private TableColumn<FileSyncContainer, String> localPathCol;
+    @FXML
+    private TableColumn<FileSyncContainer, String> remotePathCol;
+    @FXML
+    private TableColumn<FileSyncContainer, String> actionColumn;
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		Context.setEditConfigCtrl(this);
-		Context.setProgressBar(progressBar);
-		Context.setFileCounterBox(fileCounterBox);
-		Context.setFileCounter(fileCounter);
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        Context.setEditConfigCtrl(this);
+        Context.setProgressBar(progressBar);
+        Context.setFileCounterBox(fileCounterBox);
+        Context.setFileCounter(fileCounter);
 
-		Callback<TableColumn<FileSyncContainer, String>, TableCell<FileSyncContainer, String>> cellFactory = new Callback<TableColumn<FileSyncContainer, String>, TableCell<FileSyncContainer, String>>() {
-			@Override
-			public TableCell<FileSyncContainer, String> call(TableColumn<FileSyncContainer, String> param) {
-				return new EditingCell();
-			}
-		};
+        Callback<TableColumn<FileSyncContainer, String>, TableCell<FileSyncContainer, String>> cellFactory = new Callback<TableColumn<FileSyncContainer, String>, TableCell<FileSyncContainer, String>>() {
+            @Override
+            public TableCell<FileSyncContainer, String> call(TableColumn<FileSyncContainer, String> param) {
+                return new EditingCell();
+            }
+        };
 
-		fileSyncTable.setFixedCellSize(25);
-		fileSyncTable.prefHeightProperty().bind(Bindings.size(fileSyncTable.getItems()).multiply(25).add(fileSyncTable.getItems().size() > 0 ? 25.1 : 50.1));
-		fileSyncTable.minHeightProperty().bind(fileSyncTable.prefHeightProperty());
-		fileSyncTable.maxHeightProperty().bind(fileSyncTable.prefHeightProperty());
+        fileSyncTable.setFixedCellSize(25);
+        fileSyncTable.prefHeightProperty().bind(Bindings.size(fileSyncTable.getItems()).multiply(25).add(fileSyncTable.getItems().size() > 0 ? 25.1 : 50.1));
+        fileSyncTable.minHeightProperty().bind(fileSyncTable.prefHeightProperty());
+        fileSyncTable.maxHeightProperty().bind(fileSyncTable.prefHeightProperty());
 
-		localPathCol.setCellValueFactory(new PropertyValueFactory<FileSyncContainer, String>("localFilePath"));
-		localPathCol.setCellFactory(cellFactory);
-		localPathCol.setOnEditCommit(new EventHandler<CellEditEvent<FileSyncContainer, String>>() {
-			@Override
-			public void handle(CellEditEvent<FileSyncContainer, String> t) {
-				t.getRowValue().setLocalFilePath(t.getNewValue());
-			}
-		});
+        localPathCol.setCellValueFactory(new PropertyValueFactory<FileSyncContainer, String>("localFilePath"));
+        localPathCol.setCellFactory(cellFactory);
+        localPathCol.setOnEditCommit(new EventHandler<CellEditEvent<FileSyncContainer, String>>() {
+            @Override
+            public void handle(CellEditEvent<FileSyncContainer, String> t) {
+                t.getRowValue().setLocalFilePath(t.getNewValue());
+            }
+        });
 
-		remotePathCol.setCellValueFactory(new PropertyValueFactory<FileSyncContainer, String>("remoteFilePath"));
-		remotePathCol.setCellFactory(cellFactory);
-		remotePathCol.setOnEditCommit(new EventHandler<CellEditEvent<FileSyncContainer, String>>() {
-			@Override
-			public void handle(CellEditEvent<FileSyncContainer, String> t) {
-				t.getRowValue().setRemoteFilePath(t.getNewValue());
-			}
-		});
-		remotePathCol.setSortType(TableColumn.SortType.ASCENDING);
+        remotePathCol.setCellValueFactory(new PropertyValueFactory<FileSyncContainer, String>("remoteFilePath"));
+        remotePathCol.setCellFactory(cellFactory);
+        remotePathCol.setOnEditCommit(new EventHandler<CellEditEvent<FileSyncContainer, String>>() {
+            @Override
+            public void handle(CellEditEvent<FileSyncContainer, String> t) {
+                t.getRowValue().setRemoteFilePath(t.getNewValue());
+            }
+        });
+        remotePathCol.setSortType(TableColumn.SortType.ASCENDING);
 
-		actionColumn.setCellFactory(new DeleteFileSyncContainerCellFactory<FileSyncContainer, String>());
+        actionColumn.setCellFactory(new DeleteFileSyncContainerCellFactory<FileSyncContainer, String>());
 
-		this.editConfigVBox.setVisible(false);
-	}
+        this.editConfigVBox.setVisible(false);
+    }
 
-	public void initData(Config editConfig) {
-		this.editConfigVBox.setVisible(true);
-		if (editConfig.getId() != null) {
-			this.editConfig = ConfigService.getConfig(editConfig.getId());
-		} else {
-			this.editConfig = editConfig;
-		}
+    public void initData(Config editConfig) {
+        this.editConfigVBox.setVisible(true);
+        if (editConfig.getId() != null) {
+            this.editConfig = ConfigService.getConfig(editConfig.getId());
+        } else {
+            this.editConfig = editConfig;
+        }
 
-		setConfigInView();
-	}
+        setConfigInView();
+    }
 
-	@FXML
-	protected void searchJarPath(ActionEvent event) {
-		final DirectoryChooser fileChooser = new DirectoryChooser();
+    @FXML
+    protected void searchJarPath(ActionEvent event) {
+        final DirectoryChooser fileChooser = new DirectoryChooser();
 
-		File file = fileChooser.showDialog(new Stage());
-		if (file != null) {
-			localPath.setText(file.getAbsolutePath());
-		}
+        File file = fileChooser.showDialog(new Stage());
+        if (file != null) {
+            localPath.setText(file.getAbsolutePath());
+        }
 
-	}
+    }
 
-	@FXML
-	protected void searchLogFile(ActionEvent event) throws IOException {
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/LogFileFinder.fxml"));
+    @FXML
+    protected void searchLogFile(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/scenes/LogFileFinder.fxml"));
 
-		Stage stage = new Stage();
-		stage.initModality(Modality.WINDOW_MODAL);
-		stage.setTitle("Log-Files gefunden auf Server: " + Context.getEditConfigCtrl().getEditConfig().getHost());
-		stage.setScene(new Scene((Pane) loader.load()));
+        Stage stage = new Stage();
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setTitle("Log-Files gefunden auf Server: " + Context.getEditConfigCtrl().getEditConfig().getHost());
+        stage.setScene(new Scene((Pane) loader.load()));
 
-		final LogFileFinder controller = (LogFileFinder) loader.getController();
-		controller.setLogFilePathField(logFilePath);
+        final LogFileFinder controller = (LogFileFinder) loader.getController();
+        controller.setLogFilePathField(logFilePath);
 
-		stage.show();
-	}
+        stage.show();
+    }
 
-	public void setConfigInView() {
-		this.host.setText(editConfig.getHost());
-		this.localPath.setText(editConfig.getLocalPath());
-		this.remotePath.setText(editConfig.getRemotePath());
-		this.name.setText(editConfig.getName());
-		this.serviceName.setText(editConfig.getServiceName());
-		this.port.setText(editConfig.getPort());
-		this.localDbName.setText(editConfig.getLocalDbName());
-		this.remoteDbName.setText(editConfig.getRemoteDbName());
-		this.springBootConfig.setSelected(editConfig.isSpringBootConfig());
-		this.databaseConfig.setSelected(editConfig.isDatabaseConfig());
-		this.fileSyncConfig.setSelected(editConfig.isFileSyncConfig());
-		this.logFileConfig.setSelected(editConfig.isLogFileConfig());
-		this.logFilePath.setText(editConfig.getLogFilePath());
-		this.autoconfig.setSelected(editConfig.isAutoconfig());
-		this.serverName.setText(editConfig.getServerName());
-		this.ip.setText(editConfig.getIP());
+    public void setConfigInView() {
+        this.host.setText(editConfig.getHost());
+        this.localPath.setText(editConfig.getLocalPath());
+        this.remotePath.setText(editConfig.getRemotePath());
+        this.name.setText(editConfig.getName());
+        this.serviceName.setText(editConfig.getServiceName());
+        this.port.setText(editConfig.getPort());
+        this.localDbName.setText(editConfig.getLocalDbName());
+        this.remoteDbName.setText(editConfig.getRemoteDbName());
+        this.dbUsername.setText(editConfig.getDbUsername());
+        this.dbPassword.setText(editConfig.getDbPassword());
+        this.springBootConfig.setSelected(editConfig.isSpringBootConfig());
+        this.databaseConfig.setSelected(editConfig.isDatabaseConfig());
+        this.fileSyncConfig.setSelected(editConfig.isFileSyncConfig());
+        this.logFileConfig.setSelected(editConfig.isLogFileConfig());
+        this.logFilePath.setText(editConfig.getLogFilePath());
+        this.apacheConfig.setSelected(editConfig.isApacheConfig());
+        this.applicationConfig.setSelected(editConfig.isApplicationConfig());
+        this.serviceConfig.setSelected(editConfig.isServiceConfig());
+        this.serverName.setText(editConfig.getServerName());
+        this.ip.setText(editConfig.getIP());
+        this.javaPath.setText(editConfig.getJavaPath());
+        this.jvmOptions.setText(editConfig.getJvmOptions());
 
-		fileSyncTable.getItems().clear();
-		fileSyncTable.getItems().addAll(editConfig.getFileSyncList());
-		fileSyncTable.refresh();
+        fileSyncTable.getItems().clear();
+        fileSyncTable.getItems().addAll(editConfig.getFileSyncList());
+        fileSyncTable.refresh();
 
-		setVisibility(VisibilityGroup.SPRING_BOOT, editConfig.isSpringBootConfig());
-		setVisibility(VisibilityGroup.DABATASE, editConfig.isDatabaseConfig());
-		setVisibility(VisibilityGroup.FILE_SYNC, editConfig.isFileSyncConfig());
-		setVisibility(VisibilityGroup.EDIT_ONLY, editConfig.getId() != null);
-		setVisibility(VisibilityGroup.AUTOCONFIG, editConfig.isAutoconfig());
-		setVisibility(VisibilityGroup.LOGFILE, editConfig.isLogFileConfig());
+        setVisibility(VisibilityGroup.SPRING_BOOT, editConfig.isSpringBootConfig());
+        setVisibility(VisibilityGroup.DABATASE, editConfig.isDatabaseConfig());
+        setVisibility(VisibilityGroup.FILE_SYNC, editConfig.isFileSyncConfig());
+        setVisibility(VisibilityGroup.EDIT_ONLY, editConfig.getId() != null);
+        setVisibility(VisibilityGroup.APACHE_CONFIG, editConfig.isApacheConfig());
+        setVisibility(VisibilityGroup.APPLICATION_CONFIG, editConfig.isApplicationConfig());
+        setVisibility(VisibilityGroup.SERVICE_CONFIG, editConfig.isServiceConfig());
+        setVisibility(VisibilityGroup.LOGFILE, editConfig.isLogFileConfig());
 
-	}
+    }
 
-	@FXML
-	protected void addFileSyncContainer(ActionEvent event) {
-		fileSyncTable.getItems().add(new FileSyncContainer("", ""));
-		fileSyncTable.refresh();
-	}
+    @FXML
+    protected void addFileSyncContainer(ActionEvent event) {
+        fileSyncTable.getItems().add(new FileSyncContainer("", ""));
+        fileSyncTable.refresh();
+    }
 
-	@FXML
-	protected void toggleSpringBootConfig(ActionEvent event) {
-		editConfig.setSpringBootConfig(!editConfig.isSpringBootConfig());
-		setVisibility(VisibilityGroup.SPRING_BOOT, editConfig.isSpringBootConfig());
-	}
+    @FXML
+    protected void toggleSpringBootConfig(ActionEvent event) {
+        editConfig.setSpringBootConfig(!editConfig.isSpringBootConfig());
+        setVisibility(VisibilityGroup.SPRING_BOOT, editConfig.isSpringBootConfig());
+    }
 
-	@FXML
-	protected void toggleDatabaseConfig(ActionEvent event) {
-		editConfig.setDatabaseConfig(!editConfig.isDatabaseConfig());
-		setVisibility(VisibilityGroup.DABATASE, editConfig.isDatabaseConfig());
-	}
+    @FXML
+    protected void toggleDatabaseConfig(ActionEvent event) {
+        editConfig.setDatabaseConfig(!editConfig.isDatabaseConfig());
+        setVisibility(VisibilityGroup.DABATASE, editConfig.isDatabaseConfig());
+    }
 
-	@FXML
-	protected void toggleFileSyncConfig(ActionEvent event) {
-		editConfig.setFileSyncConfig(!editConfig.isFileSyncConfig());
-		setVisibility(VisibilityGroup.FILE_SYNC, editConfig.isFileSyncConfig());
-	}
+    @FXML
+    protected void toggleFileSyncConfig(ActionEvent event) {
+        editConfig.setFileSyncConfig(!editConfig.isFileSyncConfig());
+        setVisibility(VisibilityGroup.FILE_SYNC, editConfig.isFileSyncConfig());
+    }
 
-	@FXML
-	protected void toggleAutoconfig(ActionEvent event) {
-		editConfig.setAutoconfig(!editConfig.isAutoconfig());
-		setVisibility(VisibilityGroup.AUTOCONFIG, editConfig.isAutoconfig());
-	}
+    @FXML
+    protected void toggleApacheConfig(ActionEvent event) {
+        editConfig.setApacheConfig(!editConfig.isApacheConfig());
+        setVisibility(VisibilityGroup.APACHE_CONFIG, editConfig.isApacheConfig());
+    }
 
-	@FXML
-	protected void toggleLogFileConfig(ActionEvent event) {
-		editConfig.setLogFileConfig(!editConfig.isLogFileConfig());
-		setVisibility(VisibilityGroup.LOGFILE, editConfig.isLogFileConfig());
-	}
+    @FXML
+    protected void toggleApplicationConfig(ActionEvent event) {
+        editConfig.setApplicationConfig(!editConfig.isApplicationConfig());
+        setVisibility(VisibilityGroup.APPLICATION_CONFIG, editConfig.isApplicationConfig());
+    }
 
-	enum VisibilityGroup {
-		SPRING_BOOT, DABATASE, FILE_SYNC, EDIT_ONLY, AUTOCONFIG, LOGFILE
-	}
+    @FXML
+    protected void toggleServiceConfig(ActionEvent event) {
+        editConfig.setServiceConfig(!editConfig.isServiceConfig());
+        setVisibility(VisibilityGroup.SERVICE_CONFIG, editConfig.isServiceConfig());
+    }
 
-	private void setVisibility(VisibilityGroup visibilityGroup, boolean visible) {
-		Pane pane = null;
+    @FXML
+    protected void toggleLogFileConfig(ActionEvent event) {
+        editConfig.setLogFileConfig(!editConfig.isLogFileConfig());
+        setVisibility(VisibilityGroup.LOGFILE, editConfig.isLogFileConfig());
+    }
 
-		switch (visibilityGroup) {
-		case SPRING_BOOT:
-			if (Context.getMainSceneCtrl() != null) {
-				Context.getMainSceneCtrl().toggleSpringBootButtons(visible && editConfig.getId() != null);
-			}
-			pane = springBootConfigGrid;
-			break;
-		case DABATASE:
-			if (Context.getMainSceneCtrl() != null) {
-				Context.getMainSceneCtrl().toggleDatabaseButtons(visible && editConfig.getId() != null);
-			}
-			pane = databaseConfigGrid;
-			break;
-		case FILE_SYNC:
-			if (Context.getMainSceneCtrl() != null) {
-				Context.getMainSceneCtrl().toggleFileSyncBootButtons(visible && editConfig.getId() != null);
-			}
-			pane = fileSyncConfigVBox;
-			break;
-		case EDIT_ONLY:
-			if (Context.getMainSceneCtrl() != null) {
-				Context.getMainSceneCtrl().toggleEditOnlyVisibility(visible);
-			}
-			break;
-		case AUTOCONFIG:
-			pane = autoconfigGrid;
-		case LOGFILE:
-			if (Context.getMainSceneCtrl() != null) {
-				Context.getMainSceneCtrl().toggleLogFileButtons(visible && editConfig.getId() != null);
-			}
-			pane = logFileGrid;
-		default:
-			break;
-		}
+    enum VisibilityGroup {
+        SPRING_BOOT, DABATASE, FILE_SYNC, EDIT_ONLY, APACHE_CONFIG, APPLICATION_CONFIG, SERVICE_CONFIG, LOGFILE
+    }
 
-		if (pane != null) {
-			pane.setVisible(visible);
+    private void setVisibility(VisibilityGroup visibilityGroup, boolean visible) {
+        Pane pane = null;
 
-			if (!visible) {
-				pane.setPrefHeight(10);
-				pane.setMinHeight(10);
-			} else {
-				pane.setMinHeight(GridPane.USE_COMPUTED_SIZE);
-				pane.setPrefHeight(GridPane.USE_COMPUTED_SIZE);
-			}
-		}
+        switch (visibilityGroup) {
+            case SPRING_BOOT:
+                if (Context.getMainSceneCtrl() != null) {
+                    Context.getMainSceneCtrl().toggleSpringBootButtons(visible && editConfig.getId() != null);
+                }
+                pane = springBootConfigGrid;
+                break;
+            case DABATASE:
+                if (Context.getMainSceneCtrl() != null) {
+                    Context.getMainSceneCtrl().toggleDatabaseButtons(visible && editConfig.getId() != null);
+                }
+                pane = databaseConfigGrid;
+                break;
+            case FILE_SYNC:
+                if (Context.getMainSceneCtrl() != null) {
+                    Context.getMainSceneCtrl().toggleFileSyncBootButtons(visible && editConfig.getId() != null);
+                }
+                pane = fileSyncConfigVBox;
+                break;
+            case EDIT_ONLY:
+                if (Context.getMainSceneCtrl() != null) {
+                    Context.getMainSceneCtrl().toggleEditOnlyVisibility(visible);
+                }
+                break;
+            case APACHE_CONFIG:
+                pane = apacheConfigGrid;
+                break;
+            case APPLICATION_CONFIG:
+                pane = applicationConfigGrid;
+                break;
+            case SERVICE_CONFIG:
+                pane = serviceConfigGrid;
+                break;
+            case LOGFILE:
+                if (Context.getMainSceneCtrl() != null) {
+                    Context.getMainSceneCtrl().toggleLogFileButtons(visible && editConfig.getId() != null);
+                }
+                pane = logFileGrid;
+                break;
+            default:
+                break;
+        }
 
-	}
+        if (pane != null) {
+            pane.setVisible(visible);
 
-	@FXML
-	protected void toggleConsoleout(ActionEvent event) throws IOException {
-		Context.getMainSceneCtrl().toggleConsoleout();
-	}
+            if (!visible) {
+                pane.setPrefHeight(10);
+                pane.setMinHeight(10);
+            } else {
+                pane.setMinHeight(GridPane.USE_COMPUTED_SIZE);
+                pane.setPrefHeight(GridPane.USE_COMPUTED_SIZE);
+            }
+        }
 
-	@FXML
-	protected void clearLog(ActionEvent event) throws IOException {
-		Context.getMainSceneCtrl().clearLog();
-	}
+    }
 
-	public void save() {
-		if (editConfig == null || editConfig.getId() == null) {
-			// @formatter:off
-			Config config = new Config(
-					localPath.getText(), 
-					remotePath.getText(), 
-					host.getText(), 
-					name.getText(), 
-					serviceName.getText(), 
-					port.getText(), 
-					localDbName.getText(), 
-					remoteDbName.getText(), 
-					springBootConfig.isSelected(),
-					databaseConfig.isSelected(),
-					fileSyncConfig.isSelected(),
-					autoconfig.isSelected(),
-					ip.getText(),
-					serverName.getText(),
-					fileSyncTable.getItems(),
-					logFilePath.getText());
-			// @formatter:on
-			ConfigService.addConfig(config);
-			editConfig = config;
-		} else {
-			editConfig.setHost(this.host.getText());
-			editConfig.setLocalPath(this.localPath.getText());
-			editConfig.setRemotePath(this.remotePath.getText());
-			editConfig.setName(this.name.getText());
-			editConfig.setServiceName(this.serviceName.getText());
-			editConfig.setPort(this.port.getText());
-			editConfig.setLocalDbName(this.localDbName.getText());
-			editConfig.setRemoteDbName(this.remoteDbName.getText());
-			editConfig.setSpringBootConfig(this.springBootConfig.isSelected());
-			editConfig.setDatabaseConfig(this.databaseConfig.isSelected());
-			editConfig.setFileSyncConfig(this.fileSyncConfig.isSelected());
-			editConfig.setAutoconfig(this.autoconfig.isSelected());
-			editConfig.setIP(this.ip.getText());
-			editConfig.setServerName(this.serverName.getText());
-			editConfig.setFileSyncList(this.fileSyncTable.getItems());
-			editConfig.setLogFilePath(this.logFilePath.getText());
-			ConfigService.save(editConfig);
-		}
+    @FXML
+    protected void toggleConsoleout(ActionEvent event) throws IOException {
+        Context.getMainSceneCtrl().toggleConsoleout();
+    }
 
-		initData(editConfig);
-		Context.getConfigTableCtrl().refresh();
-	}
+    @FXML
+    protected void clearLog(ActionEvent event) throws IOException {
+        Context.getMainSceneCtrl().clearLog();
+    }
 
-	public void duplicate() throws IllegalAccessException, InvocationTargetException {
-		Config newConfig = new Config();
-		BeanUtils.copyProperties(newConfig, editConfig);
-		newConfig.setId(null);
-		newConfig.setName("Kopie von " + newConfig.getName());
-		initData(newConfig);
-		save();
-	}
+    public void save() {
+        if (editConfig == null || editConfig.getId() == null) {
+            // @formatter:off
+            Config config = new Config(
+                    localPath.getText(),
+                    remotePath.getText(),
+                    host.getText(),
+                    name.getText(),
+                    serviceName.getText(),
+                    port.getText(),
+                    localDbName.getText(),
+                    remoteDbName.getText(),
+                    dbUsername.getText(),
+                    dbPassword.getText(),
+                    springBootConfig.isSelected(),
+                    databaseConfig.isSelected(),
+                    fileSyncConfig.isSelected(),
+                    ip.getText(),
+                    serverName.getText(),
+                    fileSyncTable.getItems(),
+                    logFilePath.getText(),
+                    javaPath.getText(),
+                    jvmOptions.getText(),
+                    apacheConfig.isSelected(),
+                    applicationConfig.isSelected(),
+                    serviceConfig.isSelected());
+            // @formatter:on
+            ConfigService.addConfig(config);
+            editConfig = config;
+        } else {
+            editConfig.setHost(this.host.getText());
+            editConfig.setLocalPath(this.localPath.getText());
+            editConfig.setRemotePath(this.remotePath.getText());
+            editConfig.setName(this.name.getText());
+            editConfig.setServiceName(this.serviceName.getText());
+            editConfig.setPort(this.port.getText());
+            editConfig.setLocalDbName(this.localDbName.getText());
+            editConfig.setRemoteDbName(this.remoteDbName.getText());
+            editConfig.setDbUsername(this.dbUsername.getText());
+            editConfig.setDbPassword(this.dbPassword.getText());
+            editConfig.setSpringBootConfig(this.springBootConfig.isSelected());
+            editConfig.setDatabaseConfig(this.databaseConfig.isSelected());
+            editConfig.setFileSyncConfig(this.fileSyncConfig.isSelected());
+            editConfig.setIP(this.ip.getText());
+            editConfig.setServerName(this.serverName.getText());
+            editConfig.setFileSyncList(this.fileSyncTable.getItems());
+            editConfig.setLogFilePath(this.logFilePath.getText());
+            editConfig.setJavaPath(this.javaPath.getText());
+            editConfig.setJvmOptions(this.jvmOptions.getText());
+            editConfig.setApacheConfig(this.apacheConfig.isSelected());
+            editConfig.setApplicationConfig(this.applicationConfig.isSelected());
+            editConfig.setServiceConfig(this.serviceConfig.isSelected());
+            ConfigService.save(editConfig);
+        }
 
-	public void dumpAndRestoreDb() {
-		try {
-			RemoteDatabaseUtils sshUtils = new RemoteDatabaseUtils(editConfig, Context.getProgressBar(), true);
-			Thread t = new Thread(sshUtils);
-			t.start();
-		} catch (Exception e) {
-			System.err.println("Database Operation failed!");
-			e.printStackTrace();
-		}
-	}
+        initData(editConfig);
+        Context.getConfigTableCtrl().refresh();
+    }
 
-	public void getDbDump() {
-		try {
-			RemoteDatabaseUtils sshUtils = new RemoteDatabaseUtils(editConfig, Context.getProgressBar(), false);
-			Thread t = new Thread(sshUtils);
-			t.start();
-		} catch (Exception e) {
-			System.err.println("Database Operation failed!");
-			System.err.println(e.getMessage());
-			e.printStackTrace();
-		}
-	}
+    public void duplicate() throws IllegalAccessException, InvocationTargetException {
+        Config newConfig = new Config();
+        BeanUtils.copyProperties(newConfig, editConfig);
+        newConfig.setId(null);
+        newConfig.setName(newConfig.getName() + "_Kopie");
+        initData(newConfig);
+        save();
+    }
 
-	public void deploy() {
-		if (editConfig != null && StringUtils.isNotBlank(editConfig.getRemotePath()) && !editConfig.getRemotePath().equals("/")) {
+    public void dumpAndRestoreDb() {
+        try {
+            RemoteDatabaseUtils sshUtils = new RemoteDatabaseUtils(editConfig, Context.getProgressBar(), true);
+            Thread t = new Thread(sshUtils);
+            t.start();
+        } catch (Exception e) {
+            System.err.println("Database Operation failed!");
+            e.printStackTrace();
+        }
+    }
 
-			try {
-				DeploymentUtils sshUtils = new DeploymentUtils(editConfig, Context.getProgressBar());
-				Thread t = new Thread(sshUtils);
-				t.start();
-			} catch (Exception e) {
-				System.err.println("Deploying failed!");
-				e.printStackTrace();
-			}
-		} else {
-			System.out.println("Can't deploy without remotePath!");
-		}
-	}
+    public void getDbDump() {
+        try {
+            RemoteDatabaseUtils sshUtils = new RemoteDatabaseUtils(editConfig, Context.getProgressBar(), false);
+            Thread t = new Thread(sshUtils);
+            t.start();
+        } catch (Exception e) {
+            System.err.println("Database Operation failed!");
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
-	public void delete() {
-		ConfigService.remove(editConfig);
-		initData(new Config());
-		editConfigVBox.setVisible(false);
-		Context.getConfigTableCtrl().refresh();
-	}
+    public void deploy() {
+        if (editConfig != null && StringUtils.isNotBlank(editConfig.getRemotePath()) && !editConfig.getRemotePath().equals("/")) {
 
-	public void addConfig() {
-		initData(new Config());
-	}
+            try {
+                DeploymentUtils sshUtils = new DeploymentUtils(editConfig, Context.getProgressBar());
+                Thread t = new Thread(sshUtils);
+                t.start();
+            } catch (Exception e) {
+                System.err.println("Deploying failed!");
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Can't deploy without remotePath!");
+        }
+    }
 
-	public Config getEditConfig() {
-		return editConfig;
-	}
+    public void delete() {
+        ConfigService.remove(editConfig);
+        initData(new Config());
+        editConfigVBox.setVisible(false);
+        Context.getConfigTableCtrl().refresh();
+    }
+
+    public void addConfig() {
+        initData(new Config());
+    }
+
+    public Config getEditConfig() {
+        return editConfig;
+    }
 
 }

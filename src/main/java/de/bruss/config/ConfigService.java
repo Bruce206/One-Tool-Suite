@@ -10,6 +10,7 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import de.bruss.EmfSingleton;
 import de.bruss.deployment.Config;
+import org.apache.commons.lang3.StringUtils;
 
 public class ConfigService {
 

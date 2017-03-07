@@ -14,247 +14,344 @@ import de.bruss.filesync.FileSyncContainer;
 @Entity
 public class Config implements Comparable<Config> {
 
-	@Id
-	@GeneratedValue
-	private Long id;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-	// general
-	private String host;
-	private String name;
+    // general
+    private String host;
+    private String name;
 
-	// spring boot
-	private String serviceName;
-	private String localPath;
-	private String remotePath;
+    // spring boot
+    private String serviceName;
+    private String localPath;
+    private String remotePath;
 
-	// database
-	private String remoteDbName;
-	private String localDbName;
+    // database
+    private String remoteDbName;
+    private String localDbName;
+    private String dbUsername;
+    private String dbPassword;
 
-	// logfile
-	private boolean logFileConfig = false;
-	private String logFilePath;
+    // logfile
+    private boolean logFileConfig = false;
+    private String logFilePath;
 
-	// autoconfig
-	private boolean autoconfig = false;
-	private String port;
-	private String serverName;
-	private String ip;
+    // autoconfig
+    private boolean apacheConfig = false;
+    private boolean applicationConfig = false;
+    private boolean serviceConfig = false;
+    private String port;
+    private String serverName;
+    private String ip;
+    private String javaPath;
+    private String jvmOptions;
 
-	private boolean springBootConfig = false;
-	private boolean databaseConfig = false;
-	private boolean fileSyncConfig = false;
+    private boolean springBootConfig = false;
+    private boolean databaseConfig = false;
+    private boolean fileSyncConfig = false;
 
-	@Embedded
-	List<FileSyncContainer> fileSyncList = new ArrayList<FileSyncContainer>();
+    @Embedded
+    List<FileSyncContainer> fileSyncList = new ArrayList<FileSyncContainer>();
 
-	// @formatter:off
-	public Config(String localPath, 
-					String remotePath, 
-					String host,
-					String name, 
-					String serviceName, 
-					String port, 
-					String localDbName, 
-					String remoteDbName, 
-					boolean springBootConfig, 
-					boolean databaseConfig, 
-					boolean fileSyncConfig,
-					boolean autoconfig,
-					String ip,
-					String serverName,
-					List<FileSyncContainer> fileSyncList,
-					String logFilePath) {
-		super();
-		setLocalPath(localPath);
-		setRemotePath(remotePath);
-		this.host = host;
-		this.name = name;
-		this.serviceName = serviceName;
-		this.port = port;
-		this.localDbName = localDbName;
-		this.remoteDbName = remoteDbName;
-		this.springBootConfig = springBootConfig;
-		this.databaseConfig = databaseConfig;
-		this.fileSyncConfig = fileSyncConfig;
-		this.autoconfig = autoconfig;
-		this.ip = ip;
-		this.serverName = serverName;
-		this.fileSyncList = fileSyncList;
-		this.logFilePath = logFilePath;
-	}
-	
-	// @formatter:on
+    // @formatter:off
+    public Config(String localPath,
+                  String remotePath,
+                  String host,
+                  String name,
+                  String serviceName,
+                  String port,
+                  String localDbName,
+                  String remoteDbName,
+                  String dbUsername,
+                  String dbPassword,
+                  boolean springBootConfig,
+                  boolean databaseConfig,
+                  boolean fileSyncConfig,
+                  String ip,
+                  String serverName,
+                  List<FileSyncContainer> fileSyncList,
+                  String logFilePath,
+                  String javaPath,
+                  String jvmOptions,
+                  boolean apacheConfig,
+                  boolean applicationConfig,
+                  boolean serviceConfig) {
+        super();
+        setLocalPath(localPath);
+        setRemotePath(remotePath);
+        this.host = host;
+        this.name = name;
+        this.serviceName = serviceName;
+        this.port = port;
+        this.localDbName = localDbName;
+        this.remoteDbName = remoteDbName;
+        this.dbUsername = dbUsername;
+        this.dbPassword = dbPassword;
+        this.springBootConfig = springBootConfig;
+        this.databaseConfig = databaseConfig;
+        this.fileSyncConfig = fileSyncConfig;
+        this.ip = ip;
+        this.serverName = serverName;
+        this.fileSyncList = fileSyncList;
+        this.logFilePath = logFilePath;
+        this.javaPath = javaPath;
+        this.jvmOptions = jvmOptions;
+        this.apacheConfig = apacheConfig;
+        this.applicationConfig = applicationConfig;
+        this.serviceConfig = serviceConfig;
+    }
 
-	public Config() {
-		// default constructor
-	}
+    // @formatter:on
 
-	public Long getId() {
-		return id;
-	}
+    public Config() {
+        // default constructor
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getLocalPath() {
-		return localPath;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setLocalPath(String localPath) {
-		this.localPath = BrussUtils.formatPath(localPath, false, true);
-	}
+    public String getLocalPath() {
+        return localPath;
+    }
 
-	public String getRemotePath() {
-		return remotePath;
-	}
+    public void setLocalPath(String localPath) {
+        this.localPath = BrussUtils.formatPath(localPath, false, true);
+    }
 
-	public void setRemotePath(String remotePath) {
-		this.remotePath = BrussUtils.formatPath(remotePath, true, true);
-	}
+    public String getRemotePath() {
+        return remotePath;
+    }
 
-	public String getHost() {
-		return host;
-	}
+    public void setRemotePath(String remotePath) {
+        this.remotePath = BrussUtils.formatPath(remotePath, true, false);
+    }
 
-	public void setHost(String host) {
-		this.host = host;
-	}
+    public String getHost() {
+        return host;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getServiceName() {
-		return serviceName;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getJarName() {
-		return serviceName + ".jar";
-	}
+    public String getServiceName() {
+        return serviceName;
+    }
 
-	public String getLocalJarPath() {
-		return localPath + getJarName();
-	}
+    public String getJarName() {
+        return serviceName + ".jar";
+    }
 
-	public String getRemoteJarPath() {
-		return remotePath + getJarName();
-	}
+    public String getLocalJarPath() {
+        return localPath + getJarName();
+    }
 
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
-	}
+    public String getRemoteJarPath() {
+        return remotePath + "/" + getJarName();
+    }
 
-	public String getPort() {
-		return port;
-	}
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
 
-	public void setPort(String port) {
-		this.port = port;
-	}
+    public String getPort() {
+        return port;
+    }
 
-	public String getRemoteDbName() {
-		return remoteDbName;
-	}
+    public void setPort(String port) {
+        this.port = port;
+    }
 
-	public void setRemoteDbName(String remoteDbName) {
-		this.remoteDbName = remoteDbName;
-	}
+    public String getRemoteDbName() {
+        return remoteDbName;
+    }
 
-	public String getLocalDbName() {
-		return localDbName;
-	}
+    public void setRemoteDbName(String remoteDbName) {
+        this.remoteDbName = remoteDbName;
+    }
 
-	public void setLocalDbName(String localDbName) {
-		this.localDbName = localDbName;
-	}
+    public String getLocalDbName() {
+        return localDbName;
+    }
 
-	public boolean isSpringBootConfig() {
-		return springBootConfig;
-	}
+    public void setLocalDbName(String localDbName) {
+        this.localDbName = localDbName;
+    }
 
-	public void setSpringBootConfig(boolean springBootConfig) {
-		this.springBootConfig = springBootConfig;
-	}
+    public boolean isSpringBootConfig() {
+        return springBootConfig;
+    }
 
-	public boolean isDatabaseConfig() {
-		return databaseConfig;
-	}
+    public void setSpringBootConfig(boolean springBootConfig) {
+        this.springBootConfig = springBootConfig;
+    }
 
-	public void setDatabaseConfig(boolean databaseConfig) {
-		this.databaseConfig = databaseConfig;
-	}
+    public boolean isDatabaseConfig() {
+        return databaseConfig;
+    }
 
-	public boolean isFileSyncConfig() {
-		return fileSyncConfig;
-	}
+    public void setDatabaseConfig(boolean databaseConfig) {
+        this.databaseConfig = databaseConfig;
+    }
 
-	public void setFileSyncConfig(boolean fileSyncConfig) {
-		this.fileSyncConfig = fileSyncConfig;
-	}
+    public boolean isFileSyncConfig() {
+        return fileSyncConfig;
+    }
 
-	public String getServerName() {
-		return serverName;
-	}
+    public void setFileSyncConfig(boolean fileSyncConfig) {
+        this.fileSyncConfig = fileSyncConfig;
+    }
 
-	public void setServerName(String serverName) {
-		this.serverName = serverName;
-	}
+    public String getServerName() {
+        return serverName;
+    }
 
-	public String getIP() {
-		return ip;
-	}
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
+    }
 
-	public void setIP(String ip) {
-		this.ip = ip;
-	}
+    public String getIP() {
+        return ip;
+    }
 
-	public boolean isAutoconfig() {
-		return autoconfig;
-	}
+    public void setIP(String ip) {
+        this.ip = ip;
+    }
 
-	public void setAutoconfig(boolean autoconfig) {
-		this.autoconfig = autoconfig;
-	}
+    @Override
+    public int compareTo(Config config) {
+        return this.id.compareTo(config.id);
+    }
 
-	@Override
-	public int compareTo(Config config) {
-		return this.id.compareTo(config.id);
-	}
+    public List<FileSyncContainer> getFileSyncList() {
+        return fileSyncList;
+    }
 
-	public List<FileSyncContainer> getFileSyncList() {
-		return fileSyncList;
-	}
+    public void setFileSyncList(List<FileSyncContainer> fileSyncList) {
+        this.fileSyncList = fileSyncList;
+    }
 
-	public void setFileSyncList(List<FileSyncContainer> fileSyncList) {
-		this.fileSyncList = fileSyncList;
-	}
+    public String getLogFilePath() {
+        return logFilePath;
+    }
 
-	public String getLogFilePath() {
-		return logFilePath;
-	}
+    public void setLogFilePath(String logFilePath) {
+        this.logFilePath = logFilePath;
+    }
 
-	public void setLogFilePath(String logFilePath) {
-		this.logFilePath = logFilePath;
-	}
+    public boolean isLogFileConfig() {
+        return logFileConfig;
+    }
 
-	public boolean isLogFileConfig() {
-		return logFileConfig;
-	}
+    public void setLogFileConfig(boolean logFileConfig) {
+        this.logFileConfig = logFileConfig;
+    }
 
-	public void setLogFileConfig(boolean logFileConfig) {
-		this.logFileConfig = logFileConfig;
-	}
+    public String getJavaPath() {
+        return javaPath;
+    }
 
-	@Override
-	public String toString() {
-		return "Config [id=" + id + ", host=" + host + ", name=" + name + ", serviceName=" + serviceName + ", localPath=" + localPath + ", remotePath=" + remotePath + ", remoteDbName=" + remoteDbName + ", localDbName=" + localDbName + ", autoconfig=" + autoconfig + ", port=" + port
-				+ ", serverName=" + serverName + ", ip=" + ip + ", springBootConfig=" + springBootConfig + ", databaseConfig=" + databaseConfig + ", fileSyncConfig=" + fileSyncConfig + ", fileSyncList=" + fileSyncList + "]";
-	}
+    public void setJavaPath(String javaPath) {
+        this.javaPath = javaPath;
+    }
 
+    public String getJvmOptions() {
+        return jvmOptions;
+    }
+
+    public void setJvmOptions(String jvmOptions) {
+        this.jvmOptions = jvmOptions;
+    }
+
+    public boolean isApacheConfig() {
+        return apacheConfig;
+    }
+
+    public void setApacheConfig(boolean apacheConfig) {
+        this.apacheConfig = apacheConfig;
+    }
+
+    public boolean isApplicationConfig() {
+        return applicationConfig;
+    }
+
+    public void setApplicationConfig(boolean applicationConfig) {
+        this.applicationConfig = applicationConfig;
+    }
+
+    public boolean isServiceConfig() {
+        return serviceConfig;
+    }
+
+    public void setServiceConfig(boolean serviceConfig) {
+        this.serviceConfig = serviceConfig;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getDbUsername() {
+        return dbUsername;
+    }
+
+    public void setDbUsername(String dbUsername) {
+        this.dbUsername = dbUsername;
+    }
+
+    public String getDbPassword() {
+        return dbPassword;
+    }
+
+    public void setDbPassword(String dbPassword) {
+        this.dbPassword = dbPassword;
+    }
+
+    @Override
+    public String toString() {
+        return "Config{" +
+                "id=" + id +
+                ", host='" + host + '\'' +
+                ", name='" + name + '\'' +
+                ", serviceName='" + serviceName + '\'' +
+                ", localPath='" + localPath + '\'' +
+                ", remotePath='" + remotePath + '\'' +
+                ", remoteDbName='" + remoteDbName + '\'' +
+                ", localDbName='" + localDbName + '\'' +
+                ", dbUsername='" + dbUsername + '\'' +
+                ", dbPassword='" + dbPassword + '\'' +
+                ", logFileConfig=" + logFileConfig +
+                ", logFilePath='" + logFilePath + '\'' +
+                ", apacheConfig=" + apacheConfig +
+                ", applicationConfig=" + applicationConfig +
+                ", serviceConfig=" + serviceConfig +
+                ", port='" + port + '\'' +
+                ", serverName='" + serverName + '\'' +
+                ", ip='" + ip + '\'' +
+                ", javaPath='" + javaPath + '\'' +
+                ", jvmOptions='" + jvmOptions + '\'' +
+                ", springBootConfig=" + springBootConfig +
+                ", databaseConfig=" + databaseConfig +
+                ", fileSyncConfig=" + fileSyncConfig +
+                ", fileSyncList=" + fileSyncList +
+                '}';
+    }
 }

@@ -151,7 +151,11 @@ public class MainSceneCtrl implements Initializable {
 		alert.setGraphic(imgView);
 		alert.setHeaderText("Soll folgende App installiert / aktualisiert werden?");
 
-		String message = "App:\t\t\t" + currentConf.getServiceName() + "\nServer:\t\t" + currentConf.getHost() + "\nAutoconfig:\t" + (currentConf.isAutoconfig() ? "Ja" : "Nein");
+		String message = "App:\t\t\t" + currentConf.getServiceName()
+                + "\nServer:\t\t" + currentConf.getHost()
+                + "\nApache-Conf anlegen:\t" + (currentConf.isApacheConfig() ? "Ja" : "Nein")
+                + "\napplication.properties anlegen:\t" + (currentConf.isApplicationConfig() ? "Ja" : "Nein")
+                + "\nUpstart- / Systemdservice anlegen:\t" + (currentConf.isServiceConfig() ? "Ja" : "Nein");
 
 		alert.setContentText(message);
 
