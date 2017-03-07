@@ -1,3 +1,9 @@
+4.0
+- Automatische Erkennung der Ubuntu-Version > Unterscheidung Upstart und Systemd
+- Autoconfig aufgeteilt in Apache-, Application- und Serviceconf
+- Einstellung von JRE-Pfad und JRE-Argumenten möglich
+- Erstellung der Datenbank auf dem Server
+
 3.31
 - Dialogbox nach Log-Download zum Öffnen des Logs
 - Tooltips
