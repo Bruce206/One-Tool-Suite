@@ -5,9 +5,12 @@ Java-Tool to deploy Spring Boot Applications, Remote-Tail Logfiles, sync files a
 * SSH-Secured Connection
 * pageant-support
 * Remote-Tailing of Logfiles
-* Deploy JAR-APP to Server (includes creation of upstart- and apache-config)
+* Deploy JAR-APP to Server
+ * create systemd or upstart-conf based on Ubuntu Version
+ * create apache-conf
+ * create application.properties
 * Deep-Sync Files & Folders from Server to Local
-* Dump, download and restore a PostgreSQL-Database with one click
+* Dump, Download and Restore a PostgreSQL-Database with one click (Server -> Local)
 * Self-Updating
 
 ## Notes
