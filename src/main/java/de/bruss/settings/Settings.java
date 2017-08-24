@@ -1,5 +1,8 @@
 package de.bruss.settings;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,6 +24,8 @@ public class Settings {
 
 	public final static Path appDataPath = Paths.get(System.getenv("APPDATA") + "\\OneToolSuite");
 	private final static Path configFilePath = Paths.get(System.getenv("APPDATA") + "\\OneToolSuite\\config.properties");
+
+	private final Logger logger = LoggerFactory.getLogger(Settings.class);
 
 	private Settings() {
 		init();
@@ -68,7 +73,7 @@ public class Settings {
 	}
 
 	public void create(String username, String sshPath, String postgresPath) {
-		System.out.println("Saving Settings...");
+		logger.info("Saving Settings...");
 		try {
 			configProp.setProperty("username", username);
 			configProp.setProperty("sshPath", sshPath);
@@ -79,7 +84,7 @@ public class Settings {
 			configProp.store(fileOut, "Configurations - don't share!!");
 			fileOut.close();
 			init();
-			System.out.println("-- [done]");
+			logger.info("-- [done]");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

@@ -13,51 +13,32 @@
 <?import com.cathive.fonts.fontawesome.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.bruss.config.ConfigTableCtrl">
-	<left>
-		<TableView fx:id="configTable" prefHeight="803.0" prefWidth="551.0" style="-fx-font-size: 12px;" BorderPane.alignment="CENTER">
-			<columns>
-				<TableColumn fx:id="name" editable="false" maxWidth="-1.0" minWidth="220.0" prefWidth="-1.0" text="Name" />
-				<TableColumn fx:id="host" editable="false" maxWidth="-1.0" minWidth="200.0" prefWidth="-1.0" text="Hostname / IP" />
-				<TableColumn fx:id="springBootConfigColumn" editable="false" prefWidth="20.0">
-               <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/spring-boot.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-				</TableColumn>
-				<TableColumn fx:id="databaseConfigColumn" editable="false" prefWidth="20.0">
-               <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/db.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-				</TableColumn>
-				<TableColumn fx:id="fileSyncConfigColumn" editable="false" prefWidth="20.0">
-               <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/network-local.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-				</TableColumn>
-            <TableColumn fx:id="logFileConfigColumn" editable="false" prefWidth="20.0">
-               <graphic>
-                  <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../images/taillog.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </TableColumn>
-			</columns>
-		</TableView>
-	</left>
-	<center>
-		<fx:include fx:id="editConfigTab" source="EditConfig.fxml" BorderPane.alignment="CENTER" />
-	</center>
+    <center>
+        <fx:include fx:id="editConfigTab" source="EditConfig.fxml" BorderPane.alignment="CENTER" />
+    </center>
+    <right>
+
+    </right>
+   <left>
+      <SplitPane dividerPositions="0.9637952559300874" orientation="VERTICAL" prefHeight="803.0" prefWidth="454.0" BorderPane.alignment="CENTER">
+        <items>
+              <!--<TableView fx:id="configTable" prefHeight="803.0" prefWidth="386.0" style="-fx-font-size: 12px;"-->
+                         <!--BorderPane.alignment="CENTER">-->
+                  <!--<columns>-->
+                      <!--<TableColumn fx:id="name" editable="false" maxWidth="-1.0" minWidth="220.0" prefWidth="-1.0"-->
+                                   <!--text="Name"/>-->
+                      <!--<TableColumn fx:id="host" editable="false" maxWidth="-1.0" minWidth="200.0" prefWidth="-1.0"-->
+                                   <!--text="Hostname / IP"/>-->
+                  <!--</columns>-->
+              <!--</TableView>-->
+              <TreeTableView fx:id="treeTableView" editable="true" prefHeight="803.0" prefWidth="448.0" showRoot="false" style="-fx-font-size: 12px;">
+                  <columns>
+                      <TreeTableColumn fx:id="treetableName" maxWidth="-1.0" minWidth="220.0" prefWidth="-1.0" text="Name" />
+                      <TreeTableColumn fx:id="treetableHostname" editable="false" maxWidth="-1.0" minWidth="220.0" prefWidth="-1.0" text="Hostname" />
+                  </columns>
+              </TreeTableView>
+            <Button fx:id="addCategoryBtn" alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" text="Neue Kategorie" />
+        </items>
+      </SplitPane>
+   </left>
 </BorderPane>

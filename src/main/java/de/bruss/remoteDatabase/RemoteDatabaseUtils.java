@@ -1,10 +1,24 @@
 package de.bruss.remoteDatabase;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.google.common.base.Preconditions;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
+import de.bruss.deployment.Config;
+import de.bruss.settings.Settings;
+import de.bruss.ssh.SshUtils;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ProgressBar;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,31 +29,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ProgressBar;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.google.common.base.Preconditions;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
-
-import de.bruss.deployment.Config;
-import de.bruss.settings.Settings;
-import de.bruss.ssh.SshUtils;
-
 public class RemoteDatabaseUtils implements Runnable {
 
 	private Session session;
 	private Config config;
 	private ProgressBar progressBar;
 	private boolean restoreLocal;
+
+	private final Logger logger = LoggerFactory.getLogger(RemoteDatabaseUtils.class);
 
 	public RemoteDatabaseUtils(Config config, ProgressBar progressBar, boolean restoreLocal) throws JSchException {
 
@@ -65,13 +62,13 @@ public class RemoteDatabaseUtils implements Runnable {
 		BufferedReader br = new BufferedReader(isr);
 		String ll;
 		while ((ll = br.readLine()) != null) {
-			System.out.println(ll);
+			logger.info(ll);
 		}
 
 	}
 
 	private void dropLocalDb() throws IOException, InterruptedException, ExecutionException, LocalDatabaseInUseException {
-		System.out.print("Dropping local database: " + config.getLocalDbName());
+		logger.info("Dropping local database: " + config.getLocalDbName());
 
 		Process p;
 		ProcessBuilder pb;
@@ -122,7 +119,7 @@ public class RemoteDatabaseUtils implements Runnable {
 			}
 		}
 
-		System.out.println("-> [done]");
+		logger.info("-> [done]");
 	}
 
 	private void createLocalDb() throws IOException {
@@ -139,7 +136,7 @@ public class RemoteDatabaseUtils implements Runnable {
 		BufferedReader br = new BufferedReader(isr);
 		String ll;
 		while ((ll = br.readLine()) != null) {
-			System.out.println(ll);
+			logger.info(ll);
 		}
 	}
 
@@ -155,14 +152,14 @@ public class RemoteDatabaseUtils implements Runnable {
 			}
 
 			// Create Dump
-			System.out.println("Removing old dump from /tmp/" + config.getRemoteDbName() + ".dump");
+			logger.info("Removing old dump from /tmp/" + config.getRemoteDbName() + ".dump");
 			if (SshUtils.fileExistsOnServer(session, "/tmp/" + config.getRemoteDbName() + ".dump")) {
 				SshUtils.removeFile(session, "/tmp/" + config.getRemoteDbName() + ".dump");
 			}
 
-			System.out.print("Sending pgdump for database: " + config.getRemoteDbName());
+			logger.info("Sending pgdump for database: " + config.getRemoteDbName());
 			String response2 = SshUtils.sendCommand(this.session, "su - postgres -c \"pg_dump -U" + config.getDbUsername() + " -f/tmp/" + config.getRemoteDbName() + ".dump -Fc " + config.getRemoteDbName() + "\"");
-			System.out.println(" -> Database dump complete: " + response2);
+			logger.info(" -> Database dump complete: " + response2);
 
 			// Download file
 			Path dbFile = Files.createTempFile("db_", ".dump");
@@ -172,14 +169,14 @@ public class RemoteDatabaseUtils implements Runnable {
 				Preconditions.checkNotNull(config.getLocalDbName());
 				dropLocalDb();
 
-				System.out.print("Creating local database: " + config.getLocalDbName());
+				logger.info("Creating local database: " + config.getLocalDbName());
 				createLocalDb();
-				System.out.println("-> [done]");
+				logger.info("-> [done]");
 
 				// restore db
-				System.out.print("Restoring local database: " + config.getLocalDbName() + " from dump: " + dbFile.toString());
+				logger.info("Restoring local database: " + config.getLocalDbName() + " from dump: " + dbFile.toString());
 				restoreLocalDb(dbFile);
-				System.out.println("-> [done]");
+				logger.info("-> [done]");
 			} else {
 				final FileChooser fileChooser = new FileChooser();
 
@@ -195,17 +192,17 @@ public class RemoteDatabaseUtils implements Runnable {
 						File file = fileChooser.showSaveDialog(new Stage());
 						if (file != null) {
 							Files.copy(dbFile, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-							System.out.println("Dump saved to: " + file.getAbsolutePath());
+							logger.info("Dump saved to: " + file.getAbsolutePath());
 						}
 					} catch (Exception e) {
-						System.out.println("Saving file failed!");
+						logger.info("Saving file failed!");
 						e.printStackTrace();
 					}
 				});
 			}
 
 		} catch (IOException | JSchException | SftpException | RuntimeException | InterruptedException | ExecutionException | LocalDatabaseInUseException e) {
-			System.out.println("Database backup / restore failed!");
+			logger.info("Database backup / restore failed!");
 			System.err.println(e.getMessage());
 			e.printStackTrace();
 		}

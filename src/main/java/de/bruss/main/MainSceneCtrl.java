@@ -1,13 +1,13 @@
 package de.bruss.main;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
+import com.jcraft.jsch.JSchException;
+import de.bruss.Context;
+import de.bruss.Starter;
+import de.bruss.UpdateService;
+import de.bruss.deployment.Config;
+import de.bruss.logger.DownloadLogService;
+import de.bruss.logger.LogFileCtrl;
+import de.bruss.settings.Settings;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -31,18 +31,15 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
-
 import org.apache.commons.io.IOUtils;
 
-import com.jcraft.jsch.JSchException;
-
-import de.bruss.Context;
-import de.bruss.Starter;
-import de.bruss.UpdateService;
-import de.bruss.deployment.Config;
-import de.bruss.logger.DownloadLogService;
-import de.bruss.logger.LogFileCtrl;
-import de.bruss.settings.Settings;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 public class MainSceneCtrl implements Initializable {
 

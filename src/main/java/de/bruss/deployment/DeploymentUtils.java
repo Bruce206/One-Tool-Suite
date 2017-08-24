@@ -1,5 +1,18 @@
 package de.bruss.deployment;
 
+import com.google.common.base.Preconditions;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
+import de.bruss.ssh.SshUtils;
+import javafx.scene.control.ProgressBar;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,25 +20,14 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-
-import com.google.common.base.Preconditions;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
-
-import de.bruss.ssh.SshUtils;
-import javafx.scene.control.ProgressBar;
-import org.apache.commons.lang3.StringUtils;
-
 public class DeploymentUtils implements Runnable {
 
     private final ServiceType serviceType;
     private Session session;
     private Config config;
     private ProgressBar progressBar;
+
+    private final Logger logger = LoggerFactory.getLogger(DeploymentUtils.class);
 
     public DeploymentUtils(Config config, ProgressBar progressBar) throws JSchException {
         this.config = config;
@@ -54,11 +56,11 @@ public class DeploymentUtils implements Runnable {
         try {
             if (isServiceInstalled()) {
                 // send stop for service
-                System.out.println("Stopping Service on Remote...    ");
+                logger.info("Stopping Service on Remote...    ");
                 String response = stopService();
-                System.out.println("-- [Done] Response:   " + response.trim());
+                logger.info("-- [Done] Response:   " + response.trim());
             } else {
-                System.out.println("No Service [" + config.getServiceName() + "] found on Server!");
+                logger.info("No Service [" + config.getServiceName() + "] found on Server!");
                 if (config.isServiceConfig()) {
                     createConfigFileOnServer();
                 }
@@ -73,7 +75,7 @@ public class DeploymentUtils implements Runnable {
                 if (!SshUtils.fileExistsOnServer(session, config.getRemotePath() + "/application.properties")) {
                     createApplicationPropertiesOnServer();
                 } else {
-                    System.out.println("application.properties already found on server. Skipping creation!");
+                    logger.info("application.properties already found on server. Skipping creation!");
                 }
             }
 
@@ -82,7 +84,7 @@ public class DeploymentUtils implements Runnable {
                     createApacheConfigOnServer();
                     reloadApache();
                 } else {
-                    System.out.println("Apache-Conf already found on server. Skipping creation!");
+                    logger.info("Apache-Conf already found on server. Skipping creation!");
                 }
             }
 
@@ -92,9 +94,9 @@ public class DeploymentUtils implements Runnable {
                 if ("0".equals(response)) {
                     System.out.print("No Database " + config.getRemoteDbName() + " exists on server. Creating a new database...");
                     String response2 = SshUtils.sendCommand(this.session, "su - postgres -c \"createdb -O" + config.getDbUsername() + " " + config.getRemoteDbName() + "\"");
-                    System.out.println("-- [done] Response: " + response2.trim());
+                    logger.info("-- [done] Response: " + response2.trim());
                 } else {
-                    System.out.println("Database " + config.getRemoteDbName() + " already exists on server. Skipping creation!");
+                    logger.info("Database " + config.getRemoteDbName() + " already exists on server. Skipping creation!");
                 }
 
             }
@@ -111,7 +113,7 @@ public class DeploymentUtils implements Runnable {
             // start service
             System.out.print("Starting Service: " + config.getServiceName() + " ");
             String response2 = startService();
-            System.out.println("-- [done] Response: " + response2);
+            logger.info("-- [done] Response: " + response2);
         } catch (JSchException | SftpException | IOException e) {
             e.printStackTrace();
         }
@@ -129,7 +131,7 @@ public class DeploymentUtils implements Runnable {
     private void reloadApache() {
         System.out.print("Restarting Apache");
         String response = SshUtils.sendCommand(session, "service apache2 reload");
-        System.out.println("-- [done] " + response);
+        logger.info("-- [done] " + response);
     }
 
     private void createApacheConfigOnServer() {
@@ -148,13 +150,13 @@ public class DeploymentUtils implements Runnable {
 
             System.out.print("-- Copying to server... (" + tempConfFile.toPath().toString() + ")");
             SshUtils.copyFile(tempConfFile.toPath().toString(), getRemoteApacheConfPath(), session, progressBar);
-            System.out.println("-- [done]");
+            logger.info("-- [done]");
             System.out.print("Enabling site...");
             String response = SshUtils.sendCommand(this.session, "a2ensite " + "virt-" + config.getServiceName() + ".conf");
-            System.out.println("-- [done] Response: " + response);
+            logger.info("-- [done] Response: " + response);
         } catch (IOException | JSchException | SftpException e) {
-            System.out.println("Error occured while creating application.properties file");
-            System.out.println(e.getMessage());
+            logger.info("Error occured while creating application.properties file");
+            logger.info(e.getMessage());
             e.printStackTrace();
         }
     }
@@ -169,7 +171,7 @@ public class DeploymentUtils implements Runnable {
         try {
             sftpChannel.rename(config.getRemotePath() + "/" + config.getJarName(), config.getRemotePath() + "/" + config.getJarName() + "OLD");
         } catch (SftpException se) {
-            System.out.println("No jar file found on server! Skipping archiving of file!");
+            logger.info("No jar file found on server! Skipping archiving of file!");
         }
         sftpChannel.exit();
         sftpChannel.disconnect();
@@ -190,11 +192,11 @@ public class DeploymentUtils implements Runnable {
         try {
             FileUtils.moveFile(files.get(0), FileUtils.getFile(config.getLocalJarPath()));
         } catch (IOException ioe) {
-            System.out.println("-- Renamed File already exists! Using this file!");
+            logger.info("-- Renamed File already exists! Using this file!");
             return;
         }
 
-        System.out.println("-- [done]");
+        logger.info("-- [done]");
     }
 
     private void createApplicationPropertiesOnServer() throws IOException {
@@ -213,10 +215,10 @@ public class DeploymentUtils implements Runnable {
 
             System.out.print("-- Copying to server... (" + tempConfFile.toPath().toString() + ")");
             SshUtils.copyFile(tempConfFile.toPath().toString(), config.getRemotePath() + "/application.properties", session, progressBar);
-            System.out.println("-- [done]");
+            logger.info("-- [done]");
         } catch (IOException | JSchException | SftpException e) {
-            System.out.println("Error occured while creating application.properties file");
-            System.out.println(e.getMessage());
+            logger.info("Error occured while creating application.properties file");
+            logger.info(e.getMessage());
             e.printStackTrace();
         } finally {
             if (applicationPropertiesTemplate != null) {
@@ -253,10 +255,10 @@ public class DeploymentUtils implements Runnable {
 
                 System.out.print("-- Copying config file to server... (" + tempConfFile.toPath().toString() + ")");
                 SshUtils.copyFile(tempConfFile.toPath().toString(), "/etc/init/" + config.getServiceName() + ".conf", session, progressBar);
-                System.out.println("-- [done]");
+                logger.info("-- [done]");
             } catch (IOException | JSchException | SftpException e) {
-                System.out.println("Error occured while creating config file");
-                System.out.println(e.getMessage());
+                logger.info("Error occured while creating config file");
+                logger.info(e.getMessage());
                 e.printStackTrace();
             }
         } else {
@@ -278,13 +280,13 @@ public class DeploymentUtils implements Runnable {
 
                 System.out.print("-- Copying systemd file to server... (" + tempServiceFile.toPath().toString() + ")");
                 SshUtils.copyFile(tempServiceFile.toPath().toString(), "/etc/systemd/system/" + config.getServiceName() + ".service", session, progressBar);
-                System.out.println("-- [done]");
+                logger.info("-- [done]");
                 System.out.print("Registering Service for start on reboot...");
                 String response = SshUtils.sendCommand(this.session, "systemctl enable " + config.getServiceName() + ".service");
-                System.out.println("-- [done] Response: " + response);
+                logger.info("-- [done] Response: " + response);
             } catch (IOException | JSchException | SftpException e) {
-                System.out.println("Error occured while creating systemd file");
-                System.out.println(e.getMessage());
+                logger.info("Error occured while creating systemd file");
+                logger.info(e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -319,10 +321,10 @@ public class DeploymentUtils implements Runnable {
         Double versionDbl = Double.parseDouble(version);
 
         if (versionDbl < 16) {
-            System.out.println("Detected Ubuntu-Version: " + version + ". Using " + ServiceType.UPSTART.toString());
+            logger.info("Detected Ubuntu-Version: " + version + ". Using " + ServiceType.UPSTART.toString());
             return ServiceType.UPSTART;
         } else {
-            System.out.println("Detected Ubuntu-Version: " + version + ". Using " + ServiceType.SYSTEMD.toString());
+            logger.info("Detected Ubuntu-Version: " + version + ". Using " + ServiceType.SYSTEMD.toString());
             return ServiceType.SYSTEMD;
         }
 

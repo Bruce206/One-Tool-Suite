@@ -1,26 +1,10 @@
 package de.bruss.ssh;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.ChannelShell;
-import com.jcraft.jsch.IdentityRepository;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
-import com.jcraft.jsch.SftpProgressMonitor;
+import com.jcraft.jsch.*;
 import com.jcraft.jsch.agentproxy.AgentProxyException;
 import com.jcraft.jsch.agentproxy.Connector;
 import com.jcraft.jsch.agentproxy.ConnectorFactory;
 import com.jcraft.jsch.agentproxy.RemoteIdentityRepository;
-
 import de.bruss.Context;
 import de.bruss.settings.Settings;
 import javafx.fxml.FXMLLoader;
@@ -29,8 +13,17 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class SshUtils {
+    private static final Logger logger = LoggerFactory.getLogger(SshUtils.class);
+
 	public static Session getSession(String host) {
 		try {
 			JSch jsch = new JSch();
@@ -132,13 +125,13 @@ public class SshUtils {
 			@Override
 			public void init(int op, String src, String dest, long max) {
 				this.max = max;
-				System.out.println("-- Starting upload... FileSize: " + FileUtils.byteCountToDisplaySize(max));
+				logger.info("-- Starting upload... FileSize: " + FileUtils.byteCountToDisplaySize(max));
 				progressBar.setVisible(true);
 			}
 
 			@Override
 			public void end() {
-				System.out.println("-- Finished uploading!");
+				logger.info("-- Finished uploading!");
 				progressBar.setVisible(false);
 			}
 
@@ -170,7 +163,7 @@ public class SshUtils {
 
 			@Override
 			public void end() {
-				System.out.println(" -> [done]!");
+				logger.info(" -> [done]!");
 				progressBar.setVisible(false);
 			}
 
@@ -194,7 +187,7 @@ public class SshUtils {
 				if (StringUtils.isNotBlank(folder)) {
 					try {
 						sftpChannel.mkdir(folder);
-						System.out.println("Created folder: " + folder);
+						logger.info("Created folder: " + folder);
 					} catch (SftpException sftpe) {
 						continue;
 					} finally {
@@ -206,7 +199,7 @@ public class SshUtils {
 
 			}
 		} catch (SftpException e) {
-			System.out.println("Folder creation failed!");
+			logger.info("Folder creation failed!");
 			e.printStackTrace();
 		}
 
@@ -218,7 +211,7 @@ public class SshUtils {
 		try {
 			sftpChannel.lstat(path);
 		} catch (SftpException se) {
-			System.out.println("File " + path + " not found on server!");
+			logger.info("File " + path + " not found on server!");
 			return false;
 		}
 
@@ -248,7 +241,7 @@ public class SshUtils {
 
 			return StringUtils.chomp(outputBuffer.toString());
 		} catch (JSchException | IOException e) {
-			System.out.println("Failed to connect to Server while sending Command: " + command);
+			logger.info("Failed to connect to Server while sending Command: " + command);
 			e.printStackTrace();
 		}
 		return null;
@@ -260,7 +253,7 @@ public class SshUtils {
 		try {
 			sftpChannel.rm(path);
 		} catch (SftpException se) {
-			System.out.println("File " + path + " not found on server!");
+			logger.info("File " + path + " not found on server!");
 		}
 
 		sftpChannel.exit();

@@ -1,5 +1,10 @@
 package de.bruss;
 
+import de.bruss.settings.Settings;
+import javafx.application.Platform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,14 +15,12 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Scanner;
 
-import javafx.application.Platform;
-import de.bruss.settings.Settings;
-
 public class UpdateService implements Runnable {
+    private final Logger logger = LoggerFactory.getLogger(UpdateService.class);
 
 	@Override
 	public void run() {
-		System.out.println("Suche nach neuer Version...");
+		logger.info("Suche nach neuer Version...");
 		String version = UpdateService.class.getPackage().getImplementationVersion();
 
 		String urlString = "http://apps.bruce-io.de/check/OneToolSuite/" + version;
@@ -36,7 +39,7 @@ public class UpdateService implements Runnable {
 			// Boolean updateRequired = true;
 
 			if (updateRequired) {
-				System.out.println("Neue Version gefunden! Starte Download...");
+				logger.info("Neue Version gefunden! Starte Download...");
 				Settings.getInstance().setProperty("showChangelog", "true");
 				File tempDir = File.createTempFile("update_OneToolSuite", Long.toString(System.nanoTime()));
 				// file only needed to create path
@@ -60,16 +63,16 @@ public class UpdateService implements Runnable {
 
 				File thisJar = new File(System.getProperty("java.class.path"));
 				String path = thisJar.getAbsolutePath();
-				System.out.println(path);
+				logger.info(path);
 
 				ProcessBuilder pb = new ProcessBuilder("java", "-jar", updater.getAbsolutePath(), path);
 
-				System.out.println("Update heruntergeladen! Starte Neu!");
+				logger.info("Update heruntergeladen! Starte Neu!");
 
 				pb.start();
 				Platform.exit();
 			} else {
-				System.out.println("Keine neuere Version verfügbar!");
+				logger.info("Keine neuere Version verfügbar!");
 			}
 
 		} catch (IOException e) {

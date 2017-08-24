@@ -1,3 +1,7 @@
+5.0
+- Kategorien für Konfigurationen
+- Neues Logging-Framework
+
 4.0
 - Automatische Erkennung der Ubuntu-Version > Unterscheidung Upstart und Systemd
 - Autoconfig aufgeteilt in Apache-, Application- und Serviceconf

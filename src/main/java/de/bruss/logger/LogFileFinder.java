@@ -1,15 +1,5 @@
 package de.bruss.logger;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
-
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileType;
-
 import de.bruss.Context;
 import de.bruss.filesync.SftpService;
 import de.bruss.settings.Settings;
@@ -25,6 +15,17 @@ import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class LogFileFinder implements Initializable {
 	ObservableList<String> items = FXCollections.observableArrayList();
@@ -37,6 +38,8 @@ public class LogFileFinder implements Initializable {
 
 	@FXML
 	private ProgressIndicator progressIndicator;
+
+	private final Logger logger = LoggerFactory.getLogger(LogFileFinder.class);
 
 	private boolean cancelled = false;
 
@@ -95,7 +98,7 @@ public class LogFileFinder implements Initializable {
 						}
 					}
 
-					System.out.println("Log-Files found: " + logList.getItems().size() + ". Searched " + folderCounter + " folders and " + fileCounter + " files.");
+					logger.info("Log-Files found: " + logList.getItems().size() + ". Searched " + folderCounter + " folders and " + fileCounter + " files.");
 					borderPane.getBottom().setVisible(false);
 					progressIndicator.setVisible(false);
 				}

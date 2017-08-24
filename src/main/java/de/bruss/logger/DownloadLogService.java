@@ -1,20 +1,8 @@
 package de.bruss.logger;
 
-import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.Optional;
-
-import org.apache.commons.lang3.StringUtils;
-
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
-
 import de.bruss.deployment.Config;
 import de.bruss.ssh.SshUtils;
 import javafx.application.Platform;
@@ -25,6 +13,18 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Optional;
 
 public class DownloadLogService implements Runnable {
 
@@ -32,6 +32,8 @@ public class DownloadLogService implements Runnable {
 	private Config config;
 	private ProgressBar progressBar;
 	private boolean restoreLocal;
+
+	private final Logger logger = LoggerFactory.getLogger(DownloadLogService.class);
 
 	public DownloadLogService(Config config, ProgressBar progressBar) throws JSchException {
 		this.config = config;
@@ -61,7 +63,7 @@ public class DownloadLogService implements Runnable {
 					File file = fileChooser.showSaveDialog(new Stage());
 					if (file != null) {
 						Files.copy(tempFile, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-						System.out.println("Logfile saved to: " + file.getAbsolutePath());
+						logger.info("Logfile saved to: " + file.getAbsolutePath());
 						
 						Platform.runLater(new Runnable() {
 							

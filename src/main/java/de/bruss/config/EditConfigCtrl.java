@@ -1,27 +1,23 @@
 package de.bruss.config;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import de.bruss.Context;
+import de.bruss.deployment.Category;
+import de.bruss.deployment.Config;
+import de.bruss.deployment.DeploymentUtils;
+import de.bruss.filesync.FileSyncContainer;
+import de.bruss.logger.LogFileFinder;
+import de.bruss.remoteDatabase.RemoteDatabaseUtils;
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
+import javafx.scene.control.*;
 import javafx.scene.control.TableColumn.CellEditEvent;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -31,16 +27,18 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import de.bruss.Context;
-import de.bruss.deployment.Config;
-import de.bruss.deployment.DeploymentUtils;
-import de.bruss.filesync.FileSyncContainer;
-import de.bruss.logger.LogFileFinder;
-import de.bruss.remoteDatabase.RemoteDatabaseUtils;
+import javax.jdo.annotations.Transactional;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class EditConfigCtrl implements Initializable {
 
@@ -48,6 +46,8 @@ public class EditConfigCtrl implements Initializable {
     private TextField host;
     @FXML
     private TextField name;
+    @FXML
+    private ChoiceBox<Category> categorySelector;
     @FXML
     private TextField localPath;
     @FXML
@@ -120,7 +120,6 @@ public class EditConfigCtrl implements Initializable {
 
     @FXML
     private Label fileCounter;
-
     @FXML
     private TableView<FileSyncContainer> fileSyncTable;
     @FXML
@@ -130,12 +129,19 @@ public class EditConfigCtrl implements Initializable {
     @FXML
     private TableColumn<FileSyncContainer, String> actionColumn;
 
+    @FXML
+    private Button addCategoryBtn;
+
+    private final Logger logger = LoggerFactory.getLogger(EditConfigCtrl.class);
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Context.setEditConfigCtrl(this);
         Context.setProgressBar(progressBar);
         Context.setFileCounterBox(fileCounterBox);
         Context.setFileCounter(fileCounter);
+
+        setCategoriesInChoiceBox();
 
         Callback<TableColumn<FileSyncContainer, String>, TableCell<FileSyncContainer, String>> cellFactory = new Callback<TableColumn<FileSyncContainer, String>, TableCell<FileSyncContainer, String>>() {
             @Override
@@ -149,7 +155,7 @@ public class EditConfigCtrl implements Initializable {
         fileSyncTable.minHeightProperty().bind(fileSyncTable.prefHeightProperty());
         fileSyncTable.maxHeightProperty().bind(fileSyncTable.prefHeightProperty());
 
-        localPathCol.setCellValueFactory(new PropertyValueFactory<FileSyncContainer, String>("localFilePath"));
+        localPathCol.setCellValueFactory(new PropertyValueFactory<>("localFilePath"));
         localPathCol.setCellFactory(cellFactory);
         localPathCol.setOnEditCommit(new EventHandler<CellEditEvent<FileSyncContainer, String>>() {
             @Override
@@ -158,7 +164,7 @@ public class EditConfigCtrl implements Initializable {
             }
         });
 
-        remotePathCol.setCellValueFactory(new PropertyValueFactory<FileSyncContainer, String>("remoteFilePath"));
+        remotePathCol.setCellValueFactory(new PropertyValueFactory<>("remoteFilePath"));
         remotePathCol.setCellFactory(cellFactory);
         remotePathCol.setOnEditCommit(new EventHandler<CellEditEvent<FileSyncContainer, String>>() {
             @Override
@@ -168,9 +174,11 @@ public class EditConfigCtrl implements Initializable {
         });
         remotePathCol.setSortType(TableColumn.SortType.ASCENDING);
 
-        actionColumn.setCellFactory(new DeleteFileSyncContainerCellFactory<FileSyncContainer, String>());
+        actionColumn.setCellFactory(new DeleteFileSyncContainerCellFactory<>());
 
         this.editConfigVBox.setVisible(false);
+
+        addCategoryBtn.setOnMouseClicked(event -> Context.getConfigTableCtrl().addCategory());
     }
 
     public void initData(Config editConfig) {
@@ -211,6 +219,8 @@ public class EditConfigCtrl implements Initializable {
     }
 
     public void setConfigInView() {
+        this.categorySelector.setValue(null);
+
         this.host.setText(editConfig.getHost());
         this.localPath.setText(editConfig.getLocalPath());
         this.remotePath.setText(editConfig.getRemotePath());
@@ -233,6 +243,7 @@ public class EditConfigCtrl implements Initializable {
         this.ip.setText(editConfig.getIP());
         this.javaPath.setText(editConfig.getJavaPath());
         this.jvmOptions.setText(editConfig.getJvmOptions());
+        this.categorySelector.getSelectionModel().select(editConfig.getCategory());
 
         fileSyncTable.getItems().clear();
         fileSyncTable.getItems().addAll(editConfig.getFileSyncList());
@@ -371,6 +382,7 @@ public class EditConfigCtrl implements Initializable {
         Context.getMainSceneCtrl().clearLog();
     }
 
+    @Transactional
     public void save() {
         if (editConfig == null || editConfig.getId() == null) {
             // @formatter:off
@@ -396,10 +408,15 @@ public class EditConfigCtrl implements Initializable {
                     jvmOptions.getText(),
                     apacheConfig.isSelected(),
                     applicationConfig.isSelected(),
-                    serviceConfig.isSelected());
+                    serviceConfig.isSelected(),
+                    categorySelector.getSelectionModel().getSelectedItem());
             // @formatter:on
             ConfigService.addConfig(config);
             editConfig = config;
+
+            Category cat = editConfig.getCategory();
+            cat.getConfigs().add(editConfig);
+            CategoryService.save(cat);
         } else {
             editConfig.setHost(this.host.getText());
             editConfig.setLocalPath(this.localPath.getText());
@@ -423,6 +440,23 @@ public class EditConfigCtrl implements Initializable {
             editConfig.setApacheConfig(this.apacheConfig.isSelected());
             editConfig.setApplicationConfig(this.applicationConfig.isSelected());
             editConfig.setServiceConfig(this.serviceConfig.isSelected());
+
+            Category oldCat = editConfig.getCategory() != null ? CategoryService.getCategory(editConfig.getCategory().getId()) : null;
+            Category newCat = this.categorySelector.getSelectionModel().getSelectedItem() != null ? CategoryService.getCategory(this.categorySelector.getSelectionModel().getSelectedItem().getId()) : null;
+
+            if (oldCat != null && oldCat.getId() != null && oldCat.getConfigs().contains(editConfig)) {
+                oldCat.getConfigs().remove(editConfig);
+                CategoryService.save(oldCat);
+            }
+
+            if (newCat != null && newCat.getId() != null) {
+                newCat.getConfigs().add(editConfig);
+                CategoryService.save(newCat);
+                editConfig.setCategory(newCat);
+            } else {
+                editConfig.setCategory(null);
+            }
+
             ConfigService.save(editConfig);
         }
 
@@ -430,6 +464,7 @@ public class EditConfigCtrl implements Initializable {
         Context.getConfigTableCtrl().refresh();
     }
 
+    @Transactional
     public void duplicate() throws IllegalAccessException, InvocationTargetException {
         Config newConfig = new Config();
         BeanUtils.copyProperties(newConfig, editConfig);
@@ -474,10 +509,11 @@ public class EditConfigCtrl implements Initializable {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("Can't deploy without remotePath!");
+            logger.info("Can't deploy without remotePath!");
         }
     }
 
+    @Transactional
     public void delete() {
         ConfigService.remove(editConfig);
         initData(new Config());
@@ -485,12 +521,21 @@ public class EditConfigCtrl implements Initializable {
         Context.getConfigTableCtrl().refresh();
     }
 
+    @Transactional
     public void addConfig() {
         initData(new Config());
     }
 
+    @Transactional
     public Config getEditConfig() {
         return editConfig;
+    }
+
+    public void setCategoriesInChoiceBox() {
+        this.categorySelector.getItems().clear();
+        List<Category> categories = CategoryService.getAll();
+        ObservableList<Category> list = FXCollections.observableArrayList(categories);
+        this.categorySelector.setItems(list);
     }
 
 }

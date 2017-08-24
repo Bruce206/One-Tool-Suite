@@ -1,11 +1,6 @@
 package de.bruss;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import com.jcraft.jsch.JSchException;
-
 import de.bruss.filesync.SftpService;
 import de.bruss.settings.Settings;
 import javafx.application.Application;
@@ -17,6 +12,12 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Starter extends Application {
 	public static void main(String[] args) {
@@ -24,6 +25,8 @@ public class Starter extends Application {
 	}
 
 	private static Scene scene;
+
+	private final Logger logger = LoggerFactory.getLogger(Starter.class);
 
 	static {
 		System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
@@ -36,14 +39,14 @@ public class Starter extends Application {
 		// System.setProperty("objectdb.conf", getClass().getResource("/objectdb.conf").getPath());
 
 		if (Files.exists(Settings.appDataPath)) {
-			System.out.println("Config-Folder gefunden unter: " + Settings.appDataPath);
+			logger.info("Config-Folder gefunden unter: " + Settings.appDataPath);
 		} else {
 			// altes verz. umbenennen
 			if (Files.exists(Paths.get(System.getenv("APPDATA") + "\\BootDeployer"))) {
-				System.out.println("Importing old appData");
+				logger.info("Importing old appData");
 				Files.move(Paths.get(System.getenv("APPDATA") + "\\BootDeployer"), Settings.appDataPath);
 			} else {
-				System.out.println("Erstelle Ordner...");
+				logger.info("Erstelle Ordner...");
 				Files.createDirectory(Settings.appDataPath);
 			}
 

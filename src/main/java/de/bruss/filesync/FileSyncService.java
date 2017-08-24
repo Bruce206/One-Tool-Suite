@@ -1,23 +1,5 @@
 package de.bruss.filesync;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.net.io.CopyStreamEvent;
-import org.apache.commons.net.io.CopyStreamListener;
-import org.apache.commons.net.io.Util;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileType;
-
 import de.bruss.Context;
 import de.bruss.deployment.Config;
 import de.bruss.settings.Settings;
@@ -26,6 +8,21 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.util.Duration;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.net.io.CopyStreamEvent;
+import org.apache.commons.net.io.CopyStreamListener;
+import org.apache.commons.net.io.Util;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileSyncService implements Runnable {
 
@@ -44,6 +41,8 @@ public class FileSyncService implements Runnable {
 	private FileSyncController fileSyncController;
 
 	Thread t;
+
+	private final Logger logger = LoggerFactory.getLogger(FileSyncService.class);
 
 	public FileSyncService(final Config config, final FileSyncController fileSyncController) {
 		this.host = config.getHost();
@@ -76,7 +75,7 @@ public class FileSyncService implements Runnable {
 				try {
 					syncFiles(fo, localFilePath, true);
 				} catch (InterruptedException e) {
-					System.out.println("interrupted");
+					logger.info("interrupted");
 					fo.close();
 					break;
 				}
@@ -87,14 +86,14 @@ public class FileSyncService implements Runnable {
 			e.printStackTrace();
 		}
 
-		System.out.println("Folders checked: " + checkFolderCount);
-		System.out.println("Folders created: " + createdFolderCount);
-		System.out.println("Files checked: " + checkFileCount);
-		System.out.println("Files updated: " + updateFileCount);
-		System.out.println("Files created: " + createdFileCount);
-		System.out.println("Files deleted locally: " + localFilesDeleted);
-		System.out.println("Folders deleted locally: " + localFoldersDeleted);
-		System.out.println("Downloaded total: " + FileUtils.byteCountToDisplaySize(downloadSizeCount));
+		logger.info("Folders checked: " + checkFolderCount);
+		logger.info("Folders created: " + createdFolderCount);
+		logger.info("Files checked: " + checkFileCount);
+		logger.info("Files updated: " + updateFileCount);
+		logger.info("Files created: " + createdFileCount);
+		logger.info("Files deleted locally: " + localFilesDeleted);
+		logger.info("Folders deleted locally: " + localFoldersDeleted);
+		logger.info("Downloaded total: " + FileUtils.byteCountToDisplaySize(downloadSizeCount));
 		Platform.runLater(() -> {
 			fileSyncController.setFinished();
 		});
@@ -218,7 +217,7 @@ public class FileSyncService implements Runnable {
 		@Override
 		public void run() {
 			Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1000), ae -> {
-				System.out.println("update " + LocalDateTime.now() + " " + Thread.currentThread().isInterrupted() + " files: " + checkFileCount);
+				logger.info("update " + LocalDateTime.now() + " " + Thread.currentThread().isInterrupted() + " files: " + checkFileCount);
 				Platform.runLater(() -> {
 
 					fileSyncController.setFoldersChecked(String.valueOf(checkFolderCount));

@@ -1,15 +1,11 @@
 package de.bruss.deployment;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
 import de.bruss.commons.BrussUtils;
 import de.bruss.filesync.FileSyncContainer;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Config implements Comparable<Config> {
@@ -51,8 +47,11 @@ public class Config implements Comparable<Config> {
     private boolean databaseConfig = false;
     private boolean fileSyncConfig = false;
 
+    @OneToMany
+    private Category category;
+
     @Embedded
-    List<FileSyncContainer> fileSyncList = new ArrayList<FileSyncContainer>();
+    List<FileSyncContainer> fileSyncList = new ArrayList<>();
 
     // @formatter:off
     public Config(String localPath,
@@ -76,7 +75,8 @@ public class Config implements Comparable<Config> {
                   String jvmOptions,
                   boolean apacheConfig,
                   boolean applicationConfig,
-                  boolean serviceConfig) {
+                  boolean serviceConfig,
+                  Category category) {
         super();
         setLocalPath(localPath);
         setRemotePath(remotePath);
@@ -100,6 +100,7 @@ public class Config implements Comparable<Config> {
         this.apacheConfig = apacheConfig;
         this.applicationConfig = applicationConfig;
         this.serviceConfig = serviceConfig;
+        this.category = category;
     }
 
     // @formatter:on
@@ -238,7 +239,7 @@ public class Config implements Comparable<Config> {
     }
 
     public List<FileSyncContainer> getFileSyncList() {
-        return fileSyncList;
+        return fileSyncList != null ? fileSyncList : new ArrayList<>();
     }
 
     public void setFileSyncList(List<FileSyncContainer> fileSyncList) {
@@ -325,6 +326,14 @@ public class Config implements Comparable<Config> {
         this.dbPassword = dbPassword;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     @Override
     public String toString() {
         return "Config{" +
@@ -354,4 +363,14 @@ public class Config implements Comparable<Config> {
                 ", fileSyncList=" + fileSyncList +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Config config = (Config) o;
+        return id.equals(config.id);
+    }
+
 }
