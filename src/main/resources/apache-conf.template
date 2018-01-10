@@ -4,15 +4,3 @@
 	ProxyPass / http://localhost:PORT/
 	ProxyPassReverse / http://localhost:PORT/
 </VirtualHost>
-
-<VirtualHost IP:443>
-	ServerName SERVER_NAME
-	
-	SSLEngine on
-
-    SSLCertificateFile /etc/apache2/ssl/ServerCert.pem
-    SSLCertificateKeyFile /etc/apache2/ssl/ServerKey.pem
-
-	ProxyPass / http://localhost:PORT/
-	ProxyPassReverse / http://localhost:PORT/
-</VirtualHost>
